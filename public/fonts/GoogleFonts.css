@@ -1,0 +1,47 @@
+/* globals/fonts.css */
+@font-face {
+    font-family: 'Quintessential';
+    src: url('/fonts/Quintessential-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('/fonts/GrenzeGotisch-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Almendra Display';
+    src: url('/fonts/AlmendraDisplay-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Funnel Display';
+    src: url('/fonts/FunnelDisplay-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Delius';
+    src: url('/fonts/Delius-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/fonts/Merriweather-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Neuton';
+    src: url('/fonts/Neuton-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
