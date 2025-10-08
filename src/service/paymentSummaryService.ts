@@ -1,3 +1,6 @@
+
+"use client"
+
 import adminInstance from "@/api/adminInstance";
 
 export const fetchPaymentSummary = async (startDate: string, endDate: string) => {

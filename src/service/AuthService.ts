@@ -1,4 +1,4 @@
-
+"use client"
 
 import adminInstance from "../api/adminInstance";
 

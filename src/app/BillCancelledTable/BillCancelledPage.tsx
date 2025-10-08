@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import React from "react";
 import { useAppContext } from "@/context/AppContext";
 import { useBillCancelled } from "@/hooks/useBillCancelled";
@@ -7,6 +7,7 @@ import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import Box from "@mui/material/Box";
 import { Typography ,useTheme} from "@mui/material";
+
 
 interface Column {
     id: string;

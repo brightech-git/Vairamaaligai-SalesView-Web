@@ -1,5 +1,6 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import React from "react";
 import { Card, Box, Typography, useTheme } from "@mui/material";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";

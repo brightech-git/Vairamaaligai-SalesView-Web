@@ -1,5 +1,6 @@
 // components/ui/table/TableSkeleton.tsx
 "use client";
+export const dynamic = "force-dynamic";
 
 import React from "react";
 import { Box, Skeleton, useTheme } from "@mui/material";

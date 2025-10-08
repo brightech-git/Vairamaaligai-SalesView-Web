@@ -1,4 +1,5 @@
 // src/service/DashboardService.ts
+"use client"
 import adminInstance from "@/api/adminInstance";
 
 // — Types for each API response —

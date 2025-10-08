@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { useState } from "react";
 import {
@@ -27,13 +28,12 @@ import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
 
 // ✅ Import your page components here
-import Dashboard from "@/pages/dashboard/DashboardPage";
-import BillCancelledPage from "@/pages/BillCancelledTable/BillCancelledPage";
-import SchemePayment from "@/pages/SchemePaymentSummary/SchemePayment";
-import PaymentSummary from "@/pages/PaymentSummary/PaymentSummary";
-import MaterialSummaryTable  from "@/pages/MeterialTableData/MaterialTableData";
-import EstimationSummary from "@/pages/estimationSummary/EstimationSummary";
-
+import Dashboard from "@/app/dashboard/DashboardPage";
+import BillCancelledPage from "@/app/BillCancelledTable/BillCancelledPage";
+import SchemePayment from "@/app/SchemePaymentSummary/SchemePayment";
+import PaymentSummary from "@/app/PaymentSummary/PaymentSummary";
+import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
+import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
 
 
 

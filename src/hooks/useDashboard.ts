@@ -1,6 +1,6 @@
 // src/hooks/useDashboard.ts
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useAppContext } from "@/context/AppContext";
 import { useMaterialTableData } from "./useMaterialTableData";
 

@@ -1,6 +1,6 @@
 // src/hooks/usePaymentSummary.ts
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { fetchPaymentSummary } from "@/service/paymentSummaryService";

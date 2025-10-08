@@ -1,5 +1,6 @@
 // components/MetalRates.tsx
 "use client";
+export const dynamic = "force-dynamic";
 
 import React from 'react';
 import { Box, Chip, useTheme, useMediaQuery } from '@mui/material';

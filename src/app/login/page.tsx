@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import React from "react";
 import {
     Box,
@@ -10,7 +10,7 @@ import {
     Container,
     Avatar
 } from "@mui/material";
-import LoginForm from "@/pages/login/LoginForm";
+import LoginForm from "../login copy/LoginForm";
 
 import Image from "next/image";
 

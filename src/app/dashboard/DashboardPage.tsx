@@ -1,11 +1,13 @@
 "use client";
-
-import BillCancelledPage from "@/pages/BillCancelledTable/BillCancelledPage";
-import  MaterialSummaryTable  from "@/pages/MeterialTableData/MaterialTableData";
-import PaymentSummary from "@/pages/PaymentSummary/PaymentSummary";
-import SchemePayment from "@/pages/SchemePaymentSummary/SchemePayment";
-import EstimationSummary from "@/pages/estimationSummary/EstimationSummary";
+export const dynamic = "force-dynamic";
+import BillCancelledPage from "../BillCancelledTable/BillCancelledPage";
+import MaterialSummaryTable from "../MeterialTableData/MaterialTableData";
+import PaymentSummary from "../PaymentSummary/PaymentSummary";
+import SchemePayment from "../SchemePaymentSummary/SchemePayment";
+import EstimationSummary from "../estimationSummary/EstimationSummary";
 import { Grid, Box, useTheme } from "@mui/material";
+
+
 const Dashboard = () => {
     const theme = useTheme();
 

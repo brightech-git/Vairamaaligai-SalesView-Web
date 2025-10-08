@@ -1,5 +1,6 @@
 // components/Header/DesktopHeader.tsx
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { use } from 'react';
 import {

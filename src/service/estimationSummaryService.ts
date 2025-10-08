@@ -1,4 +1,5 @@
 // src/services/estimationSummaryService.ts
+"use client"
 import adminInstance from "@/api/adminInstance";
 
 

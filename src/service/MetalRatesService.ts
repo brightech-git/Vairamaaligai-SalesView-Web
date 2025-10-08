@@ -1,4 +1,5 @@
 // services/MetalRatesService.ts
+"use client"
 import adminInstance from "@/api/adminInstance";// adjust the path
 
 export interface MetalRates {

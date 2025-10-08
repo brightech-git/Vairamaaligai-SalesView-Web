@@ -1,4 +1,5 @@
 // src/services/paymentModeService.ts
+"use client"
 import adminInstance from "@/api/adminInstance";
 
 export const schemePaymentSummary = async (startDate: string, endDate: string) => {

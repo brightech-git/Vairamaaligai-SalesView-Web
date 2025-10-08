@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo } from "react";
 import { format, subDays } from "date-fns";

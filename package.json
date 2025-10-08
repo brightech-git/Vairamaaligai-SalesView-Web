@@ -2,13 +2,12 @@
   "name": "vmj-sales-view",
   "version": "0.1.0",
   "private": true,
- "scripts": {
+"scripts": {
   "dev": "next dev",
   "build": "next build",
-  "start": "next start",
   "export": "next export",
-  "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-  "format": "prettier --write ."
+  "start": "next start",
+  "lint": "eslint"
 },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

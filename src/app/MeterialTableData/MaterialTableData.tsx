@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import React, { useState } from "react";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";

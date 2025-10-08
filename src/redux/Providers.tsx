@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { Provider } from "react-redux";
 import { store } from "./store";
 

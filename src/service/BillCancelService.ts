@@ -1,4 +1,5 @@
 // ✅ src/service/BillCancelService.ts
+"use client"
 import adminInstance from "@/api/adminInstance";
 
 export interface BillCancel {
