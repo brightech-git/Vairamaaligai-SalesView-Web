@@ -55,6 +55,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [activeItem, setActiveItem] = useState("dashboard");
+    
 
     const drawerWidth = sidebarOpen ? 240 : 72;
 
@@ -103,9 +104,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                         noWrap
                         component="div"
                         className="font-quintessential"
-                        sx={{ color: theme.palette.text.primary }}
+                        sx={{ color: theme.palette.text.primary ,textTransform: 'capitalize'}}
                     >
-                        Dashboard
+                        {activeItem}
                     </Typography>
                 )}
                 {!isMobile && (

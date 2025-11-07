@@ -25,6 +25,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [tempStartDate, setTempStartDate] = useState<Date | null>(dateRange.startDate);
     const [tempEndDate, setTempEndDate] = useState<Date | null>(dateRange.endDate);
+
     const handleChipClick = (period: string) => {
         setSelectedChip(period);
         const today = new Date();
@@ -83,6 +84,20 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
     ];
 
     const open = Boolean(anchorEl);
+    // Helper to check if a date range matches a predefined range
+    const getActiveChip = () => {
+        const today = new Date();
+        const { startDate, endDate } = dateRange;
+        if (!startDate || !endDate) return null;
+
+        if (isSameDay(startDate, today) && isSameDay(endDate, today)) return 'today';
+        if (isSameDay(startDate, subDays(today, 7)) && isSameDay(endDate, today)) return 'last7days';
+        if (isSameDay(startDate, subDays(today, 30)) && isSameDay(endDate, today)) return 'last30days';
+        if (selectedChip === 'custom') return 'custom';
+        return null;
+    };
+
+    const activeChip = getActiveChip();
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -125,32 +140,31 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                             key={chip.value}
                             label={chip.label}
                             size="small"
-                            variant={selectedChip === chip.value ? "filled" : "outlined"}
+                            variant={activeChip === chip.value ? "filled" : "outlined"}
                             onClick={() => handleChipClick(chip.value)}
                             sx={{
                                 fontFamily: "'Funnel Display', sans-serif",
                                 fontSize: '0.75rem',
                                 fontWeight: 500,
-                                ...(selectedChip === chip.value && {
+                                ...(activeChip === chip.value && {
                                     backgroundColor: theme.palette.primary.main,
                                     color: theme.palette.primary.contrastText,
                                     '&:hover': {
                                         opacity: 1,
-                                        color:'#000'
-                       
+                                        color: '#000'
                                     },
                                 }),
-                                ...(selectedChip !== chip.value && {
+                                ...(activeChip !== chip.value && {
                                     borderColor: theme.palette.grey[400],
                                     color: theme.palette.text.secondary,
                                     '&:hover': {
                                         opacity: 1,
                                         color: '#000'
-
                                     },
                                 }),
                             }}
                         />
+
                     ))}
                 </Box>
 

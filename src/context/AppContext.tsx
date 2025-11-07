@@ -42,10 +42,10 @@ export const useAppContext = () => {
             setDateRange: () => { },
             metalRates: { G: 0, S: 0, P: 0 },
             setMetalRates: () => { },
-            selectedChip: "last7days",
+            selectedChip: "today",
             setSelectedChip: () => { },
             fetchDataWithDates: () => { },
-            formattedStartDate: format(subDays(new Date(), 7), "yyyy-MM-dd"),
+            formattedStartDate: format(new Date(), "yyyy-MM-dd"),
             formattedEndDate: format(new Date(), "yyyy-MM-dd"),
         } as AppContextType;
     }
@@ -60,7 +60,7 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [dateRange, setDateRange] = useState<DateRange>({
-        startDate: subDays(new Date(), 7),
+        startDate: new Date(),
         endDate: new Date(),
     });
 

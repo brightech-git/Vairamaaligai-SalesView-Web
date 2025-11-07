@@ -32,8 +32,8 @@ const EstimationSummary = () => {
     // --- Data mapping
     const summaryData = [
         { label: "Total Estimate", value: data?.TotalEstimate ?? 0 },
-        { label: "Total Pending", value: data?.TotalPending ?? 0 },
         { label: "Total Billed", value: data?.TotalBilled ?? 0 },
+        { label: "Total Pending", value: data?.TotalPending ?? 0 },
     ];
 
     // --- Columns for ResponsiveTable

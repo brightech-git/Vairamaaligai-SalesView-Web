@@ -40,6 +40,8 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
     const { mode } = useThemeContext();
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
+    const isCompact = useMediaQuery("(max-width: 450px)"); // ≤450px
+    const isMediumScreen = useMediaQuery("(max-width: 550px) and (min-width: 451px)"); // between 451–550px
 
     const getHeaderStyle = () => ({
         background: '#E9E3DF',
@@ -96,6 +98,13 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
             },
         },
     });
+    const size = React.useMemo(() => {
+        if (isCompact)
+            return { font: 10, padding: "3px 4px", minWidth: 50, bodyFont: 10 };
+        if (isMediumScreen)
+            return { font: 11, padding: "4px 6px", minWidth: 60, bodyFont: 10.8 };
+        return { font: 12.5, padding: "6px 8px", minWidth: 70, bodyFont: 11.5 };
+    }, [isCompact, isMediumScreen]);
 
     // ------------------- MUI Table for Desktop -------------------
     if (isLargeScreen) {
@@ -190,41 +199,41 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
 
     // ------------------- Mobile View with Tailwind CSS Table -------------------
     return (
-        <div className={cn(
-            "w-full rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden",
-            "bg-[var(--color-paper)]",
-            className
-        )}>
-            {/* Mobile Table Container */}
+        <div
+            className={cn(
+                "w-full rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden",
+                "bg-[var(--color-paper)] transition-all duration-300",
+                className
+            )}
+        >
+            {/* Table Container */}
             <div className="w-full overflow-hidden">
                 {/* Table Header */}
-                <div className="flex bg-gray-600 sticky top-0 z-10">
-                    {columns.map((col, index) => (
+                <div
+                    className={cn("flex sticky top-0 z-10", "transition-all duration-200")}
+                    style={{
+                        backgroundColor: theme.palette.text.secondary,
+                    }}
+                >
+                    {columns.map((col) => (
                         <div
                             key={col.id}
                             className={cn(
-                                "flex-1 min-w-0 p-2 border-r border-gray-500 last:border-r-0",
-                                "text-white font-domine font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis",
-                                col.align === 'center' && 'text-center',
-                                col.align === 'right' && 'text-right',
-                                !col.align && 'text-left'
+                                "flex-1 border-r border-gray-500 last:border-r-0",
+                                "font-domine font-semibold text-white overflow-hidden text-ellipsis",
+                                col.align === "center" && "text-center",
+                                col.align === "right" && "text-right",
+                                !col.align && "text-left"
                             )}
                             style={{
-                                flex: col.minWidth ? 'none' : 1,
-                                minWidth: col.minWidth ? `${col.minWidth}px` : '70px',
-                                backgroundColor:theme.palette.text.secondary,   
-                                color:'#030333ff', 
-                                paddingTop: "4px",
-                                paddingBottom: "4px",
-                                paddingLeft: "6px",
-                                paddingRight: "6px",
-                                position: "sticky",
-                                top: 0,
-                                zIndex: 1,
-                                whiteSpace: "nowrap",
-                                fontSize: "12.5px",
+                                flex: col.minWidth ? "none" : 1,
+                                minWidth: col.minWidth ? `${col.minWidth}px` : `${size.minWidth}px`,
+                                color: "#030333ff",
+                                padding: size.padding,
+                                fontSize: `${size.font}px`,
                                 fontWeight: 600,
-
+                                whiteSpace: "nowrap",
+                                
                             }}
                         >
                             {col.label}
@@ -238,10 +247,9 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                         <div
                             key={idx}
                             className={cn(
-                                "flex hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors",
-                                idx % 2 === 0
-                                    ? "bg-white dark:bg-gray-900"
-                                    : "bg-gray-50 dark:bg-gray-800"
+                                "flex transition-colors",
+                                "hover:bg-gray-50 dark:hover:bg-gray-800",
+                                idx % 2 === 0 ? "bg-white dark:bg-gray-900" : "bg-gray-50 dark:bg-gray-800"
                             )}
                         >
                             {columns.map((col) => {
@@ -252,19 +260,21 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                                     <div
                                         key={col.id}
                                         className={cn(
-                                            "flex-1 min-w-0 p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0",
-                                            "font-montserrat text-sm font-medium text-gray-900 dark:text-white",
-                                            "whitespace-nowrap overflow-hidden text-ellipsis",
-                                            col.align === 'center' && 'text-center',
-                                            col.align === 'right' && 'text-right',
-                                            !col.align && 'text-left'
+                                            "flex-1 border-r border-gray-200 dark:border-gray-700 last:border-r-0",
+                                            "font-montserrat text-gray-900 dark:text-white overflow-hidden text-ellipsis",
+                                            col.align === "center" && "text-center",
+                                            col.align === "right" && "text-right",
+                                            !col.align && "text-left"
                                         )}
                                         style={{
-                                            flex: col.minWidth ? 'none' : 1,
-                                            minWidth: col.minWidth ? `${col.minWidth}px` : '75px',
-                                            fontSize: "11.55px",
-                                            textTransform: "capitalize"
-                                           
+                                            flex: col.minWidth ? "none" : 1,
+                                            minWidth: col.minWidth
+                                                ? `${col.minWidth}px`
+                                                : `${size.minWidth + 5}px`,
+                                            fontSize: `${size.bodyFont}px`,
+                                            padding: size.padding,
+                                            textTransform: "capitalize",
+                                            fontWeight: 500,
                                         }}
                                     >
                                         {displayValue}

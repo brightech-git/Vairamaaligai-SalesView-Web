@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/api/v1"; // ✅ adjust if needed
-
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1" // ✅ adjust if needed
+//const BASE_URL =  "http://localhost:8080/api/v1" // ✅ adjust if needed
+console.log ("BASE_URL", BASE_URL)
 
 const adminInstance = axios.create({
     baseURL: BASE_URL,

@@ -14,6 +14,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { metalRates } = useAppContext();
+    console.log(metalRates ,'metalRates')
 
     // Chip style configuration
     const chipStyles = {
@@ -105,7 +106,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                             fontWeight: 700,
                             fontSize: '14px'
                         }}>
-                            ₹{metalRates.G.toLocaleString()}
+                            ₹{metalRates.G}
                         </span>
                     </Box>
                 }
@@ -133,7 +134,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                             fontWeight: 700,
                             fontSize: '14px'
                         }}>
-                            ₹{metalRates.S.toLocaleString()}
+                            ₹{metalRates.S}
                         </span>
                     </Box>
                 }

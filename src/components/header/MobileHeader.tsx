@@ -67,10 +67,10 @@ const MobileHeader: React.FC = () => {
                     <Typography
                         variant="body1"
                         sx={{
-                            fontFamily: "'Quintessential', cursive",
+                            fontFamily:"var(--font-merriweather)",
                             fontWeight: 700,
                             color: 'inherit',
-                            fontSize: '16px'
+                            fontSize: '17px'
                         }}
                     >
                         Vairamaaligai
