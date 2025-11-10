@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <Head>
-        <title>Vairamaaligai Sales View</title>
+        <title>Jaiguru Sales View</title>
         <link rel="icon" href="/images/logo/icon.png" />
       </Head>
       <body>
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 {children}
                 <ToastContainer
                   position="top-right"
-                  autoClose={2000}
+                  autoClose={3000}
                   hideProgressBar
                 />
               </AppProvider>

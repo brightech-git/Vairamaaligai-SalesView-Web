@@ -10,7 +10,7 @@ import {
     Container,
     Avatar
 } from "@mui/material";
-import LoginForm from "../login copy/LoginForm";
+import LoginForm from "./LoginForm";
 
 import Image from "next/image";
 
@@ -180,7 +180,7 @@ const LoginPage = () => {
                                         color: theme.palette.text.primary,
                                     }}
                                 >
-                                   Vairamaaligai Jewellers
+                                   Jaiguru Jewellers
                                 </Typography>
                             </Box>
                         )}
@@ -203,9 +203,9 @@ const LoginPage = () => {
                                 Welcome Back
                             </Typography>
                             <Typography
-                                variant="body1"
+                                variant="body2"
                                 sx={{
-                                    color: theme.palette.text.secondary,
+                                    color: theme.palette.text.primary,
                                     fontFamily: "'Funnel Display', sans-serif",
                                     maxWidth: 300,
                                     margin: "0 auto",
@@ -224,7 +224,7 @@ const LoginPage = () => {
                             <Typography
                                 variant="caption"
                                 sx={{
-                                    color: theme.palette.text.secondary,
+                                    color: theme.palette.text.primary,
                                     fontFamily: "'Delius', cursive",
                                     display: "flex",
                                     alignItems: "center",
@@ -242,12 +242,12 @@ const LoginPage = () => {
                         <Typography
                             variant="caption"
                             sx={{
-                                color: theme.palette.text.secondary,
+                                color: theme.palette.text.primary,
                                 fontFamily: "'Delius', cursive",
                                 opacity: 0.7,
                             }}
                         >
-                            © 2024 Vairamaaligai jewellers. All rights reserved.
+                            © 2024 Jaiguru jewellers. All rights reserved.
                         </Typography>
                     </Box>
                 </Container>

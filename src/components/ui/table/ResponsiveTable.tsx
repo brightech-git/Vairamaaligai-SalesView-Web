@@ -44,10 +44,10 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
     const isMediumScreen = useMediaQuery("(max-width: 550px) and (min-width: 451px)"); // between 451–550px
 
     const getHeaderStyle = () => ({
-        background: '#E9E3DF',
-        color: "#030333ff",
+        background: theme.palette.primary.dark || '#E9E3DF',
+        color: theme.palette.text.secondary || '#FFFFFF',
         fontWeight: 600,
-        fontSize: "15.5px",
+        fontSize: theme.typography.h4,
         border: 'none',
         paddingTop: "4px",
         paddingBottom: "4px",
@@ -112,11 +112,9 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
             <MuiThemeProvider theme={tableTheme}>
                 <TableContainer
                     component={Paper}
-                    className={cn("rounded-xl shadow-md border border-gray-200", className)}
+                    className={cn("shadow-sm border border-gray-100 ", className)}
                     sx={{
                         backgroundColor: theme.palette.background.default,
-                        backgroundImage: "none",
-                        maxWidth: "95%",
                         margin: "auto",
                         maxHeight: stickyHeader ? "calc(100vh - 240px)" : "none",
                     }}
@@ -172,7 +170,7 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                                                 align={getAutoAlign(value, col) as any}
                                                 sx={{
                                                     fontFamily: "var(--font-montserrat)",
-                                                    fontSize: 14.5,
+                                                    fontSize: 12.5,
                                                     fontWeight: 500,
                                                     color: theme.palette.text.primary,
                                                     py: 0.5,
@@ -212,7 +210,7 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                 <div
                     className={cn("flex sticky top-0 z-10", "transition-all duration-200")}
                     style={{
-                        backgroundColor: theme.palette.text.secondary,
+                        backgroundColor: theme.palette.primary.main,
                     }}
                 >
                     {columns.map((col) => (
@@ -228,7 +226,7 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                             style={{
                                 flex: col.minWidth ? "none" : 1,
                                 minWidth: col.minWidth ? `${col.minWidth}px` : `${size.minWidth}px`,
-                                color: "#030333ff",
+                                color: theme.palette.text.secondary,
                                 padding: size.padding,
                                 fontSize: `${size.font}px`,
                                 fontWeight: 600,

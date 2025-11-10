@@ -12,9 +12,25 @@ const DashboardPage = () => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+ const getAuthSession = (): boolean => {
+    const itemStr = sessionStorage.getItem("isAuthenticated");
+    if (!itemStr) return false;
+
+    const item = JSON.parse(itemStr);
+    const now = new Date().getTime();
+
+    if (now > item.expiry) {
+        sessionStorage.removeItem("isAuthenticated");
+        return false;
+    }
+
+    return item.value;
+};
+
+
   useEffect(() => {
-    const auth = localStorage.getItem("isAuthenticated");
-    if (auth === "true") {
+    const auth = getAuthSession();
+    if (auth === true) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
@@ -38,7 +54,7 @@ const DashboardPage = () => {
           Welcome to the Dashboard
         </Typography>
 
-        <Typography variant="body1" mt={2}>
+        <Typography variant="body1" mt={2} >
           This content is only visible to logged-in users.
         </Typography>
       </Box>

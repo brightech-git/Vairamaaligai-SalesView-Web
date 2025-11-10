@@ -107,18 +107,19 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
     // Enhanced color palettes
     const lightPalette = {
         background: {
-            default: "#FFF7DD",
-            paper: "#CBDCEB",
+            default: "#FFFFFF",
+            paper: "#FFFFFF",
             
         },
         text: {
-            primary: "#030333ff",
-            secondary: "#64748b",
+            primary: "#111",
+            secondary: "#FFFFFF",
+            disabled: "#94a3b8",
         },
         primary: {
-            main: "#3b82f6",
+            main: "#030333ff",
             light: "#60a5fa",
-            dark: "#2563eb",
+            dark: "#111111",
         },
         secondary: {
             main: "#8b5cf6",
@@ -144,17 +145,17 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
 
     const darkPalette = {
         background: {
-            default: "#2A1458",
-            paper: "#090040",
+            default: "#0C0C0C",
+            paper: "#0C0C0C",
         },
         text: {
             primary: "#f1f5f9",
-            secondary: "#E9E3DF",
+            secondary: "#222",
         },
         primary: {
-            main: "#60a5fa",
+            main: "#FFFFFF",
             light: "#93c5fd",
-            dark: "#3b82f6",
+            dark: "#FFFFFF",
         },
         secondary: {
             main: "#a78bfa",
@@ -206,14 +207,17 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 },
                 h4: {
                     fontFamily: "'Merriweather', serif",
+                    color: palette.text.secondary,
                     fontWeight: 600,
-                    color: palette.text.primary,
+                    fontSize: '14px'
                     
                 },
                 body1: {
                     fontFamily: "'Funnel Display', sans-serif",
                     lineHeight: 1.6,
-                    color: palette.text.primary,
+                    color: palette.text.secondary,
+                    fontWeight: 400,
+                    fontSize:'10px'
                 },
                 body2: {
                     fontFamily: "'Delius', cursive",
@@ -225,6 +229,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 borderRadius: 12,
             },
             components: {
+
                 MuiCssBaseline: {
                     styleOverrides: {
                         html: {
@@ -296,7 +301,9 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                         },
                     },
                 },
+              
             },
+            
         };
 
         return createTheme(themeOptions);

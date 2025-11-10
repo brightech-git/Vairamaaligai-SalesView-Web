@@ -14,8 +14,19 @@ const LoginForm: React.FC = () => {
     const [localError, setLocalError] = useState<string | null>(null);
 
     // ✅ Hardcoded credentials
-    const VALID_USERNAME = "vmj";
+    const VALID_USERNAME = "vj";
     const VALID_PASSWORD = "vmj@123";
+
+    const setAuthSession = (value:boolean, ttlInMinutes :number=30) => {
+        const now = new Date().getTime(); // current time in milliseconds
+        const item = {
+            value,                        // the actual value you want to store (true/false)
+            expiry: now + ttlInMinutes * 60 * 1000, // future timestamp in ms
+        };
+        sessionStorage.setItem("isAuthenticated", JSON.stringify(item));
+    };
+
+
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,7 +39,7 @@ const LoginForm: React.FC = () => {
 
         if (identifier === VALID_USERNAME && password === VALID_PASSWORD) {
             toast.success("✅ Login successful!");
-            localStorage.setItem("isAuthenticated", "true");
+            setAuthSession(true ,60);
             setIdentifier("");
             setPassword("");
          
@@ -73,7 +84,9 @@ const LoginForm: React.FC = () => {
                 fullWidth
                 label="Username"
                 variant="outlined"
+                placeholder="Enter UserName"
                 value={identifier}
+           
                 onChange={(e) => setIdentifier(e.target.value)}
             />
 
@@ -81,6 +94,7 @@ const LoginForm: React.FC = () => {
                 fullWidth
                 label="Password"
                 type="password"
+                placeholder="Enter Your Password"
                 variant="outlined"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

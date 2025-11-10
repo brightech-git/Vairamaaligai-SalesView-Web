@@ -73,7 +73,7 @@ const MobileHeader: React.FC = () => {
                             fontSize: '17px'
                         }}
                     >
-                        Vairamaaligai
+                        Jaiguru
                     </Typography>
                 </Box>
 

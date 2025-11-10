@@ -125,7 +125,7 @@ const BillCancelledPage = () => {
                     <Typography
                         variant="body2"
                         sx={{
-                            color: theme.palette.text.secondary,
+                            color: theme.palette.text.primary,
                             fontFamily: 'var(--font-funnel)',
                             mb: 0.5,
                             maxWidth: 300,

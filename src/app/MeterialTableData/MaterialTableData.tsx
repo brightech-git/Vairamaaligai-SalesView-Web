@@ -5,7 +5,7 @@ import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import { useDashboard } from "@/hooks/useDashboard";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Modal, Box, Typography, IconButton ,useTheme ,Button} from "@mui/material";
+import { Modal, Box, Typography, IconButton ,useTheme ,Button ,Tooltip } from "@mui/material";
 import { formatNumber, DecimalFormat } from "@/lib/numberFormatter";
 
 
@@ -75,6 +75,7 @@ const theme = useTheme();
             stock: formatNumber(stock?.Total_Netwt || 0, "3" as DecimalFormat),
             stone:
                 stones.length > 0 ? (
+                    <Tooltip title="Click to show details" arrow>
                     <IconButton
                         size="small"
                         onClick={() => {
@@ -89,8 +90,9 @@ const theme = useTheme();
                             },
                         }}
                     >
-                        <VisibilityIcon fontSize="small" />
+                        <VisibilityIcon fontSize="small" titleAccess="modal" />
                     </IconButton>
+                        </Tooltip>
                 ) : null,
         };
     });
@@ -261,7 +263,7 @@ const theme = useTheme();
                                                     sx={{
                                                         fontFamily: "'Funnel Display', sans-serif",
                                                         fontWeight: 500,
-                                                        color: 'text.secondary',
+                                                        color: theme.palette.text.primary,
                                                         display: 'block',
                                                     }}
                                                 >
@@ -286,7 +288,7 @@ const theme = useTheme();
                                                     sx={{
                                                         fontFamily: "'Funnel Display', sans-serif",
                                                         fontWeight: 500,
-                                                        color: 'text.secondary',
+                                                        color: theme.palette.text.primary,
                                                         display: 'block',
                                                     }}
                                                 >
@@ -311,7 +313,7 @@ const theme = useTheme();
                                                     sx={{
                                                         fontFamily: "'Funnel Display', sans-serif",
                                                         fontWeight: 500,
-                                                        color: 'text.secondary',
+                                                        color: theme.palette.text.primary,
                                                         display: 'block',
                                                     }}
                                                 >
@@ -352,7 +354,7 @@ const theme = useTheme();
                                         sx={{
                                             fontFamily: "'Funnel Display', sans-serif",
                                             fontWeight: 500,
-                                            color: 'text.secondary',
+                                            color: theme.palette.text.primary,
                                             display: 'block',
                                         }}
                                     >
@@ -363,7 +365,7 @@ const theme = useTheme();
                                         sx={{
                                             fontFamily: "'Domine', serif",
                                             fontWeight: 600,
-                                            color: 'text.primary',
+                                            color: theme.palette.text.primary,
                                         }}
                                     >
                                         {(selectedStones.reduce((sum, stone) => sum + stone.stnpcs, 0))} pcs
@@ -375,7 +377,7 @@ const theme = useTheme();
                                         sx={{
                                             fontFamily: "'Funnel Display', sans-serif",
                                             fontWeight: 500,
-                                            color: 'text.secondary',
+                                            color: theme.palette.text.primary,
                                             display: 'block',
                                         }}
                                     >

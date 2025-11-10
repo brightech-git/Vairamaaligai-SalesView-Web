@@ -28,7 +28,6 @@ return (
     sx={{
         mt: 2,
         mb: 3,
-        px: {xs:0, md: 2 ,lg:3},
     }}
 >
     <Grid

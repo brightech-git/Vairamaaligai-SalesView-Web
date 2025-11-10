@@ -35,19 +35,15 @@ const DesktopHeader: React.FC = () => {
             <Box sx={{ 
                 display: 'flex', 
                 alignItems: 'center', 
-                flex: {lg:0,md:0,sm:1},
-                minWidth: 200,
             }}>
                 <Box
                     sx={{
                         width: 40,
                         height: 40,
-                        
                         borderRadius: 1,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        mr: 1,
                     }}
                 >
                     <Avatar
@@ -56,7 +52,7 @@ const DesktopHeader: React.FC = () => {
                         sx={{
                             width: 40,
                             height: 40,
-                            mr: 2,
+                            mr: 1,
                         }}
                     />
                 </Box>
@@ -65,11 +61,12 @@ const DesktopHeader: React.FC = () => {
                     sx={{
                         fontFamily: "'Quintessential', cursive",
                         fontWeight: 700,
-                        color: 'inherit',
+                        color: theme.palette.text.primary,
                         whiteSpace: 'nowrap',
+                        fontSize:{md:'16px' ,lg:'20px'}
                     }}
                 >
-                    Vairamaaligai
+                    Jaiguru Jewellers
                 </Typography>
             </Box>
 

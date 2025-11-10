@@ -156,7 +156,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                 }),
                                 ...(activeChip !== chip.value && {
                                     borderColor: theme.palette.grey[400],
-                                    color: theme.palette.text.secondary,
+                                    color: theme.palette.text.primary,
                                     '&:hover': {
                                         opacity: 1,
                                         color: '#000'
@@ -222,12 +222,34 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     fullWidth: true,
                                     sx: {
                                         '& .MuiOutlinedInput-root': {
-                                            color: theme.palette.text.primary,
+                                            color: theme.palette.text.secondary,
                                             '& fieldset': { borderColor: theme.palette.divider },
                                             '&:hover fieldset': { borderColor: theme.palette.primary.main },
                                             '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
                                         },
-                                        '& .MuiInputLabel-root': { color: theme.palette.text.secondary },
+                                        '& .MuiInputLabel-root': { color: theme.palette.text.primary },
+                                    },
+                                },
+                                // 🎯 Style the calendar popup here
+                                popper: {
+                                    sx: {
+                                        '.MuiPaper-root': {
+                                            color: theme.palette.text.secondary,  // <--- makes all text primary
+                                        },
+                                        '.MuiPickersDay-root': {
+                                            color: theme.palette.text.primary,              // Default day text
+                                            backgroundColor: theme.palette.primary.light, 
+                                        },
+                                        '.MuiPickersDay-root.Mui-selected': {
+                                            backgroundColor: theme.palette.primary.main,    // Selected day bg
+                                            color: theme.palette.primary.contrastText,      // Selected day text
+                                        },
+                                        '.MuiPickersCalendarHeader-label, .MuiPickersArrowSwitcher-button': {
+                                            color: theme.palette.text.primary,  // month/year header + arrows
+                                        },
+                                        '.MuiDayCalendar-weekDayLabel': {
+                                            color: theme.palette.text.primary,  // S, M, T, W, T, F, S labels
+                                        },
                                     },
                                 },
                             }}
@@ -245,12 +267,33 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     fullWidth: true,
                                     sx: {
                                         '& .MuiOutlinedInput-root': {
-                                            color: theme.palette.text.primary,
+                                            color: theme.palette.text.secondary,
                                             '& fieldset': { borderColor: theme.palette.divider },
                                             '&:hover fieldset': { borderColor: theme.palette.primary.main },
                                             '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
                                         },
-                                        '& .MuiInputLabel-root': { color: theme.palette.text.secondary },
+                                        '& .MuiInputLabel-root': { color: theme.palette.text.primary },
+                                    },
+                                },
+                                popper: {
+                                    sx: {
+                                        '.MuiPaper-root': {
+                                            color: theme.palette.text.secondary,  // <--- makes all text primary
+                                        },
+                                        '.MuiPickersDay-root': {
+                                            color: theme.palette.text.primary,              // Default day text
+                                            backgroundColor: theme.palette.primary.light,
+                                        },
+                                        '.MuiPickersDay-root.Mui-selected': {
+                                            backgroundColor: theme.palette.primary.main,    // Selected day bg
+                                            color: theme.palette.primary.contrastText,      // Selected day text
+                                        },
+                                        '.MuiPickersCalendarHeader-label, .MuiPickersArrowSwitcher-button': {
+                                            color: theme.palette.text.primary,  // month/year header + arrows
+                                        },
+                                        '.MuiDayCalendar-weekDayLabel': {
+                                            color: theme.palette.text.primary,  // S, M, T, W, T, F, S labels
+                                        },
                                     },
                                 },
                             }}
@@ -265,7 +308,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                             onClick={() => setAnchorEl(null)}
                             sx={{
                                 borderColor: theme.palette.grey[400],
-                                color: theme.palette.text.secondary,
+                                color: theme.palette.text.primary,
                                 '&:hover': {
                                     backgroundColor: theme.palette.action.hover,
                                 },
@@ -297,7 +340,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                 mt: 2,
                                 textAlign: 'center',
                                 fontFamily: "'Funnel Display', sans-serif",
-                                color: theme.palette.text.secondary,
+                                color: theme.palette.text.primary,
                             }}
                         >
                             {format(tempStartDate, 'dd/MM/yyyy')} - {format(tempEndDate, 'dd/MM/yyyy')}

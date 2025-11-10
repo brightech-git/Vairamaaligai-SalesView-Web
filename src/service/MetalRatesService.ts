@@ -11,8 +11,10 @@ export interface MetalRates {
 const MetalRatesService = {
     getRates: async (): Promise<MetalRates> => {
         try {
-            const response = await adminInstance.get('/rates')
-            return response.data;
+            const response = await adminInstance.get('/rates');
+           return response.data;
+            
+        
         } catch (error) {
             console.error("Error fetching metal rates:", error);
             return {

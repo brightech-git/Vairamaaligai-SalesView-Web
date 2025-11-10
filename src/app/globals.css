@@ -99,14 +99,14 @@ body {
 
 /* Enhanced Focus Styles */
 *:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+  outline: 1px solid var(--primary-color);
+  outline-offset: 1px;
   border-radius: 4px;
 }
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 ::-webkit-scrollbar-track {
@@ -115,7 +115,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-foreground-secondary);
-  border-radius: 3px;
+  border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -161,3 +161,4 @@ body {
 .font-neuton {
   font-family: var(--font-neuton);
 }
+

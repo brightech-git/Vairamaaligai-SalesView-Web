@@ -149,7 +149,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                                     color:
                                         activeItem === item.id
                                             ? theme.palette.primary.main
-                                            : theme.palette.text.secondary,
+                                            : theme.palette.text.primary,
                                 }}
                             >
                                 {item.icon}
@@ -161,6 +161,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                                         fontFamily: "'Funnel Display', sans-serif",
                                         fontWeight: 500,
                                         fontSize: "0.875rem", // smaller text
+                                        color:
+                                            activeItem === item.id
+                                                ? theme.palette.primary.main
+                                                : theme.palette.text.primary,
+                                        textTransform: "capitalize",
                                     }}
                                 />
                             )}
