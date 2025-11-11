@@ -12,13 +12,16 @@ import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import { useSchemePayment } from "@/hooks/useSchemePaymentSummary";
 import { formatNumber } from "@/lib/numberFormatter";
+import { useDashBoardContext } from "@/context/DashBoardContext";
 
 const SchemePayment = () => {
     const theme = useTheme();
-    const { data, isLoading, error } = useSchemePayment();
+    const { schemePayment ,loading ,error } = useDashBoardContext();
+
+    console.log(schemePayment,'schemePayment')
 
     // --- Loading State
-    if (isLoading) return <TableSkeleton rows={5} columns={2} />;;
+    if (loading) return <TableSkeleton rows={5} columns={2} />;;
 
     // --- Error State
     if (error)
@@ -34,9 +37,9 @@ const SchemePayment = () => {
    
 
     const tableData =
-        data?.map((item: any) => ({
-            paymode: item.paymode,
-            amount: item.amount,
+        schemePayment?.map((item: any) => ({
+            paymode: item.CHITMODEPAY,
+            amount: item.CHITAMOUNT,
         })) || [];
 
     
@@ -71,7 +74,7 @@ const SchemePayment = () => {
                 mb: 1, textAlign: 'center ', fontWeight: 600, color: theme.palette.text.primary, fontFamily: 'var(--font-merriweather)',
                 fontSize: { xs: '1.25rem', sm: '1.25rem', md: '1.25rem', lg: '1.25rem', xl: '1.25rem' }
 }}>
-                       Scheme Payments
+                       Chit Collection
                     </Typography>
            
                 <ResponsiveTable columns={columns} data={tableData} stickyHeader />
