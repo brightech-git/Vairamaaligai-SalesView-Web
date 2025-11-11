@@ -12,13 +12,16 @@ import {
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import { useEstimationSummary } from "@/hooks/useEstimationSummary";
+import { useDashBoardContext } from "@/context/DashBoardContext";
 
 const EstimationSummary = () => {
     const theme = useTheme();
-    const { data, isLoading, error } = useEstimationSummary();
+    const {estimationSummary ,loading ,error} =useDashBoardContext();
+
+    console.log(estimationSummary,'EstimationSummary')
 
     // --- Loading State (Skeleton shimmer)
-    if (isLoading) return <TableSkeleton rows={5} columns={2} />;
+    if (loading) return <TableSkeleton rows={5} columns={2} />;
     // --- Error State
     if (error)
         return (
@@ -29,12 +32,21 @@ const EstimationSummary = () => {
             </Card>
         );
 
-    // --- Data mapping
-    const summaryData = [
-        { label: "Total Estimate", value: data?.TotalEstimate ?? 0 },
-        { label: "Total Billed", value: data?.TotalBilled ?? 0 },
-        { label: "Total Pending", value: data?.TotalPending ?? 0 },
-    ];
+   
+
+    const order = ["TOTAL", "BILLED", "NOT BILLED"];
+
+    const summaryData = order.map((status) => {
+        const item = estimationSummary?.find((e: any) => e.EST_STATUS === status);
+        return {
+            label:
+                status === "TOTAL" ? "Total Estimate" :
+                    status === "BILLED" ? "Total Billed" :
+                        status === "NOT BILLED" ? "Total Pending" : status,
+            value: item?.EST_COUNT || 0,
+        };
+    });
+
 
     // --- Columns for ResponsiveTable
     const columns = [

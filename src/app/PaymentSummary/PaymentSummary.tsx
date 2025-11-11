@@ -7,12 +7,16 @@ import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import { usePaymentSummary } from "@/hooks/usePaymentSummary";
 import { formatNumber } from "@/lib/numberFormatter";
+import { useDashBoardContext } from "@/context/DashBoardContext";
 
 const PaymentSummary = () => {
     const theme = useTheme();
-    const { data, isLoading, error } = usePaymentSummary();
 
-    if (isLoading) return <TableSkeleton rows={5} columns={2} />;
+    const { paymentSummary ,loading ,error } = useDashBoardContext();
+
+    console.log(paymentSummary ,'paymentSummary')
+
+    if ( loading ) return <TableSkeleton rows={5} columns={2} />;
 
     if (error)
         return (
@@ -22,18 +26,26 @@ const PaymentSummary = () => {
         );
 
     // ... rest of your actual data processing and table rendering
-    const rows = [
-        { mode: "Cash", amount: data?.cash || 0 },
-        { mode: "Credit/Debit Card", amount: data?.creditCardBill || 0 },
-        { mode: "Cheque / UPI", amount: data?.chequeAndUPI || 0 },
-        { mode: "Scheme Adjustment", amount: data?.schemeAdjustment || 0 },
-    ];
+
+    const rows = paymentSummary.map((item: any) => ({
+        mode: item.PAYMODE,
+        amount: item.AMOUNT,
+    }));
+    console.log(rows, 'rows')
+
+
+    // const rows = [
+    //     { mode: "Cash", amount: data?.cash || 0 },
+    //     { mode: "Credit/Debit Card", amount: data?.creditCardBill || 0 },
+    //     { mode: "Cheque / UPI", amount: data?.chequeAndUPI || 0 },
+    //     { mode: "Scheme Adjustment", amount: data?.schemeAdjustment || 0 },
+    // ];
 
     const total = rows.reduce((sum, r) => sum + r.amount, 0);
 
     const tableData = [
         ...rows,
-        { mode: "Total", amount: total, isTotal: true },
+       
     ];
 
     const columns = [

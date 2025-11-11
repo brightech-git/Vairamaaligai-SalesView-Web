@@ -9,6 +9,7 @@ import { AppProvider } from "@/context/AppContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React,{ ReactNode, useState } from "react";
 import Head from "next/head";
+import { DashBoardProvider } from "@/context/DashBoardContext";
 
 // src/app/layout.tsx
 
@@ -33,12 +34,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ReduxProvider>
             <ThemeContextProvider>
               <AppProvider>
+
+
+                <DashBoardProvider>
+
                 {children}
                 <ToastContainer
                   position="top-right"
                   autoClose={3000}
                   hideProgressBar
                 />
+
+                </DashBoardProvider>
+                
               </AppProvider>
             </ThemeContextProvider>
           </ReduxProvider>

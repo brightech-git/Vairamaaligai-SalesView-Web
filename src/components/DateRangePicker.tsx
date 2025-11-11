@@ -2,7 +2,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import {
     Box,
     Chip,
@@ -15,12 +15,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format, subDays, startOfDay, endOfDay, isToday, isSameDay } from 'date-fns';
 import { useAppContext } from '@/context/AppContext';
+import { useDashBoardContext } from '@/context/DashBoardContext';
 
 interface DateRangePickerProps { }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = () => {
     const theme = useTheme();
     const { dateRange, fetchDataWithDates, selectedChip, setSelectedChip } = useAppContext();
+
+    const { filters, materialSummary, setFilters,  loading, error, refresh } = useDashBoardContext();
+
+   console.log(materialSummary ,'summary')
 
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [tempStartDate, setTempStartDate] = useState<Date | null>(dateRange.startDate);
@@ -50,17 +55,61 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
         setTempStartDate(start); // update local state
         setTempEndDate(end);     // update local state
         fetchDataWithDates(start, end);
+        setFilters((prev) => ({
+            ...prev,
+            fromDate: format(start, 'yyyy-MM-dd'),
+            toDate: format(end, 'yyyy-MM-dd'),
+        }));
+
         setAnchorEl(null);
     };
 
+    useEffect(() => {
+        const today = new Date();
+        const start = startOfDay(today);
+        const end = endOfDay(today);
+
+        setTempStartDate(start);
+        setTempEndDate(end);
+
+        // Convert to yyyy-MM-dd string
+        const formattedStart = format(start, 'yyyy-MM-dd');
+        const formattedEnd = format(end, 'yyyy-MM-dd');
+
+        setFilters((prev) => ({
+            ...prev,
+            fromDate: formattedStart,
+            toDate: formattedEnd,
+            adminDB: "VAIADMINDB",
+            transDB: "VAIT2526",
+            schemeDB: "VAISH0708",
+            costId: "",
+        }));
+
+        setSelectedChip('today');
+        fetchDataWithDates(start, end);
+    }, []);
 
     const handleCustomRangeApply = () => {
         if (tempStartDate && tempEndDate) {
             setSelectedChip('custom');
-            fetchDataWithDates(startOfDay(tempStartDate), endOfDay(tempEndDate));
+            const start = startOfDay(tempStartDate);
+            const end = endOfDay(tempEndDate);
+
+            // Update dashboard filters
+            setFilters((prev) => ({
+                ...prev,
+                fromDate: format(start, 'yyyy-MM-dd'),
+                toDate: format(end, 'yyyy-MM-dd'),
+            }));
+
+            // Fetch data with new dates
+            fetchDataWithDates(start, end);
+
             setAnchorEl(null);
         }
     };
+
 
     // Format date for display
     const formatDateForDisplay = (date: Date) => {

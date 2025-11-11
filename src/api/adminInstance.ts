@@ -6,7 +6,7 @@ console.log ("BASE_URL", BASE_URL)
 
 const adminInstance = axios.create({
     baseURL: BASE_URL,
-    timeout: 10000,
+    timeout: 400000,
     headers: {
         "Content-Type": "application/json",
     },
