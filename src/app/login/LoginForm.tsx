@@ -14,8 +14,8 @@ const LoginForm: React.FC = () => {
     const [localError, setLocalError] = useState<string | null>(null);
 
     // ✅ Hardcoded credentials
-    const VALID_USERNAME = "vj";
-    const VALID_PASSWORD = "vmj@123";
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "dj@123";
 
     const setAuthSession = (value:boolean, ttlInMinutes :number=30) => {
         const now = new Date().getTime(); // current time in milliseconds
@@ -69,6 +69,9 @@ const LoginForm: React.FC = () => {
                 flexDirection: "column",
                 gap: 2,
                 width: "100%",
+                maxWidth: 400, // optional, limits form width
+                mx: "auto",    // center horizontally
+                px: 2,         // small padding for mobile
             }}
         >
             {localError && (
@@ -80,24 +83,41 @@ const LoginForm: React.FC = () => {
                 </Typography>
             )}
 
+            {/* Name Label */}
+            <Typography
+                variant="subtitle2" // Use variant, not fontFamily
+                sx={{ color: theme.palette.text.primary, fontWeight: 600 }}
+            >
+                Name
+            </Typography>
             <TextField
                 fullWidth
-                label="Username"
                 variant="outlined"
                 placeholder="Enter UserName"
                 value={identifier}
-           
                 onChange={(e) => setIdentifier(e.target.value)}
+                InputProps={{
+                    sx: { fontSize: "1rem", color: theme.palette.text.primary },
+                }}
             />
 
+            {/* Password Label */}
+            <Typography
+                variant="subtitle2"
+                sx={{ color: theme.palette.text.primary, fontWeight: 600 }}
+            >
+                Password
+            </Typography>
             <TextField
                 fullWidth
-                label="Password"
                 type="password"
                 placeholder="Enter Your Password"
                 variant="outlined"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                    sx: { fontSize: "1rem", color: theme.palette.text.primary },
+                }}
             />
 
             <Button
@@ -105,19 +125,12 @@ const LoginForm: React.FC = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ py: 1.2, fontWeight: 600 }}
+                sx={{ py: 1.5, fontWeight: 600, fontSize: "1rem" }}
             >
                 Login
             </Button>
-
-            {/* <Typography
-                variant="body2"
-                align="center"
-                sx={{ color: theme.palette.text.secondary }}
-            >
-                <strong>Demo Credentials:</strong> admin / admin123
-            </Typography> */}
         </Box>
+
     );
 };
 

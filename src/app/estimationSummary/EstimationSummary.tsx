@@ -1,92 +1,123 @@
 "use client";
 
-export const dynamic = "force-dynamic";
 import React from "react";
-import {
-    Card,
-    Box,
-    Skeleton,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
-import { useEstimationSummary } from "@/hooks/useEstimationSummary";
-import { useDashBoardContext } from "@/context/DashBoardContext";
 
-const EstimationSummary = () => {
+interface EstimationSummaryProps {
+    branchName?: string; // Optional, for single branch title
+    data: any[] | { branchName: string; estimationSummary: any[] }[]; // Accept flat or branch-wise
+    loading: boolean;
+    error: string | null;
+}
+
+const EstimationSummary: React.FC<EstimationSummaryProps> = ({
+    branchName,
+    data,
+    loading,
+    error,
+}) => {
     const theme = useTheme();
-    const {estimationSummary ,loading ,error} =useDashBoardContext();
 
-    console.log(estimationSummary,'EstimationSummary')
+    if (loading) return <TableSkeleton rows={3} columns={2} />;
 
-    // --- Loading State (Skeleton shimmer)
-    if (loading) return <TableSkeleton rows={5} columns={2} />;
-    // --- Error State
     if (error)
         return (
-            <Card sx={{ p: 3, textAlign: "center" }}>
-                <Typography color={theme.palette.error.main}>
-                    Failed to load estimation summary
-                </Typography>
-            </Card>
+            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+                <Typography variant="body1">Failed to load estimation summary</Typography>
+            </Box>
         );
 
-   
+    if (!data || (Array.isArray(data) && data.length === 0)) return null;
 
-    const order = ["TOTAL", "BILLED", "NOT BILLED"];
+    // Function to render a single branch table
+    const renderTable = (tableData: any[], title?: string) => {
+        if (!tableData || tableData.length === 0) return null;
 
-    const summaryData = order.map((status) => {
-        const item = estimationSummary?.find((e: any) => e.EST_STATUS === status);
-        return {
-            label:
-                status === "TOTAL" ? "Total Estimate" :
-                    status === "BILLED" ? "Total Billed" :
-                        status === "NOT BILLED" ? "Total Pending" : status,
-            value: item?.EST_COUNT || 0,
-        };
-    });
+        const order = ["TOTAL", "BILLED", "NOT BILLED"];
 
+        const summaryData = order.map((status) => {
+            const item = tableData.find((e: any) => e.EST_STATUS === status);
+            return {
+                label:
+                    status === "TOTAL"
+                        ? "Total Estimate"
+                        : status === "BILLED"
+                            ? "Total Billed"
+                            : status === "NOT BILLED"
+                                ? "Total Pending"
+                                : status,
+                value: item?.EST_COUNT || 0,
+            };
+        });
 
-    // --- Columns for ResponsiveTable
-    const columns = [
-        {
-            id: "label",
-            label: "Metric",
-            align: "center" as const,
-            render: (value: string) => (
-                <span>
-                    {value}
-                </span>
-            ),
-        },
-        {
-            id: "value",
-            label: "Count",
-            align: "center" as const,
-            render: (value: number) => (
-                <span>
-                    {value}
-                </span>
-            ),
-        },
-    ];
+        const columns = [
+            {
+                id: "label",
+                label: "Metric",
+                align: "center" as const,
+                render: (value: string) => <span>{value}</span>,
+            },
+            {
+                id: "value",
+                label: "Count",
+                align: "center" as const,
+                render: (value: number) => <span>{value}</span>,
+            },
+        ];
 
-    return (
-        <Box>
-          
-         
-            <Typography variant="h6" sx={{
-                mb: 1, textAlign: 'center ', fontWeight: 600, fontFamily: 'var(--font-merriweather)',
-                fontSize: { xs: '1.25rem', sm: '1.25rem', md: '1.25rem', lg: '1.25rem', xl: '1.25rem' }
-}}>
-                                Estimation Summary
-                             </Typography>
-                         
+        return (
+            <Box sx={{ mb: 3 }} key={title || Math.random()}>
+                {title && (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+
+                        }}
+                    >
+                        {title} - Estimation Summary
+                    </Typography>
+                )}
+                {!title && (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+                            
+                        }}
+                    >
+                         Estimation Summary
+                    </Typography>
+                )}
+
                 <ResponsiveTable columns={columns} data={summaryData} stickyHeader />
-      
-        </Box>
-    );
+            </Box>
+        );
+    };
+
+    // Handle multi-branch case
+    if (Array.isArray(data) && data[0]?.branchName && data[0]?.estimationSummary) {
+        return (
+            <>
+                {data.map((branch: any) =>
+                    renderTable(branch.estimationSummary, branch.branchName)
+                )}
+            </>
+        );
+    }
+
+    // Handle single-branch flat array
+    return renderTable(data as any[], branchName);
 };
 
 export default EstimationSummary;

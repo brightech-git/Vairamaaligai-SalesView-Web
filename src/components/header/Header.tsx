@@ -37,9 +37,10 @@ const Header: React.FC = () => {
                 backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                marginBottom: sidebarOpen? '5rem':'0.5rem'
             }}
         >
-            <Toolbar sx={{ minHeight: '64px!important', py: 1 }}>
+            <Toolbar sx={{ minHeight: '64px!important', py: 1 , }}>
                 <HeaderContent />
             </Toolbar>
         </AppBar>

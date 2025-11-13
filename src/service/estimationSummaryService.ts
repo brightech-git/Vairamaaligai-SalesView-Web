@@ -8,12 +8,6 @@ export const fetchEstimationSummary = async (startDate: string, endDate: string)
         params: { startDate, endDate },
     });
 
-    // Example response:
-    // {
-    //   "TotalPending": 3,
-    //   "TotalBilled": 0,
-    //   "TotalEstimate": 3
-    // }
 
     return response.data;
 };

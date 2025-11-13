@@ -49,7 +49,7 @@ const LoginPage = () => {
             />
 
             {/* ===== Left Side - Brand & Visual ===== */}
-            <Box
+             {/* <Box
                 sx={{
                     flex: { md: 1.2 },
                     position: "relative",
@@ -65,7 +65,7 @@ const LoginPage = () => {
                     overflow: "hidden",
                 }}
             >
-                {/* Abstract Background Elements */}
+           
                 <Box
                     sx={{
                         position: "absolute",
@@ -91,7 +91,7 @@ const LoginPage = () => {
                     }}
                 />
 
-                {/* Content Container */}
+            
 
                 <Box
                     sx={{
@@ -107,7 +107,7 @@ const LoginPage = () => {
                         style={{ objectFit: "cover" }} // cover, contain, etc.
                     />
                 </Box>
-            </Box>
+            </Box>  */}
 
             {/* ===== Right Side - Login Form ===== */}
             <Box

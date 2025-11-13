@@ -4,10 +4,6 @@ import adminInstance from "@/api/adminInstance";
 export const dashBoardContent = async (filters: {
     fromDate: string;
     toDate: string;
-    costId?: string;
-    adminDB?: string;
-    transDB?: string;
-    schemeDB?: string;
 }) => {
 
 

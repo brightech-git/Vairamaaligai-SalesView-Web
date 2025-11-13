@@ -1,58 +1,76 @@
 "use client";
-export const dynamic = "force-dynamic";
-import BillCancelledPage from "../BillCancelledTable/BillCancelledPage";
+import React from "react";
+import { useDashBoardContext } from "@/context/DashBoardContext";
+import { Box, Grid, useTheme } from "@mui/material";
+
 import MaterialSummaryTable from "../MeterialTableData/MaterialTableData";
 import PaymentSummary from "../PaymentSummary/PaymentSummary";
 import SchemePayment from "../SchemePaymentSummary/SchemePayment";
 import EstimationSummary from "../estimationSummary/EstimationSummary";
-import { Grid, Box, useTheme } from "@mui/material";
-
+import BillCancelledPage from "../BillCancelledTable/BillCancelledPage";
+import { useThemeContext } from "@/context/ThemeContext";
 
 const Dashboard = () => {
-    const theme = useTheme();
+  const theme = useTheme();
+  const { branchesData, loading, error } = useDashBoardContext();
+  const { sidebarOpen } =useThemeContext();
 
-return (
+  if (error) return <div>{error}</div>;
+
+  return (
     <Box
-        sx={{
-            backgroundColor: theme.palette.background.default,
-            minHeight: "100%",
-            p: {xs:0 ,md:2},
-        }}
+      sx={{
+        backgroundColor: theme.palette.background.default,
+        p: { xs: 0, md: 2 },
+        marginTop: sidebarOpen ? '3rem' : '0.5rem'
+      }}
     >
-        {/* Material Summary Table */ }
-{/* Material Summary Table */ }
-<MaterialSummaryTable />
+      {branchesData.map((branch) => (
+        <Box key={branch.branchName} sx={{ mb: 2 }}>
+          <MaterialSummaryTable
+            branchName={branch.branchName}
+            data={branch.materialSummary}
+            loading={loading}
+            error={error}
+          />
 
-{/* Summary Section */ }
-<Box
-    sx={{
-        mt: 2,
-        mb: 3,
-    }}
->
-    <Grid
-        container
-        spacing={2.5}
-        alignItems="stretch"
-        justifyContent="space-between"
-    >
-        {/* Each Grid item will auto-scale and be same height */}
-        <Grid size={{ xs: 12, md: 4 }}>
-            <PaymentSummary />
-        </Grid>
+          <Box sx={{ mt: 2, mb: 3 }}>
+            <Grid container spacing={2.5} alignItems="stretch">
+              <Grid size={{xs:12, md:4}} >
+                <PaymentSummary
+                  data={branch.paymentSummary}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-            <SchemePayment />
-        </Grid>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <SchemePayment
+                  data={branch.schemePayment}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-            <EstimationSummary />
-        </Grid>
-    </Grid>
-</Box>
+              <Grid size={{xs:12, md:4}}>
+                <EstimationSummary
+                  data={branch.estimationSummary}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
+            </Grid>
+          </Box>
 
-{/* Bill Cancelled Table */ }
-<BillCancelledPage />
-</Box>
-)}
+          <BillCancelledPage
+            data={branch.cancelledBills}
+            loading={loading}
+            error={error}
+          />
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
 export default Dashboard;

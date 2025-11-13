@@ -18,12 +18,19 @@ import {
 import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
+import BranchSelector from '../BranchSelector';
 
 const MobileHeader: React.FC = () => {
     const { mode, toggleTheme, toggleSidebar } = useThemeContext();
     const theme = useTheme();
+
+    const branchOptions = [
+        { branchId: 1, branchName: "THIRUVALLUR" },
+        { branchId: 2, branchName: "JNROAD" },
+        { branchId: 3, branchName: "THIRUTTANI" },
+    ];
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100% !important' }}>
             {/* First Row - Logo, Menu, Theme Toggle */}
             <Box sx={{
                 display: 'flex',
@@ -33,7 +40,7 @@ const MobileHeader: React.FC = () => {
                 mb: 1,
             }}>
                 {/* Left - Menu & Logo */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap:0.25 }}>
                     <IconButton
                         onClick={toggleSidebar}
                         sx={{ color: 'inherit' }}
@@ -46,7 +53,6 @@ const MobileHeader: React.FC = () => {
                         sx={{
                             width: 32,
                             height: 32,
-                           
                             borderRadius: 1,
                             display: 'flex',
                             alignItems: 'center',
@@ -59,7 +65,6 @@ const MobileHeader: React.FC = () => {
                             sx={{
                                 width: 32,
                                 height: 32,
-                                mr: 2,
                             }}
                         />
                     </Box>
@@ -70,7 +75,7 @@ const MobileHeader: React.FC = () => {
                             fontFamily:"var(--font-merriweather)",
                             fontWeight: 700,
                             color: 'inherit',
-                            fontSize: '17px'
+                            fontSize: '12px'
                         }}
                     >
                         Jaiguru
@@ -78,12 +83,9 @@ const MobileHeader: React.FC = () => {
                 </Box>
 
                 {/* Right - Theme Toggle */}
-                <IconButton
-                    onClick={toggleTheme}
-                    sx={{ color: 'inherit' }}
-                >
-                    {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <BranchSelector branchOptions={branchOptions} />
+                </Box>
             </Box>
 
             {/* Second Row - Date Picker and Metal Rates */}

@@ -1,86 +1,113 @@
 "use client";
-export const dynamic = "force-dynamic";
+
 import React from "react";
-import {
-    Card,
-    Box,
-    Skeleton,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
-import { useSchemePayment } from "@/hooks/useSchemePaymentSummary";
 import { formatNumber } from "@/lib/numberFormatter";
-import { useDashBoardContext } from "@/context/DashBoardContext";
 
-const SchemePayment = () => {
+interface SchemePaymentProps {
+    branchName?: string; // Optional, for single branch title
+    data: any[] | { branchName: string; schemePayment: any[] }[]; // Accept flat or branch-wise
+    loading: boolean;
+    error: string | null;
+}
+
+const SchemePayment: React.FC<SchemePaymentProps> = ({
+    branchName,
+    data,
+    loading,
+    error,
+}) => {
     const theme = useTheme();
-    const { schemePayment ,loading ,error } = useDashBoardContext();
 
-    console.log(schemePayment,'schemePayment')
+    if (loading) return <TableSkeleton rows={5} columns={2} />;
 
-    // --- Loading State
-    if (loading) return <TableSkeleton rows={5} columns={2} />;;
-
-    // --- Error State
     if (error)
         return (
-            <Card sx={{ p: 3, textAlign: "center" }}>
-                <Typography color={theme.palette.error.main}>
-                    Failed to load payment modes
-                </Typography>
-            </Card>
+            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+                <Typography variant="body1">Failed to load Chit Collection</Typography>
+            </Box>
         );
 
-    // --- Prepare data
-   
+    if (!data || (Array.isArray(data) && data.length === 0)) return null;
 
-    const tableData =
-        schemePayment?.map((item: any) => ({
-            paymode: item.CHITMODEPAY,
-            amount: item.CHITAMOUNT,
-        })) || [];
+    // Helper: render one branch table
+    const renderTable = (tableData: any[], title?: string) => {
+        if (!tableData || tableData.length === 0) return null;
 
-    
-    // --- Columns
-    const columns = [
-        {
-            id: "paymode",
-            label: "Payment Mode",
-            align: "left" as const,
-            render: (value: string, row: any) => (
-                <span >
-                    {value}
-                </span>
-            ),
-        },
-        {
-            id: "amount",
-            label: "Amount (₹)",
-            align: "right" as const,
-            render: (value: number, row: any) => (
-                <span>
-                    ₹ {formatNumber(value, "2")}
-                </span>
-            ),
-        },
-    ];
+        const rows = tableData.map((item: any) => ({
+            paymode: item.CHITMODEPAY || "-",
+            amount: Number(item.CHITAMOUNT) || 0,
+        }));
 
-    return (
-        <Box>
-         
-            <Typography variant="h6" sx={{
-                mb: 1, textAlign: 'center ', fontWeight: 600, color: theme.palette.text.primary, fontFamily: 'var(--font-merriweather)',
-                fontSize: { xs: '1.25rem', sm: '1.25rem', md: '1.25rem', lg: '1.25rem', xl: '1.25rem' }
-}}>
-                       Chit Collection
+        const total = rows.reduce((sum, r) => sum + r.amount, 0);
+
+        const columns = [
+            {
+                id: "paymode",
+                label: "Payment Mode",
+                align: "left" as const,
+                render: (value: string) => <span>{value}</span>,
+            },
+            {
+                id: "amount",
+                label: "Amount (₹)",
+                align: "right" as const,
+                render: (value: number) => <span>₹ {formatNumber(value, "2")}</span>,
+            },
+        ];
+
+        return (
+            <Box sx={{ mb: 3 }} key={title}>
+                {title && (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+                        }}
+                    >
+                        {title} - Chit Collection
                     </Typography>
-           
-                <ResponsiveTable columns={columns} data={tableData} stickyHeader />
-       
-        </Box>
-    );
+                )}
+                 {!title &&(
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            mb: 1,
+                                            textAlign: "center",
+                                            fontWeight: 600,
+                                            color: theme.palette.text.primary,
+                                            fontFamily: "var(--font-merriweather)",
+                                        }}
+                                    >
+                                            Chit Collection
+                                    </Typography>
+                                )
+                                }
+                <ResponsiveTable columns={columns} data={rows} stickyHeader />
+              
+            </Box>
+        );
+    };
+
+    // Handle multiple branches
+    if (Array.isArray(data) && data[0]?.branchName &&( data[0]?.SchemePayment || data[0]?.schemePayment[0])) {
+        return (
+            <>
+                {data.map((branch: any) =>
+                    renderTable(branch.SchemePayment || branch.schemePayment, branch.branchName)
+                )}
+            </>
+        );
+    }
+
+    // Handle single flat dataset
+    return renderTable(data as any[], branchName);
 };
 
 export default SchemePayment;

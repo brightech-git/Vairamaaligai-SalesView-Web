@@ -17,10 +17,16 @@ import {
 import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
+import BranchSelector from '../BranchSelector';
 
 const DesktopHeader: React.FC = () => {
     const { mode, toggleTheme } = useThemeContext();
     const theme=useTheme();
+    const branchOptions = [
+        { branchId: 1, branchName: "THIRUVALLUR" },
+        { branchId: 2, branchName: "JNROAD" },
+        { branchId: 3, branchName: "THIRUTTANI" },
+    ];
 
     return (
         <Box sx={{
@@ -68,18 +74,20 @@ const DesktopHeader: React.FC = () => {
                 >
                     Jaiguru Jewellers
                 </Typography>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flex: { xs: 1, sm: 1, },
+                    justifyContent: 'center',
+                    maxWidth: 500,
+                    ml: 2,
+                }}>
+                    <DateRangePicker />
+                </Box>
             </Box>
 
             {/* Center Section - Date Range Picker */}
-            <Box sx={{ 
-                display: 'flex', 
-                alignItems: 'center',
-                flex: { xs: 1,sm:1,},
-                justifyContent: 'center',
-                maxWidth: 500,
-            }}>
-                <DateRangePicker />
-            </Box>
+           
 
             {/* Right Section - Metal Rates and Theme Toggle */}
             <Box sx={{
@@ -95,8 +103,12 @@ const DesktopHeader: React.FC = () => {
                     <MetalRates />
                 </Box>
 
-                {/* Theme Toggle */}
-                <IconButton
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <BranchSelector branchOptions={branchOptions} />
+                </Box>
+
+              {/*   Theme Toggle */}
+                {/* <IconButton
                     onClick={toggleTheme}
                     sx={{ 
                         color: 'inherit',
@@ -106,7 +118,7 @@ const DesktopHeader: React.FC = () => {
                     }}
                 >
                     {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
+                </IconButton> */}
             </Box>
         </Box>
     );

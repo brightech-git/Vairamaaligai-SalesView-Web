@@ -50,13 +50,13 @@ const DashboardPage = () => {
           backgroundColor: theme.palette.background.default,
         }}
       >
-        <Typography variant="h5" fontWeight={600}>
+        {/* <Typography variant="h5" fontWeight={600}>
           Welcome to the Dashboard
         </Typography>
 
         <Typography variant="body1" mt={2} >
           This content is only visible to logged-in users.
-        </Typography>
+        </Typography> */}
       </Box>
     </DashboardLayout>
   );

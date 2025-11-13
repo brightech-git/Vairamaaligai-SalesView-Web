@@ -1,107 +1,117 @@
 "use client";
 
 import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-    useMemo,
-    ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  ReactNode,
 } from "react";
 import { dashBoardContent } from "@/service/DashBoardService";
 
 type DashboardFilters = {
-    fromDate: string;
-    toDate: string;
-    costId?: string;
-    adminDB?: string;
-    transDB?: string;
-    schemeDB?: string;
+  fromDate: string;
+  toDate: string;
+  branchIds?: number[]; // multiple selected branch IDs
+};
+
+type BranchData = {
+  branchId: number;
+  branchName: string;
+  materialSummary: any[];
+  schemePayment: any[];
+  paymentSummary: any[];
+  estimationSummary: any[];
+  cancelledBills: any[];
 };
 
 type DashBoardContextType = {
-    filters: DashboardFilters;
-    materialSummary: any[];
-    schemePayment: any[];
-    paymentSummary: any[];
-    estimationSummary: any[];
-    loading: boolean;
-    error: string | null;
-    setFilters: React.Dispatch<React.SetStateAction<DashboardFilters>>;
-    refresh: () => void;
+  filters: DashboardFilters;
+  branchesData: BranchData[];
+  loading: boolean;
+  error: string | null;
+  setFilters: React.Dispatch<React.SetStateAction<DashboardFilters>>;
+  refresh: () => void;
 };
 
 const DashBoardContext = createContext<DashBoardContextType | undefined>(
-    undefined
+  undefined
 );
 
 export const useDashBoardContext = () => {
-    const context = useContext(DashBoardContext);
-    if (!context) {
-        throw new Error("useDashBoardContext must be used within a DashBoardProvider");
-    }
-    return context;
+  const context = useContext(DashBoardContext);
+  if (!context)
+    throw new Error(
+      "useDashBoardContext must be used within a DashBoardProvider"
+    );
+  return context;
 };
 
 export const DashBoardProvider = ({ children }: { children: ReactNode }) => {
-    const [filters, setFilters] = useState<DashboardFilters>({
-        fromDate: "",
-        toDate: "",
-        costId: "",
-        adminDB: "VAIADMINDB",
-        transDB: "VAIT2526",
-        schemeDB: "VAISH0708",
-    });
+  const [filters, setFilters] = useState<DashboardFilters>({
+    fromDate: "",
+    toDate: "",
+    branchIds: [], // empty = all branches
+  });
 
-    const [materialSummary, setMaterialSummary] = useState<any[]>([]);
-    const [schemePayment, setSchemePayment] = useState<any[]>([]);
-    const [paymentSummary, setPaymentSummary] = useState<any[]>([]);
-    const [estimationSummary, setEstimationSummary] = useState<any[]>([]);
+  const [branchesData, setBranchesData] = useState<BranchData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const fetchDashboard = async () => {
+    if (!filters.fromDate || !filters.toDate) return;
 
-    const fetchDashboard = async () => {
-        if (!filters.fromDate || !filters.toDate) return; // wait until valid date
-        try {
-            setLoading(true);
-            setError(null);
-            const res = await dashBoardContent(filters);
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await dashBoardContent(filters);
 
-            // Set separate states
-            setMaterialSummary(res.resultSets?.[0] || []);
-            setSchemePayment(res.resultSets?.[1] || []);
-            setPaymentSummary(res.resultSets?.[2] || []);
-            setEstimationSummary(res.resultSets?.[3] || []);
-        } catch (err: any) {
-            setError(err.message || "Failed to load dashboard data");
-        } finally {
-            setLoading(false);
-        }
-    };
+      // Map raw data
+      const allBranches: BranchData[] =
+        res.branches?.map((branch: any) => ({
+          branchId: branch.branchId,
+          branchName: branch.branchName,
+          materialSummary: branch.resultSets?.[0] || [],
+          schemePayment: branch.resultSets?.[1] || [],
+          paymentSummary: branch.resultSets?.[2] || [],
+          estimationSummary: branch.resultSets?.[3] || [],
+          cancelledBills: branch.resultSets?.[4] || [],
+        })) || [];
 
-    useEffect(() => {
-        fetchDashboard();
-    }, [filters]);
+      // Filter based on selected branch IDs
+      const filteredBranches =
+        filters.branchIds && filters.branchIds.length > 0
+          ? allBranches.filter((b) => filters.branchIds?.includes(b.branchId))
+          : allBranches; // if none selected, show all
 
-    const value = useMemo(
-        () => ({
-            filters,
-            materialSummary,
-            schemePayment,
-            paymentSummary,
-            estimationSummary,
-            loading,
-            error,
-            setFilters,
-            refresh: fetchDashboard,
-        }),
-        [filters, materialSummary, schemePayment, paymentSummary, estimationSummary, loading, error]
-    );
+      setBranchesData(filteredBranches);
+    } catch (err: any) {
+      setError(err.message || "Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <DashBoardContext.Provider value={value}>
-            {children}
-        </DashBoardContext.Provider>
-    );
+  useEffect(() => {
+    fetchDashboard();
+  }, [filters]);
+
+  const value = useMemo(
+    () => ({
+      filters,
+      branchesData,
+      loading,
+      error,
+      setFilters,
+      refresh: fetchDashboard,
+    }),
+    [filters, branchesData, loading, error]
+  );
+
+  return (
+    <DashBoardContext.Provider value={value}>
+      {children}
+    </DashBoardContext.Provider>
+  );
 };

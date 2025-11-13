@@ -1,86 +1,115 @@
 "use client";
-
-export const dynamic = "force-dynamic";
 import React from "react";
-import { Card, Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
-import { usePaymentSummary } from "@/hooks/usePaymentSummary";
 import { formatNumber } from "@/lib/numberFormatter";
-import { useDashBoardContext } from "@/context/DashBoardContext";
 
-const PaymentSummary = () => {
+interface PaymentSummaryProps {
+    branchName?: string;
+    data: any[] | { branchName: string; paymentSummary: any[] }[];
+    loading: boolean;
+    error: string | null;
+}
+
+const PaymentSummary: React.FC<PaymentSummaryProps> = ({
+    branchName,
+    data,
+    loading,
+    error,
+}) => {
     const theme = useTheme();
 
-    const { paymentSummary ,loading ,error } = useDashBoardContext();
+    console.log("data", data)
 
-    console.log(paymentSummary ,'paymentSummary')
-
-    if ( loading ) return <TableSkeleton rows={5} columns={2} />;
-
+    if (loading) return <TableSkeleton rows={5} columns={2} />;
     if (error)
         return (
-            <Card sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
                 <Typography variant="body1">Failed to load payment summary</Typography>
-            </Card>
+            </Box>
         );
+    if (!data || (Array.isArray(data) && data.length === 0)) return null;
 
-    // ... rest of your actual data processing and table rendering
+    const renderTable = (tableData: any[], title?: string) => {
+        if (!tableData || tableData.length === 0) return null;
 
-    const rows = paymentSummary.map((item: any) => ({
-        mode: item.PAYMODE,
-        amount: item.AMOUNT,
-    }));
-    console.log(rows, 'rows')
+        const rows = tableData.map((item: any) => ({
+            mode: item.PAYMODE || "-",
+            amount: Number(item.AMOUNT) || 0,
+        }));
 
 
-    // const rows = [
-    //     { mode: "Cash", amount: data?.cash || 0 },
-    //     { mode: "Credit/Debit Card", amount: data?.creditCardBill || 0 },
-    //     { mode: "Cheque / UPI", amount: data?.chequeAndUPI || 0 },
-    //     { mode: "Scheme Adjustment", amount: data?.schemeAdjustment || 0 },
-    // ];
+        const columns = [
+            {
+                id: "mode",
+                label: "Payment Mode",
+                align: "left" as const,
+                render: (v: any) => <span>{v}</span>,
+            },
+            {
+                id: "amount",
+                label: "Amount (₹)",
+                align: "right" as const,
+                render: (v: number) => <span>₹ {formatNumber(v ?? 0, "2")}</span>,
+            },
+        ];
 
-    const total = rows.reduce((sum, r) => sum + r.amount, 0);
+        return (
+            <Box sx={{ mb: 3 }} key={title || Math.random()}>
+                {title && (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+                        }}
+                    >
+                        {title} - Payment Summary
+                    </Typography>
+                )}
+                {!title &&(
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+                        }}
+                    >
+                        Payment Summary
+                    </Typography>
+                )
+                }
+                <ResponsiveTable columns={columns} data={rows} stickyHeader />
+                
+            </Box>
+        );
+    };
 
-    const tableData = [
-        ...rows,
-       
-    ];
+    if (
+        Array.isArray(data) &&
+        data[0]?.branchName &&
+        (data[0]?.PaymentSummary || data[0]?.paymentSummary)
+    ) {
+        return (
+            <>
+                {data.map((branch: any) =>
+                    renderTable(
+                        branch.PaymentSummary || branch.paymentSummary,
+                        branch.branchName
+                    )
+                )}
+            </>
+        );
+    }
 
-    const columns = [
-        {
-            id: "mode",
-            label: "Payment Mode",
-            align: "left" as const,
-            render: (value: any, row: any) => (
-                <span>
-                    {value}
-                </span>
-            ),
-        },
-        {
-            id: "amount",
-            label: "Amount (₹)",
-            align: "right" as const,
-            render: (value: number, row: any) => (
-                <span>
-                    ₹ {formatNumber(value, "2")}
-                </span>
-            ),
-        },
-    ];
-
-    return (
-        <Box>
-            <Typography variant="h6" sx={{
-                mb: 1, textAlign: 'center ', fontWeight: 600, color: theme.palette.text.primary, fontFamily: 'var(--font-merriweather)',
-                fontSize: { xs: '1.25rem', sm: '1.25rem', md: '1.25rem', lg: '1.25rem', xl: '1.25rem' } }}>
-                                    Payment Summary
-                                </Typography>
-            <ResponsiveTable columns={columns} data={tableData} stickyHeader />
-        </Box>
-    );
+    return renderTable(data as any[], branchName);
 };
 
 export default PaymentSummary;

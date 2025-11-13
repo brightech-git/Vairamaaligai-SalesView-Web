@@ -206,23 +206,38 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                     color: palette.text.primary,
                 },
                 h4: {
-                    fontFamily: "'Merriweather', serif",
+                    fontFamily: "'Delius', serif",
                     color: palette.text.secondary,
                     fontWeight: 600,
-                    fontSize: '14px'
+                    fontSize: '16px'
                     
+                },
+                h5: {
+                    fontFamily: "'Merriweather', serif",
+                    color: palette.text.primary,
+                    fontWeight: 600,
+                    fontSize: '14px'
+
+                },
+                h6: {
+                    fontFamily: "'Merriweather', serif",
+                    color: palette.text.primary,
+                    fontWeight: 600,
+                    fontSize: '14px'
+
                 },
                 body1: {
                     fontFamily: "'Funnel Display', sans-serif",
                     lineHeight: 1.6,
-                    color: palette.text.secondary,
+                    color: palette.text.primary,
                     fontWeight: 400,
                     fontSize:'10px'
                 },
                 body2: {
                     fontFamily: "'Delius', cursive",
                     lineHeight: 1.5,
-                    color: palette.text.secondary,
+                    color: palette.text.primary,
+                    fontSize: '12px'
                 },
             },
             shape: {

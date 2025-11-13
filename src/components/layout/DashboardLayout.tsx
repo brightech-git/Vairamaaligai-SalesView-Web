@@ -34,8 +34,9 @@ import SchemePayment from "@/app/SchemePaymentSummary/SchemePayment";
 import PaymentSummary from "@/app/PaymentSummary/PaymentSummary";
 import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
 import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
+import BranchTables from "../ui/table/BranchTables";
 
-
+import { useDashBoardContext } from "@/context/DashBoardContext";
 
 interface DashboardLayoutProps {
     children?: React.ReactNode;
@@ -56,7 +57,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [activeItem, setActiveItem] = useState("dashboard");
     
-
+    const { branchesData, loading, error } = useDashBoardContext(); // ✅ get context
     const drawerWidth = sidebarOpen ? 240 : 72;
 
     const handleMenuClick = (itemId: string) => {
@@ -69,20 +70,73 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
         switch (activeItem) {
             case "dashboard":
                 return <Dashboard />;
+
             case "material":
-                return <MaterialSummaryTable />;
+                return (
+                    <MaterialSummaryTable
+                        data={branchesData.map(branch => ({
+                            branchName: branch.branchName,
+                            materialSummary: branch.materialSummary
+                        }))}
+                        loading={loading}
+                        error={error}
+                    />
+
+                );
+
             case "payment":
-                return <PaymentSummary />;
+                return (
+                    <PaymentSummary
+                        data={branchesData.map(branch => ({
+                            branchName: branch.branchName,
+                            paymentSummary: branch.paymentSummary
+                        }))}
+                        loading={loading}
+                        error={error}
+                    />
+                );
+
             case "scheme":
-                return <SchemePayment />;
-            case "estimation"  :
-                return <EstimationSummary />;
+                return (
+                    <SchemePayment
+                        data={branchesData.map(branch => ({
+                            branchName: branch.branchName,
+                            SchemePayment: branch.schemePayment
+                        }))}
+                        loading={loading}
+                        error={error}
+                    />
+                );
+
+            case "estimation":
+                return (
+                    <EstimationSummary
+                        data={branchesData.map(branch => ({
+                            branchName: branch.branchName,
+                            estimationSummary: branch.estimationSummary
+                        }))}
+                        loading={loading}
+                        error={error}
+                    />
+                );
+
             case "cancelled":
-                return <BillCancelledPage />;      
+                return (
+                    <BillCancelledPage
+                        data={branchesData.map(branch => ({
+                            branchName: branch.branchName,
+                            cancelledBills: branch.cancelledBills
+                        }))}
+                        loading={loading}
+                        error={error}
+                    />
+                );
+
             default:
                 return <Dashboard />;
         }
     };
+
 
 
     const drawerContent = (

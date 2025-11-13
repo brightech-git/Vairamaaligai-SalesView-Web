@@ -23,9 +23,9 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
     const theme = useTheme();
     const { dateRange, fetchDataWithDates, selectedChip, setSelectedChip } = useAppContext();
 
-    const { filters, materialSummary, setFilters,  loading, error, refresh } = useDashBoardContext();
+    const { setFilters } = useDashBoardContext();
 
-   console.log(materialSummary ,'summary')
+  
 
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [tempStartDate, setTempStartDate] = useState<Date | null>(dateRange.startDate);
@@ -80,10 +80,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
             ...prev,
             fromDate: formattedStart,
             toDate: formattedEnd,
-            adminDB: "VAIADMINDB",
-            transDB: "VAIT2526",
-            schemeDB: "VAISH0708",
-            costId: "",
+
         }));
 
         setSelectedChip('today');
@@ -271,7 +268,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     fullWidth: true,
                                     sx: {
                                         '& .MuiOutlinedInput-root': {
-                                            color: theme.palette.text.secondary,
+                                            color: theme.palette.text.primary, // text in the input field
                                             '& fieldset': { borderColor: theme.palette.divider },
                                             '&:hover fieldset': { borderColor: theme.palette.primary.main },
                                             '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
@@ -279,29 +276,36 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                         '& .MuiInputLabel-root': { color: theme.palette.text.primary },
                                     },
                                 },
-                                // 🎯 Style the calendar popup here
                                 popper: {
                                     sx: {
                                         '.MuiPaper-root': {
-                                            color: theme.palette.text.secondary,  // <--- makes all text primary
+                                            backgroundColor: theme.palette.background.paper,
+                                            color: theme.palette.text.primary, // default text
                                         },
                                         '.MuiPickersDay-root': {
-                                            color: theme.palette.text.primary,              // Default day text
-                                            backgroundColor: theme.palette.primary.light, 
+                                            color: theme.palette.text.primary, // default day text
+                                            backgroundColor: theme.palette.background.paper,
                                         },
                                         '.MuiPickersDay-root.Mui-selected': {
-                                            backgroundColor: theme.palette.primary.main,    // Selected day bg
-                                            color: theme.palette.primary.contrastText,      // Selected day text
+                                            backgroundColor: theme.palette.primary.main, // selected day bg
+                                            color: theme.palette.primary.contrastText,   // selected day text
                                         },
                                         '.MuiPickersCalendarHeader-label, .MuiPickersArrowSwitcher-button': {
-                                            color: theme.palette.text.primary,  // month/year header + arrows
+                                            color: theme.palette.text.primary, // month/year text + arrows
                                         },
                                         '.MuiDayCalendar-weekDayLabel': {
-                                            color: theme.palette.text.primary,  // S, M, T, W, T, F, S labels
+                                            color: theme.palette.text.primary, // week labels S,M,T...
+                                        },
+                                        '.MuiPickersYear-root': {
+                                            color: theme.palette.text.primary, // year selector text
+                                        },
+                                        '.MuiPickersCalendarHeader-label': {
+                                            color: theme.palette.text.primary,
                                         },
                                     },
                                 },
                             }}
+
                         />
 
                         <DatePicker
@@ -316,7 +320,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     fullWidth: true,
                                     sx: {
                                         '& .MuiOutlinedInput-root': {
-                                            color: theme.palette.text.secondary,
+                                            color: theme.palette.text.primary, // text in the input field
                                             '& fieldset': { borderColor: theme.palette.divider },
                                             '&:hover fieldset': { borderColor: theme.palette.primary.main },
                                             '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
@@ -327,25 +331,33 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                 popper: {
                                     sx: {
                                         '.MuiPaper-root': {
-                                            color: theme.palette.text.secondary,  // <--- makes all text primary
+                                            backgroundColor: theme.palette.background.paper,
+                                            color: theme.palette.text.primary, // default text
                                         },
                                         '.MuiPickersDay-root': {
-                                            color: theme.palette.text.primary,              // Default day text
-                                            backgroundColor: theme.palette.primary.light,
+                                            color: theme.palette.text.primary, // default day text
+                                            backgroundColor: theme.palette.background.paper,
                                         },
                                         '.MuiPickersDay-root.Mui-selected': {
-                                            backgroundColor: theme.palette.primary.main,    // Selected day bg
-                                            color: theme.palette.primary.contrastText,      // Selected day text
+                                            backgroundColor: theme.palette.primary.main, // selected day bg
+                                            color: theme.palette.primary.contrastText,   // selected day text
                                         },
                                         '.MuiPickersCalendarHeader-label, .MuiPickersArrowSwitcher-button': {
-                                            color: theme.palette.text.primary,  // month/year header + arrows
+                                            color: theme.palette.text.primary, // month/year text + arrows
                                         },
                                         '.MuiDayCalendar-weekDayLabel': {
-                                            color: theme.palette.text.primary,  // S, M, T, W, T, F, S labels
+                                            color: theme.palette.text.primary, // week labels S,M,T...
+                                        },
+                                        '.MuiPickersYear-root': {
+                                            color: theme.palette.text.primary, // year selector text
+                                        },
+                                        '.MuiPickersCalendarHeader-label': {
+                                            color: theme.palette.text.primary,
                                         },
                                     },
                                 },
                             }}
+
                         />
 
                     </Box>
