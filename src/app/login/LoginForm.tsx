@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useCompanyDetails } from "@/context/CompanyDetailsContext";
 
 const LoginForm: React.FC = () => {
     const theme = useTheme();
@@ -13,9 +14,12 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState("");
     const [localError, setLocalError] = useState<string | null>(null);
 
+  
+
+
     // ✅ Hardcoded credentials
     const VALID_USERNAME = "admin";
-    const VALID_PASSWORD = "dj@123";
+    const VALID_PASSWORD = "bmg@123";
 
     const setAuthSession = (value:boolean, ttlInMinutes :number=30) => {
         const now = new Date().getTime(); // current time in milliseconds
@@ -67,11 +71,11 @@ const LoginForm: React.FC = () => {
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 2,
+                gap: 1,
                 width: "100%",
                 maxWidth: 400, // optional, limits form width
                 mx: "auto",    // center horizontally
-                px: 2,         // small padding for mobile
+                px: 1,         // small padding for mobile
             }}
         >
             {localError && (

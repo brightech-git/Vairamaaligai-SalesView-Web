@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React,{ ReactNode, useState } from "react";
 import Head from "next/head";
 import { DashBoardProvider } from "@/context/DashBoardContext";
+import { CompanyDetailsProvider } from "@/context/CompanyDetailsContext";
 
 // src/app/layout.tsx
 
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <ThemeContextProvider>
               <AppProvider>
 
-
+                <CompanyDetailsProvider>
                 <DashBoardProvider>
 
                 {children}
@@ -46,7 +47,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 />
 
                 </DashBoardProvider>
-                
+                </CompanyDetailsProvider>
               </AppProvider>
             </ThemeContextProvider>
           </ReduxProvider>

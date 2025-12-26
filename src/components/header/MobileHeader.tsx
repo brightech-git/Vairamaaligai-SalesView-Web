@@ -20,14 +20,18 @@ import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
 import BranchSelector from '../BranchSelector';
 
-const MobileHeader: React.FC = () => {
+interface MobileHeaderProps {
+    logo: string;
+}
+
+const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
     const { mode, toggleTheme, toggleSidebar } = useThemeContext();
     const theme = useTheme();
 
     const branchOptions = [
-        { branchId: 1, branchName: "THIRUVALLUR" },
-        { branchId: 2, branchName: "JNROAD" },
-        { branchId: 3, branchName: "THIRUTTANI" },
+        { branchId: 1, branchName: "Headoffice" },
+        { branchId: 2, branchName: "Periyar" },
+        // { branchId: 3, branchName: "THIRUTTANI" },
     ];
     return (
         <Box sx={{ width: '100% !important' }}>
@@ -51,35 +55,23 @@ const MobileHeader: React.FC = () => {
                     {/* Small Logo */}
                     <Box
                         sx={{
-                            width: 32,
+                            width: 'auto',
                             height: 32,
-                            borderRadius: 1,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                         }}
                     >
-                        <Avatar
-                            src="/images/logo/icon.png" // your image path
+                        <img
+                            src={logo} // your image path
                             alt="Logo"
-                            sx={{
-                                width: 32,
-                                height: 32,
-                            }}
+                           style={{
+                            height:'30px'
+                           }}
                         />
                     </Box>
 
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            fontFamily:"var(--font-merriweather)",
-                            fontWeight: 700,
-                            color: 'inherit',
-                            fontSize: '12px'
-                        }}
-                    >
-                        Jaiguru
-                    </Typography>
+                
                 </Box>
 
                 {/* Right - Theme Toggle */}

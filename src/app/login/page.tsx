@@ -11,14 +11,16 @@ import {
     Avatar
 } from "@mui/material";
 import LoginForm from "./LoginForm";
-
+import { useCompanyDetails } from "@/context/CompanyDetailsContext";
 import Image from "next/image";
 
 const LoginPage = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
-
+  const { companyDetails } =useCompanyDetails();
+     const logo = `${companyDetails?.BASEURL.trim()}${companyDetails?.LOGO}`
+     console.log(logo ,'companydetails');
     return (
         <Box
             sx={{
@@ -157,53 +159,50 @@ const LoginPage = () => {
                         />
 
                         {/* Mobile Header */}
-                        {isMobile && (
-                            <Box sx={{ textAlign: "center", mb: 2 }}>
-                                <Box
-                                    sx={{
-                                        width: 60,
-                                        height: 60,
-                                        borderRadius: 2,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        margin: "0 auto 6px",
-                                    }}
-                                >
-                                    <Avatar src="images/logo/icon.png" sx={{objectFit:'cover',width:'60px',height:'60px'}} />
-                                </Box>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        fontFamily: "'Delius', cursive",
-                                        fontWeight: 500,
-                                        color: theme.palette.text.primary,
-                                    }}
-                                >
-                                   Jaiguru Jewellers
-                                </Typography>
-                            </Box>
-                        )}
-
+                      
+                         
+                       
                         {/* Login Header */}
-                        <Box sx={{ textAlign: "center", mb: 2 }}>
+                        <Box sx={{ textAlign: "center", justifyContent:'center' ,mb:3 ,display:'flex' ,flexDirection:'row' ,gap:2}}>
+                            <Box
+                                                    sx={{
+                                                        width: 'auto',
+                                                        height: 40,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                <img
+                                    src={logo} // your image path
+                                    alt="Logo"
+                                    style={{
+
+                                        height: '30px',
+                                        width:'auto'
+                                    }}
+                                />
+                                </Box>
+                                <Box>
+
+                              
                             <Typography
-                                variant="h4"
+                                variant="h5"
                                 sx={{
-                                    fontWeight: 700,
+                                    fontWeight: 600,
                                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
                                     fontFamily: "'Quintessential', cursive",
-                                    mb: 1,
-                                    fontSize:"1.25rem"
+                                    mb: 0.5,
+                                    fontSize:"1.15rem"
                                 }}
                             >
                                 Welcome Back
                             </Typography>
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 sx={{
                                     color: theme.palette.text.primary,
                                     fontFamily: "'Funnel Display', sans-serif",
@@ -214,8 +213,8 @@ const LoginPage = () => {
                             >
                                 Sign in to access your dashboard
                             </Typography>
-                        </Box>
-
+                            </Box>
+                     </Box>
                         {/* Login Form */}
                         <LoginForm />
 
@@ -238,7 +237,7 @@ const LoginPage = () => {
                     </Paper>
 
                     {/* Footer */}
-                    <Box sx={{ mt: 3, textAlign: "center" }}>
+                    {/* <Box sx={{ mt: 3, textAlign: "center" }}>
                         <Typography
                             variant="caption"
                             sx={{
@@ -249,7 +248,7 @@ const LoginPage = () => {
                         >
                             © 2024 Jaiguru jewellers. All rights reserved.
                         </Typography>
-                    </Box>
+                    </Box> */}
                 </Container>
             </Box>
         </Box>

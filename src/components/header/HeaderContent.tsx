@@ -6,14 +6,21 @@ import React from 'react';
 import { Box, useTheme, useMediaQuery } from '@mui/material';
 import MobileHeader from './MobileHeader';
 import DesktopHeader from './DesktopHeader';
+import { useCompanyDetails } from '@/context/CompanyDetailsContext';
+
 
 const HeaderContent: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+    const { companyDetails } =useCompanyDetails();
+    const logo = `${companyDetails?.BASEURL.trim()}${companyDetails?.LOGO}`
+    console.log(logo ,'companydetails');
+
+
     return (
         <Box sx={{ width: '100%' }}>
-            {isMobile ? <MobileHeader /> : <DesktopHeader />}
+            {isMobile ? <MobileHeader logo={logo}/> : <DesktopHeader logo={logo}/>}
         </Box>
     );
 };

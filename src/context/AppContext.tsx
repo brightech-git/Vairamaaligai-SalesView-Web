@@ -11,9 +11,9 @@ interface DateRange {
 }
 
 interface MetalRates {
-    G: number; // Gold
-    S: number; // Silver
-    P: number; // Platinum
+    GOLDRATE: number; // Gold
+    SILVERRATE: number; // Silver
+
 }
 
 interface AppContextType {
@@ -40,7 +40,7 @@ export const useAppContext = () => {
         return {
             dateRange: { startDate: new Date(), endDate: new Date() },
             setDateRange: () => { },
-            metalRates: { G: 0, S: 0, P: 0 },
+            metalRates: { GOLDRATE: 0, SILVERRATE: 0 },
             setMetalRates: () => { },
             selectedChip: "today",
             setSelectedChip: () => { },
@@ -65,9 +65,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     });
 
     const [metalRates, setMetalRates] = useState<MetalRates>({
-        G: 0,
-        S: 0,
-        P: 0,
+        GOLDRATE: 0,
+        SILVERRATE: 0,
     });
 
     const [selectedChip, setSelectedChip] = useState<string>("last7days");
@@ -78,16 +77,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             const data: ApiMetalRates = await MetalRatesService.getRates();
             console.log("Fetched metal rates:", data);
             setMetalRates({
-                G: data.G,
-                S: data.S,
-                P: data.P,
+                GOLDRATE: data.GOLDRATE,
+                SILVERRATE: data.SILVERRATE,
             });
         } catch (error) {
             console.error("Failed to fetch metal rates:", error);
             setMetalRates({
-                G: 0,
-                S: 0,
-                P: 0,
+                GOLDRATE: 0,
+                SILVERRATE: 0,
+
             });
         }
     };

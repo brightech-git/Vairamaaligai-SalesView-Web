@@ -19,13 +19,19 @@ import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
 import BranchSelector from '../BranchSelector';
 
-const DesktopHeader: React.FC = () => {
+interface DesktopHeaderProps {
+    logo: string;
+}
+
+const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
+
+    console.log(logo,'logossss')
     const { mode, toggleTheme } = useThemeContext();
     const theme=useTheme();
     const branchOptions = [
-        { branchId: 1, branchName: "THIRUVALLUR" },
-        { branchId: 2, branchName: "JNROAD" },
-        { branchId: 3, branchName: "THIRUTTANI" },
+        { branchId: 1, branchName: "Headoffice" },
+        { branchId: 2, branchName: "Periyar" },
+        // { branchId: 3, branchName: "THIRUTTANI" },
     ];
 
     return (
@@ -44,36 +50,20 @@ const DesktopHeader: React.FC = () => {
             }}>
                 <Box
                     sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        width: 'auto',
+                        height: 30,
                     }}
                 >
-                    <Avatar
-                        src="/images/logo/icon.png" // your image path
+                    <img
+                        src={logo}// your image path
                         alt="Logo"
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            mr: 1,
+                        style={{
+                            height:'40px'
                         }}
+                      
                     />
                 </Box>
-                <Typography
-                    variant="h6"
-                    sx={{
-                        fontFamily: "'Quintessential', cursive",
-                        fontWeight: 700,
-                        color: theme.palette.text.primary,
-                        whiteSpace: 'nowrap',
-                        fontSize:{md:'16px' ,lg:'20px'}
-                    }}
-                >
-                    Jaiguru Jewellers
-                </Typography>
+               
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',

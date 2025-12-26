@@ -44,7 +44,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                                 fontFamily: "'Delius', cursive",
                                 fontWeight: 600
                             }}>
-                                ₹{metalRates.G}
+                                ₹{metalRates.GOLDRATE}
                             </span>
                         </Box>
                     }
@@ -71,7 +71,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                                 fontFamily: "'Delius', cursive",
                                 fontWeight: 600
                             }}>
-                                ₹{metalRates.S}
+                                ₹{metalRates.SILVERRATE}
                             </span>
                         </Box>
                     }
@@ -106,7 +106,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                             fontWeight: 700,
                             fontSize: '14px'
                         }}>
-                            ₹{metalRates.G}
+                            ₹{metalRates.GOLDRATE}
                         </span>
                     </Box>
                 }
@@ -134,7 +134,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                             fontWeight: 700,
                             fontSize: '14px'
                         }}>
-                            ₹{metalRates.S}
+                            ₹{metalRates.SILVERRATE}
                         </span>
                     </Box>
                 }

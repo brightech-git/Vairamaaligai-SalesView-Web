@@ -56,13 +56,13 @@ const EstimationSummary: React.FC<EstimationSummaryProps> = ({
             {
                 id: "label",
                 label: "Metric",
-                align: "center" as const,
+                align: "left" as const,
                 render: (value: string) => <span>{value}</span>,
             },
             {
                 id: "value",
                 label: "Count",
-                align: "center" as const,
+                align: "right" as const,
                 render: (value: number) => <span>{value}</span>,
             },
         ];
