@@ -28,11 +28,11 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
     const { mode, toggleTheme, toggleSidebar } = useThemeContext();
     const theme = useTheme();
 
-    const branchOptions = [
-        { branchId: 1, branchName: "Headoffice" },
-        { branchId: 2, branchName: "Periyar" },
-        // { branchId: 3, branchName: "THIRUTTANI" },
-    ];
+    // const branchOptions = [
+    //     { branchId: 1, branchName: "Headoffice" },
+    //     { branchId: 2, branchName: "Periyar" },
+    //     // { branchId: 3, branchName: "THIRUTTANI" },
+    // ];
     return (
         <Box sx={{ width: '100% !important' }}>
             {/* First Row - Logo, Menu, Theme Toggle */}
@@ -75,9 +75,9 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                 </Box>
 
                 {/* Right - Theme Toggle */}
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                {/* <Box sx={{ display: 'flex', gap: 1 }}>
                     <BranchSelector branchOptions={branchOptions} />
-                </Box>
+                </Box> */}
             </Box>
 
             {/* Second Row - Date Picker and Metal Rates */}

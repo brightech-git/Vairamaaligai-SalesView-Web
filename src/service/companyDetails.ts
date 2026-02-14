@@ -2,9 +2,9 @@ import axios from "axios";
 
 const baseUrl = 'https://app.bmgjewellers.com/api/v1';
 
-export const getCompanyDetails = async () => {
+export const getCompanyDetails = async (id:number) => {
     try {
-        const response = await axios.get(`${baseUrl}/company/all`);
+        const response = await axios.get(`${baseUrl}/company/getById?id=${id}`);
         if (response.data) {
             return response.data;
         }

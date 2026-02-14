@@ -15,11 +15,12 @@ const LoginForm: React.FC = () => {
     const [localError, setLocalError] = useState<string | null>(null);
 
   
-
+    const { companyDetails } = useCompanyDetails(); 
+    console.log(companyDetails,'companyDetails')
 
     // ✅ Hardcoded credentials
-    const VALID_USERNAME = "admin";
-    const VALID_PASSWORD = "bmg@123";
+    const VALID_USERNAME = companyDetails?.USERNAME;
+    const VALID_PASSWORD = companyDetails?.PASSWORD;
 
     const setAuthSession = (value:boolean, ttlInMinutes :number=30) => {
         const now = new Date().getTime(); // current time in milliseconds

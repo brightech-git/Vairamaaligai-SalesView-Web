@@ -14,7 +14,9 @@ const HeaderContent: React.FC = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const { companyDetails } =useCompanyDetails();
-    const logo = `${companyDetails?.BASEURL.trim()}${companyDetails?.LOGO}`
+
+    const baseUrl = 'https://app.bmgjewellers.com'
+    const logo = `${baseUrl.trim()}${companyDetails?.LOGO}`
     console.log(logo ,'companydetails');
 
 

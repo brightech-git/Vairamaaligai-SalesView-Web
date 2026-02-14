@@ -173,7 +173,7 @@ const LoginPage = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                <img
+                                {/* <img
                                     src={logo} // your image path
                                     alt="Logo"
                                     style={{
@@ -181,7 +181,7 @@ const LoginPage = () => {
                                         height: '30px',
                                         width:'auto'
                                     }}
-                                />
+                                /> */}
                                 </Box>
                                 <Box>
 
@@ -189,12 +189,12 @@ const LoginPage = () => {
                             <Typography
                                 variant="h5"
                                 sx={{
-                                    fontWeight: 600,
+                                    fontWeight: 700,
                                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
-                                    fontFamily: "'Quintessential', cursive",
+                                    fontFamily: "'Lato",
                                     mb: 0.5,
                                     fontSize:"1.15rem"
                                 }}

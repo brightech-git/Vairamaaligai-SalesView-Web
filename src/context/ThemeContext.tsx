@@ -112,19 +112,19 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
             
         },
         text: {
-            primary: "#041f60",
+            primary: "#ba7135",
             secondary: "#FFFFFF",
-            disabled: "#94a3b8",
+            disabled: "#ba7135",
         },
         primary: {
-            main: "#f16137",
-            light: "#cd865c",
-            dark: "#f16137",
+            main: "#9d2324",
+            light: "#c09b4a",
+            dark: "#9d2324",
         },
         secondary: {
-            main: "#f16137",
-            light: "#cd865c",
-            dark: "#f16137",
+            main: "#9d2324",
+            light: "#c09b4a",
+            dark: "#9d2324",
         },
         success: {
             main: "#10b981",
@@ -189,52 +189,52 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 ...palette,
             },
             typography: {
-                fontFamily: "'Funnel Display', sans-serif",
+                fontFamily: "Lato",
                 h1: {
-                    fontFamily: "'Quintessential', cursive",
+                    fontFamily: "Lato",
                     fontWeight: 700,
                     color: palette.text.primary,
                 },
                 h2: {
-                    fontFamily: "'Grenze Gotisch', serif",
+                    fontFamily: "Lato",
                     fontWeight: 600,
                     color: palette.text.primary,
                 },
                 h3: {
-                    fontFamily: "'Almendra Display', serif",
+                    fontFamily: "Lato",
                     fontWeight: 600,
                     color: palette.text.primary,
                 },
                 h4: {
-                    fontFamily: "'Delius', serif",
+                    fontFamily: "Lato",
                     color: palette.text.secondary,
                     fontWeight: 600,
                     fontSize: '16px'
                     
                 },
                 h5: {
-                    fontFamily: "'Merriweather', serif",
+                    fontFamily: "Lato",
                     color: palette.text.primary,
                     fontWeight: 600,
                     fontSize: '14px'
 
                 },
                 h6: {
-                    fontFamily: "'Merriweather', serif",
+                    fontFamily: "Lato",
                     color: palette.text.primary,
                     fontWeight: 600,
                     fontSize: '14px'
 
                 },
                 body1: {
-                    fontFamily: "'Funnel Display', sans-serif",
+                    fontFamily: "Lato",
                     lineHeight: 1.6,
                     color: palette.text.primary,
                     fontWeight: 400,
                     fontSize:'10px'
                 },
                 body2: {
-                    fontFamily: "'Delius', cursive",
+                    fontFamily: "Lato",
                     lineHeight: 1.5,
                     color: palette.text.primary,
                     fontSize: '12px'

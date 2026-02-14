@@ -28,11 +28,11 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
     console.log(logo,'logossss')
     const { mode, toggleTheme } = useThemeContext();
     const theme=useTheme();
-    const branchOptions = [
-        { branchId: 1, branchName: "Headoffice" },
-        { branchId: 2, branchName: "Periyar" },
-        // { branchId: 3, branchName: "THIRUTTANI" },
-    ];
+    // const branchOptions = [
+    //     { branchId: 1, branchName: "Headoffice" },
+    //     { branchId: 2, branchName: "Periyar" },
+    //     // { branchId: 3, branchName: "THIRUTTANI" },
+    // ];
 
     return (
         <Box sx={{
@@ -80,7 +80,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
            
 
             {/* Right Section - Metal Rates and Theme Toggle */}
-            <Box sx={{
+            {/* <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
                 flex: 1,
@@ -89,13 +89,13 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                 minWidth: 200,
             }}>
                 {/* Metal Rates as Chips */}
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                {/* <Box sx={{ display: 'flex', gap: 1 }}>
                     <MetalRates />
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <BranchSelector branchOptions={branchOptions} />
-                </Box>
+                </Box> */}
 
               {/*   Theme Toggle */}
                 {/* <IconButton
@@ -109,7 +109,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                 >
                     {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                 </IconButton> */}
-            </Box>
+            {/* </Box> */} 
         </Box>
     );
 };
