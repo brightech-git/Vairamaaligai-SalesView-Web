@@ -49,7 +49,7 @@ export const DashBoardProvider = ({ children }: { children: ReactNode }) => {
         toDate: "",
         costId: "",
         adminDB: "VAIADMINDB",
-        transDB: "VAIT2526",
+        transDB: "VAIT2627",
         schemeDB: "VAISH0708",
     });
 
