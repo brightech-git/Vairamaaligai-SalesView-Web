@@ -81,7 +81,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
             fromDate: formattedStart,
             toDate: formattedEnd,
             adminDB: "VAIADMINDB",
-            transDB: "VAIT2526",
+            transDB: "VAIT2627",
             schemeDB: "VAISH0708",
             costId: "",
         }));
