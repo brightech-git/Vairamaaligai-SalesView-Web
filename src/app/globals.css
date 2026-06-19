@@ -95,10 +95,12 @@ body {
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--color-background);
+  size: 1px;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -77,8 +77,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             const data: ApiMetalRates = await MetalRatesService.getRates();
             console.log("Fetched metal rates:", data);
             setMetalRates({
-                GOLDRATE: data.GOLDRATE,
-                SILVERRATE: data.SILVERRATE,
+                GOLDRATE: data.G,
+                SILVERRATE: data.S,
             });
         } catch (error) {
             console.error("Failed to fetch metal rates:", error);

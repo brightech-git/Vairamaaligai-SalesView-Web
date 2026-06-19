@@ -3,9 +3,8 @@
 import adminInstance from "@/api/adminInstance";// adjust the path
 
 export interface MetalRates {
-    SILVERRATE: number;
-
-    GOLDRATE: number;
+    S: number;
+    G: number;
 }
 
 const MetalRatesService = {
@@ -18,8 +17,8 @@ const MetalRatesService = {
         } catch (error) {
             console.error("Error fetching metal rates:", error);
             return {
-                SILVERRATE: 0,
-                GOLDRATE: 0,
+                S: 0,
+                G: 0,
             }; // fallback in case of error
         }
     },

@@ -15,7 +15,7 @@ const Dashboard = () => {
   const { branchesData, loading, error } = useDashBoardContext();
   const { sidebarOpen } =useThemeContext();
 
-  console.log(branchesData,'branchesData')
+
   if (error) return <div>{error}</div>;
 
   const hasValidData = (arr:any) => {
@@ -33,21 +33,15 @@ const Dashboard = () => {
     <Box
       sx={{
         backgroundColor: theme.palette.background.default,
-        p: { xs: 0, md: 2 },
-        marginTop: sidebarOpen ? 'rem' : '0.5rem'
+      
       }}
+      p={'1rem'}
     >
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.default,
-          p: { xs: 0, md: 2 },
-          marginTop: sidebarOpen ? "0rem" : "0.5rem",
-        }}
-      >
+     
         {branchesData.map((branch) => (
           <Box key={branch.branchName} sx={{ mb: 2 }}>
 
-            {/* ➤ Branch Name Heading */}
+       
             {/* ➤ Branch Name Heading */}
             <Typography
               variant="h6"
@@ -72,7 +66,7 @@ const Dashboard = () => {
               />
             )}
 
-            <Box sx={{ mt: 2, mb: 3 }}>
+            <Box sx={{ mt: 1, mb: 1 }}>
               <Grid container spacing={2.5} alignItems="stretch">
 
                 {hasValidData(branch.paymentSummary) && (
@@ -118,7 +112,7 @@ const Dashboard = () => {
 
           </Box>
         ))}
-      </Box>
+   
 
     </Box>
   );

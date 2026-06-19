@@ -45,18 +45,12 @@ const DashboardPage = () => {
     <DashboardLayout>
       <Box
         sx={{
-          p: 3,
+          p: 2,
           color: theme.palette.text.primary,
           backgroundColor: theme.palette.background.default,
         }}
       >
-        {/* <Typography variant="h5" fontWeight={600}>
-          Welcome to the Dashboard
-        </Typography>
-
-        <Typography variant="body1" mt={2} >
-          This content is only visible to logged-in users.
-        </Typography> */}
+       
       </Box>
     </DashboardLayout>
   );

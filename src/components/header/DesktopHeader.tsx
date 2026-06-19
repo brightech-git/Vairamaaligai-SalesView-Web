@@ -2,7 +2,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import React, { use } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     IconButton,
@@ -18,6 +18,11 @@ import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
 import BranchSelector from '../BranchSelector';
+import logoImg from '@/app/logo.png';
+import { branchOptions } from './constant';
+import MultiSelectComboBox from '../ui/MultiSelect';
+import { useDashBoardContext } from '@/context/DashBoardContext';
+import { OptionType } from '../ui/MultiSelect';
 
 interface DesktopHeaderProps {
     logo: string;
@@ -28,11 +33,18 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
     console.log(logo,'logossss')
     const { mode, toggleTheme } = useThemeContext();
     const theme=useTheme();
-    const branchOptions = [
-        { branchId: 1, branchName: "Headoffice" },
-        { branchId: 2, branchName: "Periyar" },
-        // { branchId: 3, branchName: "THIRUTTANI" },
-    ];
+ 
+ const { filters, setFilters } = useDashBoardContext();
+
+    const [selectedBranches, setSelectedBranches] = useState<OptionType[]>([]);
+
+    const handleBranchChange = (fieldName: string, selected: OptionType[]) => {
+        setSelectedBranches(selected);
+        const branchIds = selected
+            .map((opt) => opt.value)
+            .filter((v): v is number => typeof v === "number");
+        setFilters({ ...filters, branchIds });
+    };
 
     return (
         <Box sx={{
@@ -49,21 +61,20 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                 alignItems: 'center', 
             }}>
                 <Box
-                    sx={{
-                        width: 'auto',
-                        height: 30,
-                    }}
+                    display={'flex'}
+                    alignItems={'center'}
                 >
                     <img
-                        src={logo}// your image path
+                        src={logoImg.src}
                         alt="Logo"
                         style={{
                             height:'40px'
                         }}
                       
                     />
+                    <Typography fontSize='18px' variant='h1'> Jaiguru Jewellers </Typography>
                 </Box>
-               
+              
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -93,8 +104,16 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                     <MetalRates />
                 </Box>
 
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <BranchSelector branchOptions={branchOptions} />
+                {/* Right - Theme Toggle */}
+                <Box sx={{ display: 'flex', gap: 1 ,minWidth:'200px' }}>
+                    {/* <BranchSelector branchOptions={branchOptions} /> */}
+                    <MultiSelectComboBox
+                        options={branchOptions}
+                        fieldName="selectBranch"
+                        onChange={handleBranchChange}
+                        value={selectedBranches}
+                        label="Select Branch"
+                    />
                 </Box>
 
               {/*   Theme Toggle */}

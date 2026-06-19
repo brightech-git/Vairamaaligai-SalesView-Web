@@ -2,7 +2,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import React from 'react';
+import React,{useState} from 'react';
 import {
     Box,
     IconButton,
@@ -19,6 +19,11 @@ import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
 import BranchSelector from '../BranchSelector';
+import logoImg from '@/app/logo.png';
+import { branchOptions } from './constant';
+import MultiSelectComboBox from '../ui/MultiSelect';
+import { useDashBoardContext } from '@/context/DashBoardContext';
+import { type OptionType } from '../ui/MultiSelect';
 
 interface MobileHeaderProps {
     logo: string;
@@ -28,11 +33,18 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
     const { mode, toggleTheme, toggleSidebar } = useThemeContext();
     const theme = useTheme();
 
-    const branchOptions = [
-        { branchId: 1, branchName: "Headoffice" },
-        { branchId: 2, branchName: "Periyar" },
-        // { branchId: 3, branchName: "THIRUTTANI" },
-    ];
+    const { filters, setFilters } = useDashBoardContext();
+
+    const [selectedBranches, setSelectedBranches] = useState<OptionType[]>([]);
+
+    const handleBranchChange = (fieldName: string, selected: OptionType[]) => {
+        setSelectedBranches(selected);
+        const branchIds = selected
+            .map((opt) => opt.value)
+            .filter((v): v is number => typeof v === "number");
+        setFilters({ ...filters, branchIds });
+    };
+
     return (
         <Box sx={{ width: '100% !important' }}>
             {/* First Row - Logo, Menu, Theme Toggle */}
@@ -42,6 +54,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                 justifyContent: 'space-between',
                 width: '100%',
                 mb: 1,
+                p :0
             }}>
                 {/* Left - Menu & Logo */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap:0.25 }}>
@@ -63,12 +76,13 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                         }}
                     >
                         <img
-                            src={logo} // your image path
+                            src={logoImg.src} // your image path
                             alt="Logo"
                            style={{
-                            height:'30px'
+                            height:'25px'
                            }}
                         />
+                         <Typography fontSize='14px' variant='h2'> Jaiguru Jewellers </Typography>
                     </Box>
 
                 
@@ -76,7 +90,14 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
 
                 {/* Right - Theme Toggle */}
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                    <BranchSelector branchOptions={branchOptions} />
+                    {/* <BranchSelector branchOptions={branchOptions} /> */}
+                    <MultiSelectComboBox
+                        options={branchOptions}
+                        fieldName="selectBranch"
+                        onChange={handleBranchChange}
+                        value={selectedBranches}
+                        minWidth={'180px'}
+                    />
                 </Box>
             </Box>
 

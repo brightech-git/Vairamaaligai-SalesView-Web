@@ -36,6 +36,8 @@ import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
 import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
 import BranchTables from "../ui/table/BranchTables";
 
+import ReportPage from "@/app/report/page";
+
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
 interface DashboardLayoutProps {
@@ -49,6 +51,8 @@ const menuItems = [
     { text: "Scheme Payment", icon: <AccountBalanceOutlined fontSize="small" />, id: "scheme" },
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
+    { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
+
 ];
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
@@ -131,6 +135,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                         error={error}
                     />
                 );
+            case "report":
+                return <ReportPage /> ;
 
             default:
                 return <Dashboard />;
@@ -274,7 +280,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                     }),
                 }}
             >
-                <Box sx={{ height: { xs: "100px", md: "74px", lg: "65px"  }  }} /> {/* Spacer for Header */}
+                <Box sx={{ height: { xs: "100px", md: "50px", lg: "40px"  }  }} /> {/* Spacer for Header */}
 
                 {/* ✅ Render the selected page here */}
                 {renderPage()}

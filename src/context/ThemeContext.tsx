@@ -9,6 +9,7 @@ import {
 } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 
+
 // Types
 interface ThemeContextProps {
     mode: "light" | "dark";
@@ -16,6 +17,7 @@ interface ThemeContextProps {
     isLargeScreen: boolean;
     sidebarOpen: boolean;
     toggleSidebar: () => void;
+    colors: any;
 }
 
 interface ThemeProviderProps {
@@ -41,6 +43,7 @@ export const useThemeContext = (): ThemeContextProps => {
                 isLargeScreen: true,
                 sidebarOpen: true,
                 toggleSidebar: () => { },
+                colors: "",
             };
         }
         throw new Error("useThemeContext must be used within a ThemeContextProvider");
@@ -49,6 +52,7 @@ export const useThemeContext = (): ThemeContextProps => {
 };
 export const useSafeThemeContext = (): ThemeContextProps => {
     const context = useContext(ThemeContext);
+    
     if (!context) {
         return {
             mode: "light",
@@ -56,6 +60,7 @@ export const useSafeThemeContext = (): ThemeContextProps => {
             isLargeScreen: true,
             sidebarOpen: true,
             toggleSidebar: () => { },
+            colors: "",
         };
     }
     return context;
@@ -109,22 +114,23 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
         background: {
             default: "#FFFFFF",
             paper: "#FFFFFF",
-            
+            greyColor: "#DFDFDF",
+       
         },
         text: {
-            primary: "#041f60",
+            primary: "#0C0C0C",
             secondary: "#FFFFFF",
             disabled: "#94a3b8",
         },
         primary: {
-            main: "#f16137",
-            light: "#cd865c",
-            dark: "#f16137",
+            main: "#121212",
+            light: "#212121",
+            dark: "#121212",
         },
         secondary: {
-            main: "#f16137",
-            light: "#cd865c",
-            dark: "#f16137",
+            main: "#121212",
+            light: "#212121",
+            dark: "#121212",
         },
         success: {
             main: "#10b981",
@@ -147,6 +153,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
         background: {
             default: "#0f0346ff",
             paper: "#0C0C0C",
+            greyColor : "#EEEDDD"
         },
         text: {
             primary: "#f1f5f9",
@@ -231,13 +238,13 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                     lineHeight: 1.6,
                     color: palette.text.primary,
                     fontWeight: 400,
-                    fontSize:'10px'
+                    fontSize:'14px'
                 },
                 body2: {
                     fontFamily: "'Delius', cursive",
                     lineHeight: 1.5,
                     color: palette.text.primary,
-                    fontSize: '12px'
+                    fontSize: '14px'
                 },
             },
             shape: {
@@ -332,6 +339,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
         isLargeScreen,
         sidebarOpen,
         toggleSidebar,
+        colors: mode === "light" ? lightPalette : darkPalette,
     }), [mode, isLargeScreen, sidebarOpen]);
 
     return (

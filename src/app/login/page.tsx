@@ -164,7 +164,7 @@ const LoginPage = () => {
                        
                         {/* Login Header */}
                         <Box sx={{ textAlign: "center", justifyContent:'center' ,mb:3 ,display:'flex' ,flexDirection:'row' ,gap:2}}>
-                            <Box
+                            {/* <Box
                                                     sx={{
                                                         width: 'auto',
                                                         height: 40,
@@ -173,7 +173,7 @@ const LoginPage = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                <img
+                                {/* <img
                                     src={logo} // your image path
                                     alt="Logo"
                                     style={{
@@ -181,8 +181,8 @@ const LoginPage = () => {
                                         height: '30px',
                                         width:'auto'
                                     }}
-                                />
-                                </Box>
+                                /> 
+                                </Box> */}
                                 <Box>
 
                               
