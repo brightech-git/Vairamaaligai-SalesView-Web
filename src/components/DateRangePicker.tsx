@@ -169,8 +169,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         height: '36px',
                         '&:hover': {
                             opacity: 1,
-                            color: '#000'
-
+                            color: theme.palette.text.primary,
                         },
                     }}
                 />
@@ -197,7 +196,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     color: theme.palette.primary.contrastText,
                                     '&:hover': {
                                         opacity: 1,
-                                        color: '#000'
+                                        color: theme.palette.primary.contrastText,
                                     },
                                 }),
                                 ...(activeChip !== chip.value && {
@@ -205,7 +204,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     color: theme.palette.text.primary,
                                     '&:hover': {
                                         opacity: 1,
-                                        color: '#000'
+                                        color: theme.palette.text.primary,
                                     },
                                 }),
                             }}

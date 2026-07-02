@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Paper, Typography, Divider, IconButton, Tooltip, useTheme, alpha } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
+import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 import MultiSelectComboBox from "@/components/ui/MultiSelect";
 import SelectBox from "@/components/ui/CustomSelect";
@@ -14,11 +18,9 @@ import {
     useRanges, useSizes, useSubItems, useCostCentre,
 } from "@/hooks/useReport";
 
-import { useThemeContext } from "@/context/ThemeContext";
 import ResponsiveTable, { Column, SubColumn, GROUP_PALETTES } from "@/components/ui/table/ReportTabel";
 import { formatToNumber } from "@/lib/numberFormatter";
 import { exportToExcel, exportToPDF, ExportColumn, } from '@/components/ui/export/ReportExport';
-import { fontSize } from "@mui/system";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -27,7 +29,7 @@ import { fontSize } from "@mui/system";
 type OptionType = { label: string; value: string };
 
 type ReportRow = {
-    itemName?: string; subItemName?: string; range?: string; size?:String;
+    itemName?: string; subItemName?: string; range?: string; size?: String;
     fhtags?: number; fhpcs?: number; fhgrswt?: number; fhnetwt?: number;
     fjtags?: number; fjpcs?: number; fjgrswt?: number; fjnetwt?: number;
     fttags?: number; ftpcs?: number; ftgrswt?: number; ftnetwt?: number;
@@ -76,7 +78,7 @@ const exportColumns: ExportColumn[] = [
     { key: "itemName", header: "ITEM", align: "left" },
     { key: "subItemName", header: "SUBITEM", align: "left" },
     { key: "range", header: "RANGE", align: "left" },
-    
+
 
     { key: "fhtags", header: "HO - TAGS", align: "right", decimals: 0 },
     { key: "fhpcs", header: "HO - PCS", align: "right", decimals: 0 },
@@ -112,12 +114,12 @@ const P = GROUP_PALETTES;   // shorthand
 
 /** sx object for a data body cell belonging to group gi */
 function dataSx(gi: number) {
-    return { backgroundColor: P[gi].dataTint, color: "#000" , fontSize:'12px' };
+    return { backgroundColor: P[gi].dataTint, color: "#000", fontSize: '12px' };
 }
 
 /** sx object for a total/foot cell belonging to group gi */
 function footSx(gi: number) {
-    return { backgroundColor: P[gi].foot, color: "#fff", fontWeight: 700 ,fontSize:'14px'};
+    return { backgroundColor: P[gi].foot, color: "#fff", fontWeight: 700, fontSize: '14px' };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -131,7 +133,7 @@ const ReportScreen = () => {
     const sizeRef = useRef<HTMLInputElement>(null);
     const costRef = useRef<HTMLInputElement>(null);
 
-    const { colors } = useThemeContext();
+    const theme = useTheme();
 
     const [viewMode, setViewMode] = useState<"form" | "table">("form");
     const [page, setPage] = useState(0);
@@ -141,23 +143,25 @@ const ReportScreen = () => {
     const [form, setForm] = useState({
         metal: "", item: "", subItem: "",
         range: [] as OptionType[],
-        size: "", cost: "", tag: "",
+        size: []as OptionType[], cost: "", tag: "",
         selectionType: "", reportType: "", displayType: "",
     });
 
     const handleChange = (name: string, value: any) =>
         setForm((prev) => ({ ...prev, [name]: value }));
 
+    console.log(filters,'filters')
+
     // ── API ──────────────────────────────────────────────────────────────────
     const { data, isLoading } = useAllReports(filters, true);
-
-    console.log(data,'data')
 
     const { data: metals = [] } = useMetals();
     const { data: items = [] } = useItems();
     const { data: costCenter = [] } = useCostCentre();
     const { data: subItems = [] } = useSubItems(form.item ? Number(form.item) : undefined);
     const { data: sizes = [] } = useSizes(form.item ? Number(form.item) : undefined);
+
+    console.log(sizes,'sizes')
     const { data: rangesData } = useRanges({
         itemId: form.item ? Number(form.item) : undefined,
         subItemId: form.subItem ? Number(form.subItem) : undefined,
@@ -169,13 +173,11 @@ const ReportScreen = () => {
     const metalsOptionList = [ALL_OPTION, ...(metals?.map((m) => ({ label: String(m.METALNAME), value: String(m.METALID) })) ?? [])];
     const itemList = [ALL_OPTION, ...(items?.map((m) => ({ label: String(m.ITEMNAME), value: String(m.ITEMID) })) ?? [])];
     const subItemOptionList = [ALL_OPTION, ...(subItems?.map((m) => ({ label: String(m.SUBITEMNAME), value: String(m.SUBITEMID) })) ?? [])];
-    const sizeList = [ALL_OPTION, ...(sizes?.map((m) => ({ label: String(m.SIZENAME), value: String(m.SIZEID) })) ?? [])];
+    const sizeList = [ALL_OPTION, ...(sizes?.map((m: any) => ({ label: String(m.SIZENAME), value: String(m.SIZEID) })) ?? [])];
     const rangeOptions = [ALL_OPTION, ...(rangesData?.map((r: any) => ({ label: String(r), value: String(r) })) ?? [])];
     const costCenters = [ALL_OPTION, ...(costCenter?.map((c) => ({ label: String(c.COSTNAME), value: String(c.COSTID) })) ?? [])];
 
     const reportData: ReportRow[] = data?.data || [];
-
-    console.log(reportData,'reportData');
 
     // ── Export subtitle ──────────────────────────────────────────────────────
     const buildSubtitle = () => {
@@ -183,7 +185,7 @@ const ReportScreen = () => {
         if (form.metal) parts.push(`Metal: ${metalsOptionList.find(m => m.value === form.metal)?.label ?? form.metal}`);
         if (form.item) parts.push(`Item: ${itemList.find(i => i.value === form.item)?.label ?? form.item}`);
         if (form.subItem) parts.push(`Sub Item: ${subItemOptionList.find(s => s.value === form.subItem)?.label ?? form.subItem}`);
-        if (form.size) parts.push(`Size: ${sizeList.find(s => s.value === form.size)?.label ?? form.size}`);
+        if (form.size)parts.push(`Size: ${form.size.map(r => r.label).join(", ")}`);
         if (form.cost) parts.push(`Cost Centre: ${costCenters.find(c => c.value === form.cost)?.label ?? form.cost}`);
         if (form.range.length) parts.push(`Range: ${form.range.map(r => r.label).join(", ")}`);
         return parts.join("  |  ");
@@ -208,7 +210,7 @@ const ReportScreen = () => {
         setPage(0);
         setFilters({
             itemId: form.item, subItemId: form.subItem,
-            metalId: form.metal, sizeId: form.size, costId: form.cost,
+            metalId: form.metal, sizeId: form.size.map(s=>s.value).join(","), costId: form.cost,
             range: form.range.map((r) => r.value).join(","),
             page: 0, pageSize,
         });
@@ -216,7 +218,7 @@ const ReportScreen = () => {
     };
 
     const handleClear = () => {
-        setForm({ metal: "", item: "", subItem: "", range: [], size: "", cost: "", tag: "", selectionType: "", reportType: "", displayType: "" });
+        setForm({ metal: "", item: "", subItem: "", range: [], size: [], cost: "", tag: "", selectionType: "", reportType: "", displayType: "" });
         setFilters(null);
         setViewMode("form");
         setPage(0);
@@ -229,37 +231,111 @@ const ReportScreen = () => {
 
     // ─────────────────────────────────────────────────────────────────────────
     return (
-        <Box display="flex" flexDirection="column" gap={2} mt={{xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
+        <Box display="flex" flexDirection="column" gap={2} mt={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
 
             {/* ═══════════ FILTER FORM ═══════════ */}
             {viewMode === "form" && (
-                <Box maxWidth={600} mx="auto" bgcolor={colors?.background.greyColor} p={1}>
-                    <Box sx={{ color: colors?.text.primary, mb: 1, fontWeight: 600, textAlign: "center" }}>
-                        STOCK REPORT
+                <Paper
+                    elevation={0}
+                    sx={{
+                        maxWidth: 720,
+                        mx: "auto",
+                        width: "100%",
+                        borderRadius: 3,
+                        border: `1px solid ${theme.palette.divider}`,
+                        overflow: "hidden",
+                    }}
+                >
+                    {/* Header bar */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                            px: { xs: 2, sm: 3 },
+                            py: 2,
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                            bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.12 : 0.06),
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: 40,
+                                height: 40,
+                                borderRadius: 2,
+                                bgcolor: theme.palette.primary.main,
+                                color: theme.palette.primary.contrastText,
+                                flexShrink: 0,
+                            }}
+                        >
+                            <Inventory2RoundedIcon fontSize="small" />
+                        </Box>
+                        <Box>
+                            <Typography variant="h6" sx={{ fontSize: { xs: "15px", sm: "17px" }, fontWeight: 700, lineHeight: 1.3 }}>
+                                Stock Report
+                            </Typography>
+                            <Typography variant="body2" color="text.primary" sx={{ fontSize: { xs: "11px", sm: "12px" } }}>
+                                Filter by metal, item and branch to generate your stock report
+                            </Typography>
+                        </Box>
                     </Box>
-                    <FormRow label="Metal" >
-                        <SelectBox options={metalsOptionList} value={form.metal} fieldName="metal" onChange={handleChange} nextRef={itemRef} size="small" placeHolder="ALL" fontSize={{xs:"10px" ,sm:"12px",md:"14px"}} />
-                    </FormRow>
-                    <FormRow label="Item Name">
-                        <SelectBox options={itemList} value={form.item} fieldName="item" onChange={handleChange} ref={itemRef} nextRef={subItemRef} size="small" placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
-                    </FormRow>
-                    <FormRow label="Sub Item">
-                        <SelectBox options={subItemOptionList} fieldName="subItem" value={form.subItem} onChange={handleChange} ref={subItemRef} nextRef={rangeRef} size="small" placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
-                    </FormRow>
-                    <FormRow label="Range">
-                        <MultiSelectComboBox fieldName="range" options={rangeOptions} value={form.range} onChange={handleChange} ref={rangeRef} nextRef={sizeRef}  />
-                    </FormRow>
-                    <FormRow label="Size">
-                        <SelectBox options={sizeList} fieldName="size" value={form.size} onChange={handleChange} ref={sizeRef} nextRef={costRef} placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
-                    </FormRow>
-                    <FormRow label="Cost Centre">
-                        <SelectBox options={costCenters} value={form.cost} fieldName="cost" onChange={handleChange} ref={costRef} placeHolder="ALL" />
-                    </FormRow>
-                    <Box display="flex" justifyContent="center" gap={2} mt={3}>
-                        <Button variant="contained" onClick={handleView}>Show</Button>
-                        <Button variant="outlined" onClick={handleClear}>Clear</Button>
+
+                    {/* Filter fields */}
+                    <Box sx={{ px: { xs: 2, sm: 3 }, py: 3 }}>
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                                columnGap: 3,
+                                rowGap: 0.5,
+                            }}
+                        >
+                            <FormRow label="Metal">
+                                <SelectBox options={metalsOptionList} value={form.metal} fieldName="metal" onChange={handleChange} nextRef={itemRef} size="small" placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
+                            </FormRow>
+                            <FormRow label="Item Name">
+                                <SelectBox options={itemList} value={form.item} fieldName="item" onChange={handleChange} ref={itemRef} nextRef={subItemRef} size="small" placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
+                            </FormRow>
+                            <FormRow label="Sub Item">
+                                <SelectBox options={subItemOptionList} fieldName="subItem" value={form.subItem} onChange={handleChange} ref={subItemRef} nextRef={rangeRef} size="small" placeHolder="ALL" fontSize={{ xs: "10px", sm: "12px", md: "14px" }} />
+                            </FormRow>
+                            <FormRow label="Range">
+                                <MultiSelectComboBox fieldName="range" options={rangeOptions} value={form.range} onChange={handleChange} ref={rangeRef} nextRef={sizeRef} />
+                            </FormRow>
+                            <FormRow label="Size">
+                                <MultiSelectComboBox options={sizeList} fieldName="size" value={form.size} onChange={handleChange} ref={sizeRef} nextRef={costRef} />
+                            </FormRow>
+                            <FormRow label="Cost Centre">
+                                <SelectBox options={costCenters} value={form.cost} fieldName="cost" onChange={handleChange} ref={costRef} placeHolder="ALL" />
+                            </FormRow>
+                        </Box>
+
+                        <Divider sx={{ my: 3 }} />
+
+                        <Box display="flex" justifyContent="flex-end" gap={1.5}>
+                            <Button
+                                variant="outlined"
+                                color="inherit"
+                                startIcon={<RestartAltRoundedIcon />}
+                                onClick={handleClear}
+                                sx={{ textTransform: "none", fontWeight: 600 }}
+                            >
+                                Clear
+                            </Button>
+                            <Button
+                                variant="contained"
+                                startIcon={<VisibilityRoundedIcon />}
+                                onClick={handleView}
+                                sx={{ textTransform: "none", fontWeight: 600, px: 3 }}
+                            >
+                                Show Report
+                            </Button>
+                        </Box>
                     </Box>
-                </Box>
+                </Paper>
             )}
 
             {/* ═══════════ TABLE VIEW ═══════════ */}
@@ -268,7 +344,18 @@ const ReportScreen = () => {
 
                     {/* Top bar */}
                     <Box display="flex" alignItems="center" gap={1.5} flexWrap="wrap">
-                        <Button variant="outlined" size="small" onClick={() => setViewMode("form")} sx={{fontSize:{xs:"8px" ,sm:"10px",lg:"12px"}}}> ← Back</Button>
+                        <Tooltip title="Back to filters">
+                            <IconButton
+                                size="small"
+                                onClick={() => setViewMode("form")}
+                                sx={{
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    borderRadius: 2,
+                                }}
+                            >
+                                <ArrowBackRoundedIcon fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
                         <Box flex={1} minWidth={0}>
                             <ExportToolbar
                                 title="Stock Report"
@@ -279,6 +366,17 @@ const ReportScreen = () => {
                             />
                         </Box>
                     </Box>
+
+                    {/* Applied filter summary */}
+                    {buildSubtitle() && (
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ fontSize: { xs: "10px", sm: "11px" }, pl: 0.5 }}
+                        >
+                            {buildSubtitle()}
+                        </Typography>
+                    )}
 
                     {/* Table */}
                     <ResponsiveTable<ReportRow>
@@ -291,7 +389,7 @@ const ReportScreen = () => {
                         renderRow={(row) => (
                             <>
                                 {/* ── Lead columns (no tint) ── */}
-                                <TableCell align="left" sx={{fontSize:'10px'}}>{row.itemName ?? ""}</TableCell>
+                                <TableCell align="left" sx={{ fontSize: '10px' }}>{row.itemName ?? ""}</TableCell>
                                 <TableCell align="left" sx={{ fontSize: '10px' }}>{row.subItemName ?? ""}</TableCell>
                                 <TableCell align="left" sx={{ fontSize: '10px' }}>{row.size ?? ""}</TableCell>
                                 <TableCell align="left" sx={{ fontSize: '10px' }} >{row.range ?? ""}</TableCell>

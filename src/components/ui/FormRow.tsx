@@ -10,11 +10,13 @@ type Props = {
 
 const FormRow = ({ label, children, labelWidth = 100 , fieldWidth = 200 }: Props) => {
     return (
-        <Box display="flex" alignItems="center" gap={2} mb={1.5}>
+        <Box display="flex" alignItems="center" gap={2} mb={2}>
             {/* Label */}
             <Typography
                 sx={{
                     minWidth: labelWidth, // 🔥 important
+                    fontWeight: 500,
+                    color: "text.primary",
                     fontSize: {
                         xs: "12px", // mobile
                         sm: "13px", // small tablet
@@ -28,7 +30,7 @@ const FormRow = ({ label, children, labelWidth = 100 , fieldWidth = 200 }: Props
             </Typography>
 
             {/* Field */}
-            <Box sx={{minWidth : fieldWidth ,fontSize :"12px" }}>{children}</Box>
+            <Box sx={{ flex: 1, minWidth: Math.min(fieldWidth, 140), fontSize: "12px" }}>{children}</Box>
         </Box>
     );
 };

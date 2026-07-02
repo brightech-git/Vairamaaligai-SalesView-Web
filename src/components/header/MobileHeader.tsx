@@ -8,29 +8,26 @@ import {
     IconButton,
     Typography,
     useTheme,
-    Avatar
 } from '@mui/material';
 import {
     Menu as MenuIcon,
-    LightMode as LightModeIcon,
-    DarkMode as DarkModeIcon,
 } from '@mui/icons-material';
 import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
-import BranchSelector from '../BranchSelector';
 import logoImg from '@/app/logo.png';
 import { branchOptions } from './constant';
 import MultiSelectComboBox from '../ui/MultiSelect';
 import { useDashBoardContext } from '@/context/DashBoardContext';
 import { type OptionType } from '../ui/MultiSelect';
+import ThemeToggle from './ThemeToggle';
 
 interface MobileHeaderProps {
     logo: string;
 }
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
-    const { mode, toggleTheme, toggleSidebar } = useThemeContext();
+    const { toggleSidebar } = useThemeContext();
     const theme = useTheme();
 
     const { filters, setFilters } = useDashBoardContext();
@@ -88,16 +85,16 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                 
                 </Box>
 
-                {/* Right - Theme Toggle */}
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    {/* <BranchSelector branchOptions={branchOptions} /> */}
+                {/* Right - Branch Selector & Theme Toggle */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <MultiSelectComboBox
                         options={branchOptions}
                         fieldName="selectBranch"
                         onChange={handleBranchChange}
                         value={selectedBranches}
-                        minWidth={'180px'}
+                        minWidth={'150px'}
                     />
+                    <ThemeToggle size="small" />
                 </Box>
             </Box>
 

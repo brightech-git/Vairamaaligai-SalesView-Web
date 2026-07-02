@@ -79,6 +79,7 @@ const CustomSelect = forwardRef<HTMLInputElement, Props>(
                         onKeyDown={(e) => handleEnterFocus(e, nextRef)}
                         size={size}
                         placeholder={placeHolder}
+                        fullWidth
                         sx={{
                             "& .MuiInputBase-input": {
                                 fontSize,

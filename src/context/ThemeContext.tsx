@@ -93,6 +93,11 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
         setSidebarOpen(initialSidebar);
     }, []);
 
+    // Keep the CSS-variable theme (globals.css) in sync with the MUI mode
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", mode);
+    }, [mode]);
+
     const toggleTheme = (): void => {
         setMode((currentMode) => {
             const newMode = currentMode === "light" ? "dark" : "light";

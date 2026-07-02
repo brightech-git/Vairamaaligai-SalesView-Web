@@ -63,7 +63,7 @@ const MultiSelectComboBox = forwardRef<HTMLInputElement, Props>(
                         label={label}
                         inputRef={ref}
                         onKeyDown={(e) => handleEnterFocus(e, nextRef)}
-                        sx={{ minWidth: minWidth || "200px" }}
+                        sx={{ width: "100%", minWidth: minWidth || "200px" }}
                         size="small"
 
                         

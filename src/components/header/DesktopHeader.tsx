@@ -5,36 +5,27 @@ export const dynamic = "force-dynamic";
 import React, { useState } from 'react';
 import {
     Box,
-    IconButton,
     Typography,
     useTheme,
-    Avatar
+    Divider,
 } from '@mui/material';
-import {
-    LightMode as LightModeIcon,
-    DarkMode as DarkModeIcon,
-} from '@mui/icons-material';
-import { useThemeContext } from '@/context/ThemeContext';
 import DateRangePicker from '../DateRangePicker';
 import MetalRates from '../MetalRates';
-import BranchSelector from '../BranchSelector';
 import logoImg from '@/app/logo.png';
 import { branchOptions } from './constant';
 import MultiSelectComboBox from '../ui/MultiSelect';
 import { useDashBoardContext } from '@/context/DashBoardContext';
 import { OptionType } from '../ui/MultiSelect';
+import ThemeToggle from './ThemeToggle';
 
 interface DesktopHeaderProps {
     logo: string;
 }
 
-const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
+const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
+    const theme = useTheme();
 
-    console.log(logo,'logossss')
-    const { mode, toggleTheme } = useThemeContext();
-    const theme=useTheme();
- 
- const { filters, setFilters } = useDashBoardContext();
+    const { filters, setFilters } = useDashBoardContext();
 
     const [selectedBranches, setSelectedBranches] = useState<OptionType[]>([]);
 
@@ -56,9 +47,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
            
         }}>
             {/* Left Section - Company Logo & Name */}
-            <Box sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
             }}>
                 <Box
                     display={'flex'}
@@ -68,35 +59,32 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                         src={logoImg.src}
                         alt="Logo"
                         style={{
-                            height:'40px'
+                            height: '40px'
                         }}
-                      
                     />
                     <Typography fontSize='18px' variant='h1'> Jaiguru Jewellers </Typography>
                 </Box>
-              
+
+                <Divider orientation="vertical" flexItem sx={{ mx: 2, borderColor: theme.palette.divider }} />
+
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
                     flex: { xs: 1, sm: 1, },
                     justifyContent: 'center',
                     maxWidth: 500,
-                    ml: 2,
                 }}>
                     <DateRangePicker />
                 </Box>
             </Box>
 
-            {/* Center Section - Date Range Picker */}
-           
-
-            {/* Right Section - Metal Rates and Theme Toggle */}
+            {/* Right Section - Metal Rates, Branch Selector and Theme Toggle */}
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
                 flex: 1,
                 justifyContent: 'flex-end',
-                gap: 3,
+                gap: 2.5,
                 minWidth: 200,
             }}>
                 {/* Metal Rates as Chips */}
@@ -104,9 +92,8 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                     <MetalRates />
                 </Box>
 
-                {/* Right - Theme Toggle */}
-                <Box sx={{ display: 'flex', gap: 1 ,minWidth:'200px' }}>
-                    {/* <BranchSelector branchOptions={branchOptions} /> */}
+                {/* Branch Selector */}
+                <Box sx={{ display: 'flex', gap: 1, minWidth: '200px' }}>
                     <MultiSelectComboBox
                         options={branchOptions}
                         fieldName="selectBranch"
@@ -116,18 +103,10 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({logo}) => {
                     />
                 </Box>
 
-              {/*   Theme Toggle */}
-                {/* <IconButton
-                    onClick={toggleTheme}
-                    sx={{ 
-                        color: 'inherit',
-                        border: `1px solid ${theme.palette.divider}`,
-                        borderRadius: 2,
-                        padding: '8px',
-                    }}
-                >
-                    {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton> */}
+                <Divider orientation="vertical" flexItem sx={{ borderColor: theme.palette.divider }} />
+
+                {/* Theme Toggle */}
+                <ThemeToggle />
             </Box>
         </Box>
     );
