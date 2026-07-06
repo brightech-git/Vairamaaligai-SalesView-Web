@@ -22,6 +22,7 @@ import {
     AccountBalanceOutlined,
     AssessmentOutlined,
     CancelOutlined,
+    ReceiptLongOutlined,
     ChevronLeft as ChevronLeftIcon,
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
@@ -34,6 +35,7 @@ import SchemePayment from "@/app/SchemePaymentSummary/SchemePayment";
 import PaymentSummary from "@/app/PaymentSummary/PaymentSummary";
 import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
 import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
+import SchemeReport from "@/app/SchemeReport/SchemeReport";
 import BranchTables from "../ui/table/BranchTables";
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
@@ -48,6 +50,7 @@ const menuItems = [
     { text: "Payment Summary", icon: <PaymentOutlined fontSize="small" />, id: "payment" },
     { text: "Scheme Payment", icon: <AccountBalanceOutlined fontSize="small" />, id: "scheme" },
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
+    { text: "Scheme Report", icon: <ReceiptLongOutlined fontSize="small" />, id: "schemeReport" },
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
 ];
 
@@ -119,6 +122,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                         error={error}
                     />
                 );
+
+            case "schemeReport":
+                return <SchemeReport />;
 
             case "cancelled":
                 return (

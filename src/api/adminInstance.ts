@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080/api/v1"
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://rangassales.brightechsoftware.com/api/v1"
 
 console.log ("BASE_URL", BASE_URL)
 
