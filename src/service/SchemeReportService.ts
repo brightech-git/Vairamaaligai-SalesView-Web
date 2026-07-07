@@ -7,11 +7,11 @@ export interface SchemeListItem {
 }
 
 export const fetchSchemeList = async (): Promise<SchemeListItem[]> => {
-    const response = await adminInstance.get("scheme/list");
-    const raw = Array.isArray(response.data) ? response.data : response.data?.data || [];
+    const response = await adminInstance.get("scheme-report/schemeName");
+    const raw = Array.isArray(response.data) ? response.data : response.data || [];
     return raw.map((item: any) => ({
-        schemeId: item.schemeId ?? item.SCHEMEID ?? item.id ?? item.ID,
-        schemeName: item.schemeName ?? item.SCHEMENAME ?? item.name ?? item.NAME,
+        schemeId: item.schemeId ?? item.SCHEMEID ?? item.SchemeId ??  item.id ?? item.ID,
+        schemeName: item.schemeName ?? item.SCHEMENAME ?? item.SchemeName ?? item.name ?? item.NAME,
     }));
 };
 

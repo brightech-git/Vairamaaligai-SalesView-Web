@@ -112,7 +112,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
             
         },
         text: {
-            primary: "#ba7135",
+            primary: "#222",
             secondary: "#FFFFFF",
             disabled: "#ba7135",
         },
