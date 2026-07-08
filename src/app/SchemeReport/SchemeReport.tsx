@@ -481,6 +481,7 @@ const SchemeReport: React.FC = () => {
                     <Box
                         sx={{
                             display: "flex",
+                            flexDirection :{ xs: "column", md: "row" },
                             alignItems: "center",
                             justifyContent: "space-between",
                             gap: 1.5,
