@@ -11,6 +11,7 @@ import React,{ ReactNode, useState } from "react";
 import Head from "next/head";
 import { DashBoardProvider } from "@/context/DashBoardContext";
 import { CompanyDetailsProvider } from "@/context/CompanyDetailsContext";
+import { Provider as ChakraProvider } from "@/components/ui/provider";
 
 // src/app/layout.tsx
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="icon" href="/images/logo/icon.png" />
       </Head>
       <body>
+        <ChakraProvider >
         <QueryClientProvider client={queryClient}>
           <ReduxProvider>
             <ThemeContextProvider>
@@ -52,6 +54,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </ThemeContextProvider>
           </ReduxProvider>
         </QueryClientProvider>
+
+        </ChakraProvider>
       </body>
     </html>
   );

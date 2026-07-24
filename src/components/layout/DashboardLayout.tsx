@@ -23,6 +23,7 @@ import {
     AssessmentOutlined,
     CancelOutlined,
     ChevronLeft as ChevronLeftIcon,
+    People
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
@@ -37,6 +38,7 @@ import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
 import BranchTables from "../ui/table/BranchTables";
 
 import ReportPage from "@/app/report/page";
+import CustomerTransactionReportPage from "@/app/CustomerReport/page";
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
@@ -52,6 +54,7 @@ const menuItems = [
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
     { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
+    { text: "Customer Report", icon: <People fontSize="small" />, id: "customer-report" },
 
 ];
 
@@ -137,6 +140,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                 );
             case "report":
                 return <ReportPage /> ;
+
+            case "customer-report":
+                return <CustomerTransactionReportPage/>;
 
             default:
                 return <Dashboard />;
