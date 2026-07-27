@@ -121,7 +121,7 @@ export default function CustomerTransactionReportPage() {
         isFetching,
     } = useCustomerTransactionReport(appliedParams ?? { fromDate, toDate }, hasSearched && !!appliedParams);
 
-    const allData: CustomerTransactionRow[] = reportData || [];
+    const allData = reportData || [];
     const columns = useMemo(() => buildColumns(allData), [allData]);
 
     const totalPages = Math.max(1, Math.ceil(allData.length / pageSize));
