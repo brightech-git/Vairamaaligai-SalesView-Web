@@ -18,6 +18,8 @@ const Header: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+    const companyName = "Sri Abirami Jewellers"
+
     const drawerWidth = sidebarOpen ? 240 : 72;
 
     const headerWidth = isMobile ? '100%' : `calc(100% - ${drawerWidth}px)`;
@@ -41,7 +43,7 @@ const Header: React.FC = () => {
             }}
         >
             <Toolbar sx={{ minHeight: '64px!important', py: 1 , }}>
-                <HeaderContent />
+                <HeaderContent companyName={companyName} />
             </Toolbar>
         </AppBar>
     );

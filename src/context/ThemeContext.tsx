@@ -128,14 +128,14 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
             disabled: "#94a3b8",
         },
         primary: {
-            main: "#121212",
-            light: "#212121",
-            dark: "#121212",
+            main: "#8b0380",
+            light: "#d538e4",
+            dark: "#6d0468",
         },
         secondary: {
-            main: "#121212",
-            light: "#212121",
-            dark: "#121212",
+            main: "#7e073e",
+            light: "#d13676",
+            dark: "#7c0c28",
         },
         success: {
             main: "#10b981",
@@ -156,8 +156,8 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
 
     const darkPalette = {
         background: {
-            default: "#0f0346ff",
-            paper: "#0C0C0C",
+            default: "rgb(70, 3, 34)",
+            paper: "#440528",
             greyColor : "#EEEDDD"
         },
         text: {

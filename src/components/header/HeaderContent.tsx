@@ -9,7 +9,7 @@ import DesktopHeader from './DesktopHeader';
 import { useCompanyDetails } from '@/context/CompanyDetailsContext';
 
 
-const HeaderContent: React.FC = () => {
+const HeaderContent: React.FC<{companyName:string}> = ({ companyName }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -20,7 +20,7 @@ const HeaderContent: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%' }}>
-            {isMobile ? <MobileHeader logo={logo}/> : <DesktopHeader logo={logo}/>}
+            {isMobile ? <MobileHeader logo={logo} companyName={companyName}/> : <DesktopHeader logo={logo} companyName={companyName}/>}
         </Box>
     );
 };

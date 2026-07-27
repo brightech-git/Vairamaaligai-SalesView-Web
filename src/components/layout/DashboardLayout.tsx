@@ -53,8 +53,8 @@ const menuItems = [
     { text: "Scheme Payment", icon: <AccountBalanceOutlined fontSize="small" />, id: "scheme" },
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
-    { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
-    { text: "Customer Report", icon: <People fontSize="small" />, id: "customer-report" },
+    // { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
+    // { text: "Customer Report", icon: <People fontSize="small" />, id: "customer-report" },
 
 ];
 
@@ -138,11 +138,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                         error={error}
                     />
                 );
-            case "report":
-                return <ReportPage /> ;
+            // case "report":
+            //     return <ReportPage /> ;
 
-            case "customer-report":
-                return <CustomerTransactionReportPage/>;
+            // case "customer-report":
+            //     return <CustomerTransactionReportPage/>;
 
             default:
                 return <Dashboard />;

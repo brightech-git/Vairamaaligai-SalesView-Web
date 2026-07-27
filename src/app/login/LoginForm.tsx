@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
   
     // ✅ Hardcoded credentials
     const VALID_USERNAME = "admin";
-    const VALID_PASSWORD = "dj@123";
+    const VALID_PASSWORD = "admin@123";
 
     const setAuthSession = (value:boolean, ttlInMinutes :number=30) => {
         const now = new Date().getTime(); // current time in milliseconds

@@ -24,9 +24,10 @@ import ThemeToggle from './ThemeToggle';
 
 interface MobileHeaderProps {
     logo: string;
+    companyName :string;
 }
 
-const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
+const MobileHeader: React.FC<MobileHeaderProps> = ({logo ,companyName}) => {
     const { toggleSidebar } = useThemeContext();
     const theme = useTheme();
 
@@ -79,7 +80,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                             height:'25px'
                            }}
                         />
-                         <Typography fontSize='14px' variant='h2'> Jaiguru Jewellers </Typography>
+                         <Typography fontSize='14px' variant='h2'> {companyName} </Typography>
                     </Box>
 
                 
@@ -87,13 +88,13 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
 
                 {/* Right - Branch Selector & Theme Toggle */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <MultiSelectComboBox
+                    {/* <MultiSelectComboBox
                         options={branchOptions}
                         fieldName="selectBranch"
                         onChange={handleBranchChange}
                         value={selectedBranches}
                         minWidth={'150px'}
-                    />
+                    /> */}
                     <ThemeToggle size="small" />
                 </Box>
             </Box>

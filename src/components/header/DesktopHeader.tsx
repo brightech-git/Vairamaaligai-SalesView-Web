@@ -20,9 +20,10 @@ import ThemeToggle from './ThemeToggle';
 
 interface DesktopHeaderProps {
     logo: string;
+    companyName: string;
 }
 
-const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
+const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo, companyName}) => {
     const theme = useTheme();
 
     const { filters, setFilters } = useDashBoardContext();
@@ -55,14 +56,14 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
                     display={'flex'}
                     alignItems={'center'}
                 >
-                    <img
+                    {/* <img
                         src={logoImg.src}
                         alt="Logo"
                         style={{
                             height: '40px'
                         }}
-                    />
-                    <Typography fontSize='18px' variant='h1'> Jaiguru Jewellers </Typography>
+                    /> */}
+                    <Typography fontSize='18px' variant='h1'> {companyName} </Typography>
                 </Box>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2, borderColor: theme.palette.divider }} />
@@ -94,13 +95,13 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
 
                 {/* Branch Selector */}
                 <Box sx={{ display: 'flex', gap: 1, minWidth: '200px' }}>
-                    <MultiSelectComboBox
+                    {/* <MultiSelectComboBox
                         options={branchOptions}
                         fieldName="selectBranch"
                         onChange={handleBranchChange}
                         value={selectedBranches}
                         label="Select Branch"
-                    />
+                    /> */}
                 </Box>
 
                 <Divider orientation="vertical" flexItem sx={{ borderColor: theme.palette.divider }} />
