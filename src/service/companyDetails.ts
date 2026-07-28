@@ -2,9 +2,12 @@ import axios from "axios";
 
 const baseUrl = 'https://app.bmgjewellers.com/api/v1';
 
-export const getCompanyDetails = async () => {
+export const getCompanyDetails = async (id:number) => {
     try {
-        const response = await axios.get(`${baseUrl}/company/all`);
+        const params = new URLSearchParams({ id: id.toString() });
+        const response = await axios.get(`${baseUrl}/company/getById`,{
+            params: params
+        });
         if (response.data) {
             return response.data;
         }

@@ -6,16 +6,11 @@ import React from 'react';
 import { Box, useTheme, useMediaQuery } from '@mui/material';
 import MobileHeader from './MobileHeader';
 import DesktopHeader from './DesktopHeader';
-import { useCompanyDetails } from '@/context/CompanyDetailsContext';
 
 
-const HeaderContent: React.FC<{companyName:string}> = ({ companyName }) => {
+const HeaderContent: React.FC<{companyName:string ,logo:string}> = ({ companyName ,logo }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-    const { companyDetails } =useCompanyDetails();
-    const logo = `${companyDetails?.BASEURL.trim()}${companyDetails?.LOGO}`
-    console.log(logo ,'companydetails');
 
 
     return (

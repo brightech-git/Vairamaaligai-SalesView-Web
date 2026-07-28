@@ -56,7 +56,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
         ];
 
         return (
-            <Box sx={{ mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"

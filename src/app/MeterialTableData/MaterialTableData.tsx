@@ -48,7 +48,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
         ];
 
         return (
-            <Box sx={{ mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"

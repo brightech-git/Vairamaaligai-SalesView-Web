@@ -74,13 +74,13 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo ,companyName}) => {
                         }}
                     >
                         <img
-                            src={logoImg.src} // your image path
+                            src={logo || logoImg.src} // your image path
                             alt="Logo"
                            style={{
                             height:'25px'
                            }}
                         />
-                         <Typography fontSize='14px' variant='h2'> {companyName} </Typography>
+                         <Typography fontSize='14px' variant='h2' mt={1}> {companyName} </Typography>
                     </Box>
 
                 

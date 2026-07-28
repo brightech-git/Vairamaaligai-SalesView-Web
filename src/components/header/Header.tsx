@@ -12,13 +12,19 @@ import {
 } from '@mui/material';
 import { useThemeContext } from '@/context/ThemeContext';
 import HeaderContent from './HeaderContent';
+import { useCompanyDetails } from '@/context/CompanyDetailsContext';
 
 const Header: React.FC = () => {
     const { sidebarOpen } = useThemeContext();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const companyName = "Sri Abirami Jewellers"
+    const {companyDetails :company} = useCompanyDetails();
+    console.log(company,'companyDetails')
+
+    const companyName = company?.COMPANYNAME ||  "Sri Abirami Jewellers";
+    const logo = `${process.env.NEXT_PUBLIC_IMAGE_URL}${company?.LOGO}`
+    console.log(logo,'imagelogo')
 
     const drawerWidth = sidebarOpen ? 240 : 72;
 
@@ -43,7 +49,7 @@ const Header: React.FC = () => {
             }}
         >
             <Toolbar sx={{ minHeight: '64px!important', py: 1 , }}>
-                <HeaderContent companyName={companyName} />
+                <HeaderContent companyName={companyName} logo={logo}/>
             </Toolbar>
         </AppBar>
     );

@@ -210,7 +210,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 h2: {
                     fontFamily: "'Grenze Gotisch', serif",
                     fontWeight: 600,
-                    color: palette.text.primary,
+                    color: palette.primary.main,
                 },
                 h3: {
                     fontFamily: "'Almendra Display', serif",

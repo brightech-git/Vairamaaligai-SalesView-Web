@@ -2,11 +2,11 @@ import React, { createContext, useContext, useEffect } from "react";
 import { getCompanyDetails } from "@/service/companyDetails";
 
 interface CompanyDetails {
-    companyName: string;
-    companyAddress: string;
-    companyContact: string;
-    companyEmail: string;
-    companyGST: string;
+    COMPANYNAME: string;
+    COMPANYADDRESS: string;
+    COMPANYCONTACT: string;
+    COMPANYEMAIL: string;
+    COMPANYGST: string;
     LOGO: string;
     BASEURL : string;
 }
@@ -24,8 +24,8 @@ export const CompanyDetailsProvider: React.FC<{ children: React.ReactNode }> = (
     useEffect(() => {
         const fetchCompanyDetails = async () => {
             try {
-                const details = await getCompanyDetails();
-                setCompanyDetails(details?.[0] ?? null);
+                const details = await getCompanyDetails(14);
+                setCompanyDetails(details ?? null);
             } catch (error) {
                 console.error("Error fetching company details:", error);
             }

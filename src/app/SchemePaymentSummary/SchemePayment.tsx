@@ -59,7 +59,7 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
         ];
 
         return (
-            <Box sx={{ mb: 3 }} key={title}>
+            <Box sx={{ mt: 3 }} key={title}>
                 {title && (
                     <Typography
                         variant="h6"

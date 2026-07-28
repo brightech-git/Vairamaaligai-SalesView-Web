@@ -36,6 +36,7 @@ const Dashboard = () => {
       
       }}
       p={'1rem'}
+    
     >
      
         {branchesData.map((branch) => (

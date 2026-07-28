@@ -56,14 +56,14 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo, companyName}) => {
                     display={'flex'}
                     alignItems={'center'}
                 >
-                    {/* <img
-                        src={logoImg.src}
+                    <img
+                        src={logo || logoImg.src}
                         alt="Logo"
                         style={{
                             height: '40px'
                         }}
-                    /> */}
-                    <Typography fontSize='18px' variant='h1'> {companyName} </Typography>
+                    />
+                    <Typography fontSize='18px' variant='h2' mt={1}> {companyName} </Typography>
                 </Box>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2, borderColor: theme.palette.divider }} />
