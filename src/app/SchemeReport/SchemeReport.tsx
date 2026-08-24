@@ -30,6 +30,8 @@ import type { SchemeListItem } from "@/service/SchemeReportService";
 import { useCompanyDetails } from "@/context/CompanyDetailsContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+// import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 
 type DateMode = "range" | "asOn";
 
@@ -347,7 +349,7 @@ const SchemeReport: React.FC = () => {
         );
     };
 
-    const handleExportPdf = () => {
+    const handleExportPdf = (type : "pdf" | "direct") => {
         if (!tables) return;
 
         const effectiveFrom = dateMode === "asOn" ? asOnDate : fromDate;
@@ -461,9 +463,274 @@ const SchemeReport: React.FC = () => {
             const finalY = (doc as any).lastAutoTable.finalY as number;
             y = finalY + 26;
         });
+        if (type === "direct"){
+            const pdfBlob = doc.output("blob");
+            const pdfUrl = URL.createObjectURL(pdfBlob);
 
-        const fileSuffix = format(new Date(), "yyyyMMdd_HHmmss");
-        doc.save(`Scheme_Report_${fileSuffix}.pdf`);
+            const printWindow = window.open(pdfUrl, "_blank");
+
+            if (!printWindow) {
+                alert("Please allow popups for printing.");
+                return;
+            }
+
+            printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+            };
+        }
+        else{
+            const fileSuffix = format(new Date(), "yyyyMMdd_HHmmss");
+            doc.save(`Scheme_Report_${fileSuffix}.pdf`);
+        }
+      
+      
+
+
+    }; 
+    const handleExportExcel = () => {
+        if (!tables) return;
+
+        const workbook = XLSX.utils.book_new();
+
+        const sections = [
+            tables.receipt,
+            tables.collection,
+            tables.amount,
+            tables.weight,
+            tables.newMember,
+        ].filter((section) => section?.hasData);
+
+        sections.forEach((section) => {
+
+            const rows = [
+                section.pdfHead,
+                ...section.pdfBody,
+            ];
+
+            const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+            // =========================
+            // Column Width
+            // =========================
+
+            worksheet["!cols"] = section.pdfHead.map((header, index) => {
+
+                let maxLength = String(header).length;
+
+                section.pdfBody.forEach((row:any) => {
+                    const value = row[index];
+
+                    if (value !== null && value !== undefined) {
+                        maxLength = Math.max(
+                            maxLength,
+                            String(value).length
+                        );
+                    }
+                });
+
+                return {
+                    wch: Math.min(Math.max(maxLength + 3, 12), 35),
+                };
+            });
+
+            // =========================
+            // Header Styling
+            // =========================
+
+            section.pdfHead.forEach((_, colIndex) => {
+
+                const cellAddress = XLSX.utils.encode_cell({
+                    r: 0,
+                    c: colIndex,
+                });
+
+                if (worksheet[cellAddress]) {
+                    worksheet[cellAddress].s = {
+                        fill: {
+                            patternType: "solid",
+                            fgColor: {
+                                rgb: "D9EAF7",
+                            },
+                        },
+                        font: {
+                            bold: true,
+                            color: {
+                                rgb: "000000",
+                            },
+                        },
+                        alignment: {
+                            horizontal: "center",
+                            vertical: "center",
+                            wrapText: true,
+                        },
+                        border: {
+                            top: {
+                                style: "thin",
+                                color: { rgb: "000000" },
+                            },
+                            bottom: {
+                                style: "thin",
+                                color: { rgb: "000000" },
+                            },
+                            left: {
+                                style: "thin",
+                                color: { rgb: "000000" },
+                            },
+                            right: {
+                                style: "thin",
+                                color: { rgb: "000000" },
+                            },
+                        },
+                    };
+                }
+            });
+
+            // =========================
+            // Body Styling
+            // =========================
+
+            section.pdfBody.forEach((row:any, rowIndex:number) => {
+
+                row.forEach((_:any, colIndex:number) => {
+
+                    const cellAddress = XLSX.utils.encode_cell({
+                        r: rowIndex + 1,
+                        c: colIndex,
+                    });
+
+                    const cell = worksheet[cellAddress];
+
+                    if (!cell) return;
+
+                    cell.s = {
+                        alignment: {
+                            horizontal:
+                                colIndex < section.pdfTextCols
+                                    ? "left"
+                                    : "right",
+                            vertical: "center",
+                            wrapText: true,
+                        },
+                        border: {
+                            top: {
+                                style: "thin",
+                                color: { rgb: "D0D0D0" },
+                            },
+                            bottom: {
+                                style: "thin",
+                                color: { rgb: "D0D0D0" },
+                            },
+                            left: {
+                                style: "thin",
+                                color: { rgb: "D0D0D0" },
+                            },
+                            right: {
+                                style: "thin",
+                                color: { rgb: "D0D0D0" },
+                            },
+                        },
+                    };
+                });
+            });
+
+            // =========================
+            // Total Row
+            // =========================
+
+            const totalRowIndex = section.pdfBody.length;
+
+            section.pdfHead.forEach((_, colIndex) => {
+
+                const cellAddress = XLSX.utils.encode_cell({
+                    r: totalRowIndex,
+                    c: colIndex,
+                });
+
+                const cell = worksheet[cellAddress];
+
+                if (!cell) return;
+
+                cell.s = {
+                    fill: {
+                        patternType: "solid",
+                        fgColor: {
+                            rgb: "E7E7E7",
+                        },
+                    },
+                    font: {
+                        bold: true,
+                    },
+                    alignment: {
+                        horizontal:
+                            colIndex < section.pdfTextCols
+                                ? "left"
+                                : "right",
+                        vertical: "center",
+                    },
+                    border: {
+                        top: {
+                            style: "thin",
+                            color: { rgb: "000000" },
+                        },
+                        bottom: {
+                            style: "thin",
+                            color: { rgb: "000000" },
+                        },
+                        left: {
+                            style: "thin",
+                            color: { rgb: "000000" },
+                        },
+                        right: {
+                            style: "thin",
+                            color: { rgb: "000000" },
+                        },
+                    },
+                };
+            });
+
+            // =========================
+            // Row Heights
+            // =========================
+
+            worksheet["!rows"] = [
+                {
+                    hpt: 25,
+                },
+                ...section.pdfBody.map(() => ({
+                    hpt: 20,
+                })),
+            ];
+
+            // =========================
+            // Freeze Header
+            // =========================
+
+            worksheet["!freeze"] = {
+                xSplit: 0,
+                ySplit: 1,
+            };
+
+            XLSX.utils.book_append_sheet(
+                workbook,
+                worksheet,
+                section.title.substring(0, 31)
+            );
+        });
+
+        // =========================
+        // Download
+        // =========================
+
+        const fileSuffix = format(
+            new Date(),
+            "yyyyMMdd_HHmmss"
+        );
+
+        XLSX.writeFile(
+            workbook,
+            `Scheme_Report_${fileSuffix}.xlsx`
+        );
     };
 
     return (
@@ -541,12 +808,32 @@ const SchemeReport: React.FC = () => {
                             <Button
                                 variant="outlined"
                                 startIcon={<PictureAsPdfOutlinedIcon />}
-                                onClick={handleExportPdf}
+                                onClick={()=>handleExportPdf("pdf")}
                                 disabled={!hasReportData}
                                 size="small"
                                 sx={{ textTransform: "none" }}
                             >
                                 Export PDF
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                startIcon={<PictureAsPdfOutlinedIcon />}
+                                onClick={()=>handleExportPdf("direct")}
+                                disabled={!hasReportData}
+                                size="small"
+                                sx={{ textTransform: "none" }}
+                            >
+                                Print
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                startIcon={<PictureAsPdfOutlinedIcon />}
+                                onClick={handleExportExcel}
+                                disabled={!hasReportData}
+                                size="small"
+                                sx={{ textTransform: "none" }}
+                            >   
+                                Export Excel
                             </Button>
                         </Box>
                     </Box>
