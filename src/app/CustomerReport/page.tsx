@@ -136,7 +136,7 @@ export default function CustomerTransactionReportPage() {
     };
 
     return (
-        <Box p={{base : "2" , lg: "4"}} mt={{base : "2" ,lg: "4"}} minH="100vh" bg="#f0f2f5" fontFamily="'Segoe UI', Arial, sans-serif" w="100%">
+        <Box p={{base : "2" , lg: "4"}} mt={{base : "4" ,lg: "10"}} minH="100vh" bg="#f0f2f5" fontFamily="'Segoe UI', Arial, sans-serif" w="100%">
             {/* Filter Bar */}
             <Box bg="#fff" border="1px solid #dde1e7" borderRadius="10px" mb={4} p={4} boxShadow="0 1px 3px rgba(0,0,0,0.06)">
                 <Flex align="center" gap={3} mb={3}>

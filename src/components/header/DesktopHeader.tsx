@@ -17,6 +17,7 @@ import MultiSelectComboBox from '../ui/MultiSelect';
 import { useDashBoardContext } from '@/context/DashBoardContext';
 import { OptionType } from '../ui/MultiSelect';
 import ThemeToggle from './ThemeToggle';
+import MaterialGroupSelect from './MaterialGroupSelect';
 
 interface DesktopHeaderProps {
     logo: string;
@@ -84,6 +85,8 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
                 alignItems: 'center',
                 flex: 1,
                 justifyContent: 'flex-end',
+                flexWrap: 'wrap',
+                rowGap: 1,
                 gap: 2.5,
                 minWidth: 200,
             }}>
@@ -91,6 +94,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <MetalRates />
                 </Box>
+
+                {/* Material / Category Selector */}
+                <MaterialGroupSelect />
 
                 {/* Branch Selector */}
                 <Box sx={{ display: 'flex', gap: 1, minWidth: '200px' }}>

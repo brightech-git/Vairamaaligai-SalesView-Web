@@ -231,7 +231,7 @@ const ReportScreen = () => {
 
     // ─────────────────────────────────────────────────────────────────────────
     return (
-        <Box display="flex" flexDirection="column" gap={2} mt={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
+        <Box display="flex" flexDirection="column" gap={2} mt={{ xs: 4, sm: 6, md: 10, lg: 10, xl: 10 }}>
 
             {/* ═══════════ FILTER FORM ═══════════ */}
             {viewMode === "form" && (

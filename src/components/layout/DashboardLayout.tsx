@@ -64,7 +64,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [activeItem, setActiveItem] = useState("dashboard");
     
-    const { branchesData, loading, error } = useDashBoardContext(); // ✅ get context
+    const { branchesData, loading, error, } = useDashBoardContext(); // ✅ get context
+
+
     const drawerWidth = sidebarOpen ? 240 : 72;
 
     const handleMenuClick = (itemId: string) => {
@@ -286,7 +288,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                     }),
                 }}
             >
-                <Box sx={{ height: { xs: "100px", md: "50px", lg: "40px"  }  }} /> {/* Spacer for Header */}
+                <Box sx={{ height: { xs: "170px", sm: "150px", md: "50px", lg: "40px"  }  }} /> {/* Spacer for Header */}
 
                 {/* ✅ Render the selected page here */}
                 {renderPage()}

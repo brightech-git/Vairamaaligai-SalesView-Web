@@ -21,6 +21,7 @@ import MultiSelectComboBox from '../ui/MultiSelect';
 import { useDashBoardContext } from '@/context/DashBoardContext';
 import { type OptionType } from '../ui/MultiSelect';
 import ThemeToggle from './ThemeToggle';
+import MaterialGroupSelect from './MaterialGroupSelect';
 
 interface MobileHeaderProps {
     logo: string;
@@ -51,13 +52,15 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                 justifyContent: 'space-between',
                 width: '100%',
                 mb: 1,
-                p :0
+                gap: 1,
+                p: 0
             }}>
                 {/* Left - Menu & Logo */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap:0.25 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25, minWidth: 0 }}>
                     <IconButton
                         onClick={toggleSidebar}
-                        sx={{ color: 'inherit' }}
+                        size="small"
+                        sx={{ color: 'inherit', flexShrink: 0 }}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -70,39 +73,61 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({logo}) => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            minWidth: 0,
                         }}
                     >
                         <img
                             src={logoImg.src} // your image path
                             alt="Logo"
                            style={{
-                            height:'25px'
+                            height:'25px',
+                            flexShrink: 0,
                            }}
                         />
-                         <Typography fontSize='14px' variant='h2'> Jaiguru Jewellers </Typography>
+                        <Typography
+                            fontSize='14px'
+                            variant='h2'
+                            noWrap
+                            sx={{
+                                display: { xs: 'none', sm: 'block' },
+                                ml: 0.5,
+                            }}
+                        >
+                            Jaiguru Jewellers
+                        </Typography>
                     </Box>
-
-                
                 </Box>
 
-                {/* Right - Branch Selector & Theme Toggle */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {/* Right - Theme Toggle */}
+                <ThemeToggle size="small" />
+            </Box>
+
+            {/* Second Row - Material/Category & Branch Selector */}
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                width: '100%',
+                gap: 1,
+                mb: 1,
+            }}>
+                <MaterialGroupSelect minWidth={'110px'} />
+                <Box sx={{ flex: 1, minWidth: '120px' }}>
                     <MultiSelectComboBox
                         options={branchOptions}
                         fieldName="selectBranch"
                         onChange={handleBranchChange}
                         value={selectedBranches}
-                        minWidth={'150px'}
+                        minWidth={'120px'}
                     />
-                    <ThemeToggle size="small" />
                 </Box>
             </Box>
 
-            {/* Second Row - Date Picker and Metal Rates */}
+            {/* Third Row - Date Picker and Metal Rates */}
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                flexWrap: 'wrap',
                 width: '100%',
                 gap: 1,
             }}>

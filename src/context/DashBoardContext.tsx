@@ -10,10 +10,13 @@ import React, {
 } from "react";
 import { dashBoardContent } from "@/service/DashBoardService";
 
+export type MaterialGroupBy = "metal" | "category";
+
 type DashboardFilters = {
   fromDate: string;
   toDate: string;
   branchIds?: number[]; // multiple selected branch IDs
+  type: MaterialGroupBy
 };
 
 type BranchData = {
@@ -25,6 +28,8 @@ type BranchData = {
   estimationSummary: any[];
   cancelledBills: any[];
 };
+
+
 
 type DashBoardContextType = {
   filters: DashboardFilters;
@@ -53,9 +58,11 @@ export const DashBoardProvider = ({ children }: { children: ReactNode }) => {
     fromDate: "",
     toDate: "",
     branchIds: [], // empty = all branches
+    type :"metal",
   });
 
   const [branchesData, setBranchesData] = useState<BranchData[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -104,7 +111,7 @@ export const DashBoardProvider = ({ children }: { children: ReactNode }) => {
       loading,
       error,
       setFilters,
-      refresh: fetchDashboard,
+      refresh: fetchDashboard
     }),
     [filters, branchesData, loading, error]
   );

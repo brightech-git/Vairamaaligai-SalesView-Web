@@ -4,6 +4,8 @@ import { Box, Typography, useTheme } from "@mui/material";
 import ResponsiveTable from "@/components/ui/table/ResponsiveTable";
 import TableSkeleton from "@/components/ui/table/TableSkeleton";
 import { formatNumber } from "@/lib/numberFormatter";
+import type { MaterialGroupBy } from "@/context/DashBoardContext";
+import { useDashBoardContext } from "@/context/DashBoardContext";
 
 interface MaterialSummaryTableProps {
     branchName?: string;      // Optional, for single branch title
@@ -20,9 +22,15 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
 }) => {
     const theme = useTheme();
 
+    const { filters } = useDashBoardContext();
+    
+
     if (loading) return <TableSkeleton rows={4} columns={6} />;
     if (error) return <div>Error loading dashboard</div>;
     if (!data || data.length === 0) return null;
+
+    const groupField = filters.type === "category" ? "CATNAME" : "METALNAME";
+    const groupLabel = filters.type === "category" ? "Category" : "Material";
 
     // Helper function to render a single table
     const renderTable = (tableData: any[], title?: string) => {
@@ -30,7 +38,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
 
         const sortedData = [...tableData]; // optionally sort by METALNAME
         const rows = sortedData.map((item) => ({
-            material: item.METALNAME || "-",
+            material: item[groupField] || "-",
             sales: formatNumber(item.SNETWT || 0, "3"),
             purchase: formatNumber(item.PGRSWT || 0, "3"),
             salesReturn: formatNumber(item.SRGRSWT || 0, "3"),
@@ -39,7 +47,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
         }));
 
         const columns = [
-            { id: "material", label: "Material", align: "center" as const },
+            { id: "material", label: groupLabel, align: "left" as const },
             { id: "sales", label: "Sales(gm)", align: "right" as const },
             { id: "purchase", label: "Purchase(gm)", align: "right" as const },
             { id: "salesReturn", label: "Sales Return(gm)", align: "right" as const },
@@ -48,7 +56,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
         ];
 
         return (
-            <Box sx={{ mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt:10, mb: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"
@@ -60,7 +68,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
                             fontFamily: "var(--font-merriweather)",
                         }}
                     >
-                        {title} - Material Summary
+                        {title} - {groupLabel} Summary
                     </Typography>
                 )}
                 <ResponsiveTable columns={columns} data={rows} stickyHeader />
