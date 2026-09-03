@@ -23,7 +23,9 @@ import {
     AssessmentOutlined,
     CancelOutlined,
     ChevronLeft as ChevronLeftIcon,
-    People
+    People,
+    PercentOutlined,
+    ContactPageOutlined
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
@@ -39,6 +41,8 @@ import BranchTables from "../ui/table/BranchTables";
 
 import ReportPage from "@/app/report/page";
 import CustomerTransactionReportPage from "@/app/CustomerReport/page";
+import DiscountReportPage from "@/app/DiscountReport/page";
+import PersonalInfoReportPage from "@/app/PersonalInfoReport/page";
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
@@ -55,6 +59,8 @@ const menuItems = [
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
     { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
     { text: "Customer Report", icon: <People fontSize="small" />, id: "customer-report" },
+    { text: "Discount Report", icon: <PercentOutlined fontSize="small" />, id: "discount-report" },
+    { text: "Personal Info Report", icon: <ContactPageOutlined fontSize="small" />, id: "personal-info-report" },
 
 ];
 
@@ -145,6 +151,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
 
             case "customer-report":
                 return <CustomerTransactionReportPage/>;
+
+            case "discount-report":
+                return <DiscountReportPage/>;
+
+            case "personal-info-report":
+                return <PersonalInfoReportPage/>;
 
             default:
                 return <Dashboard />;
