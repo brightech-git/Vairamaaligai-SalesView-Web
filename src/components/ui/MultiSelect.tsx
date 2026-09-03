@@ -43,7 +43,14 @@ const MultiSelectComboBox = forwardRef<HTMLInputElement, Props>(
 
                     return (
                         <li key={key} {...rest} style={{fontSize:"10px"}}>
-                            <Checkbox checked={selected} size="small"  />
+                            <Checkbox
+                                checked={selected}
+                                size="small"
+                                sx={{
+                                    color: "#94a3b8",
+                                    "&.Mui-checked": { color: "#1e40af" },
+                                }}
+                            />
                             {option.label}
                         </li>
                     );
