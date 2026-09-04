@@ -27,7 +27,7 @@ export const CompanyDetailsProvider: React.FC<{ children: React.ReactNode }> = (
     useEffect(() => {
         const fetchCompanyDetails = async () => {
             try {
-                const rangaCompanyId = 12 ;
+                const rangaCompanyId = 5 ;
                 const details = await getCompanyDetails(rangaCompanyId);
                 console.log("Fetched company details:", details);
                 setCompanyDetails(details ?? null);

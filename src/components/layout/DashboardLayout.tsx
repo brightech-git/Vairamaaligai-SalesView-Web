@@ -14,6 +14,7 @@ import {
     Box,
     useTheme,
     useMediaQuery,
+    
 } from "@mui/material";
 import {
     DashboardOutlined,
@@ -22,7 +23,9 @@ import {
     AccountBalanceOutlined,
     AssessmentOutlined,
     CancelOutlined,
+    PersonOutline as PersonOutlineIcon,
     ChevronLeft as ChevronLeftIcon,
+    
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
@@ -35,6 +38,7 @@ import PaymentSummary from "@/app/PaymentSummary/PaymentSummary";
 import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
 import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
 import BranchTables from "../ui/table/BranchTables";
+import PersonalInfoReport from "@/app/PersonalInfoReport/PersonalInfoReport";
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
@@ -49,6 +53,7 @@ const menuItems = [
     { text: "Scheme Payment", icon: <AccountBalanceOutlined fontSize="small" />, id: "scheme" },
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
     { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
+    { text: "Personal Info Report", icon: <PersonOutlineIcon fontSize="small" />, id: "personal-info" },
 ];
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
@@ -131,6 +136,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                         error={error}
                     />
                 );
+
+            case "personal-info":
+                return <PersonalInfoReport />;
 
             default:
                 return <Dashboard />;
