@@ -16,7 +16,7 @@ import {
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
 interface BranchOption {
-    branchId: number;
+    branchId: string;
     branchName: string;
 }
 
@@ -26,7 +26,7 @@ interface BranchSelectorProps {
 
 const BranchSelector: React.FC<BranchSelectorProps> = ({ branchOptions }) => {
     const { filters, setFilters } = useDashBoardContext();
-    const [selectedIds, setSelectedIds] = useState<number[]>(filters.branchIds || []);
+    const [selectedIds, setSelectedIds] = useState<string[]>(filters.branchIds || []);
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("sm")); // small screens
@@ -36,12 +36,12 @@ const BranchSelector: React.FC<BranchSelectorProps> = ({ branchOptions }) => {
     }, [filters.branchIds]);
 
     const handleChange = (event: SelectChangeEvent<typeof selectedIds>) => {
-        const value = event.target.value as number[];
+        const value = event.target.value as string[];
         setSelectedIds(value);
         setFilters((prev) => ({ ...prev, branchIds: value }));
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         const newSelected = selectedIds.filter((item) => item !== id);
         setSelectedIds(newSelected);
         setFilters((prev) => ({ ...prev, branchIds: newSelected }));

@@ -7,12 +7,10 @@ export const dashBoardContent = async (filters: {
 }) => {
 
 
-    console.log("📊 Dashboard API Request:", filters);
     try {
-        const response = await adminInstance.get("dashboard", {
+        const response = await adminInstance.get("dashboardNew", {
             params: filters,
         });
-        console.log(response.data ,'ranga dash')
         return response.data;
     } catch (error) {
         console.error("❌ Dashboard API Error:", error);

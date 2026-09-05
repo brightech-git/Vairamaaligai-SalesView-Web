@@ -15,7 +15,6 @@ const Dashboard = () => {
   const { branchesData, loading, error } = useDashBoardContext();
   const { sidebarOpen } =useThemeContext();
 
-  console.log(branchesData,'branchesData')
   if (error) return <div>{error}</div>;
 
   const hasValidData = (arr:any) => {
@@ -45,7 +44,7 @@ const Dashboard = () => {
         }}
       >
         {branchesData.map((branch) => (
-          <Box key={branch.branchName} sx={{ mb: 2 }}>
+          <Box key={branch.branchId} sx={{ mb: 2 }}>
 
             {/* ➤ Branch Name Heading */}
             {/* ➤ Branch Name Heading */}

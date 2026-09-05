@@ -13,17 +13,24 @@ import { dashBoardContent } from "@/service/DashBoardService";
 type DashboardFilters = {
   fromDate: string;
   toDate: string;
-  branchIds?: number[]; // multiple selected branch IDs
+  branchIds?: string[]; // multiple selected branch IDs (COMPANYID values)
+};
+
+type CompanyDetails = {
+  COMPANYID?: string;
+  COMPANYNAME?: string;
+  [key: string]: any;
 };
 
 type BranchData = {
-  branchId: number;
+  branchId: string;
   branchName: string;
   materialSummary: any[];
   schemePayment: any[];
   paymentSummary: any[];
   estimationSummary: any[];
   cancelledBills: any[];
+  companyDetails: CompanyDetails;
 };
 
 type DashBoardContextType = {
@@ -67,17 +74,26 @@ export const DashBoardProvider = ({ children }: { children: ReactNode }) => {
       setError(null);
       const res = await dashBoardContent(filters);
 
-      // Map raw data
-      const allBranches: BranchData[] =
-        res.branches?.map((branch: any) => ({
-          branchId: branch.branchId,
-          branchName: branch.branchName,
-          materialSummary: branch.resultSets?.[0] || [],
-          schemePayment: branch.resultSets?.[1] || [],
-          paymentSummary: branch.resultSets?.[2] || [],
-          estimationSummary: branch.resultSets?.[3] || [],
-          cancelledBills: branch.resultSets?.[4] || [],
-        })) || [];
+      // API returns { success, data: [{ schemeDB, resultSets, transDB, adminDB }], fromDate, toDate }
+      // resultSets order: [0] material summary, [1] scheme/chit payment,
+      // [2] payment mode summary, [3] estimation status summary, [4] company details
+      const rawBranches: any[] = Array.isArray(res?.data) ? res.data : [];
+
+      const allBranches: BranchData[] = rawBranches.map((branch: any, index: number) => {
+        const resultSets = branch.resultSets || [];
+        const companyDetails: CompanyDetails = resultSets[4]?.[0] || {};
+
+        return {
+          branchId: companyDetails.COMPANYID || branch.transDB || String(index),
+          branchName: companyDetails.COMPANYNAME || branch.transDB || `Branch ${index + 1}`,
+          materialSummary: resultSets[0] || [],
+          schemePayment: resultSets[1] || [],
+          paymentSummary: resultSets[2] || [],
+          estimationSummary: resultSets[3] || [],
+          cancelledBills: resultSets[5] || [],
+          companyDetails,
+        };
+      });
 
       // Filter based on selected branch IDs
       const filteredBranches =
