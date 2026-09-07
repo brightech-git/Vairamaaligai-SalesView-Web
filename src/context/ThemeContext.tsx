@@ -109,22 +109,22 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
         background: {
             default: "#FFFFFF",
             paper: "#FFFFFF",
-            
+
         },
         text: {
-            primary: "#ba7135",
+            primary: "#1A1A1A",
             secondary: "#FFFFFF",
-            disabled: "#ba7135",
+            disabled: "#8a8a8a",
         },
         primary: {
-            main: "#9d2324",
-            light: "#c09b4a",
-            dark: "#9d2324",
+            main: "#80004D",
+            light: "#A64C7C",
+            dark: "#56002F",
         },
         secondary: {
-            main: "#9d2324",
-            light: "#c09b4a",
-            dark: "#9d2324",
+            main: "#D4AF37",
+            light: "#E0C670",
+            dark: "#A8862B",
         },
         success: {
             main: "#10b981",
@@ -153,14 +153,14 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
             secondary: "#222",
         },
         primary: {
-            main: "#FFFFFF",
-            light: "#93c5fd",
-            dark: "#FFFFFF",
+            main: "#D4599A",
+            light: "#E58BB8",
+            dark: "#80004D",
         },
         secondary: {
-            main: "#a78bfa",
-            light: "#c4b5fd",
-            dark: "#8b5cf6",
+            main: "#D4AF37",
+            light: "#E0C670",
+            dark: "#A8862B",
         },
         success: {
             main: "#34d399",
@@ -182,6 +182,8 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
     // MUI Theme configuration
     const muiTheme = useMemo(() => {
         const palette = mode === "light" ? lightPalette : darkPalette;
+        // Warm gold-tinted surface for the header & sidebar so they read as distinct from the page background
+        const surfaceBg = mode === "light" ? "#FBF3E3" : palette.background.paper;
 
         const themeOptions: ThemeOptions = {
             palette: {
@@ -264,7 +266,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 MuiAppBar: {
                     styleOverrides: {
                         root: {
-                            backgroundColor: palette.background.paper,
+                            backgroundColor: surfaceBg,
                             color: palette.text.primary,
                             boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
                         },
@@ -273,7 +275,7 @@ export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
                 MuiDrawer: {
                     styleOverrides: {
                         paper: {
-                            backgroundColor: palette.background.paper,
+                            backgroundColor: surfaceBg,
                             borderRight: `1px solid ${palette.grey[200]}`,
                             transition: "width 0.3s ease",
                         },

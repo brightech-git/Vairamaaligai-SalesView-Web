@@ -171,7 +171,7 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                                                 sx={{
                                                     fontFamily: "var(--font-montserrat)",
                                                     fontSize: 12.5,
-                                                    fontWeight: 500,
+                                                    fontWeight: 600,
                                                     color: theme.palette.text.primary,
                                                     py: 0.5,
                                                     px: 1,
@@ -272,7 +272,7 @@ const ResponsiveTable: React.FC<ResponsiveTableProps> = ({
                                             fontSize: `${size.bodyFont}px`,
                                             padding: size.padding,
                                             textTransform: "capitalize",
-                                            fontWeight: 500,
+                                            fontWeight: 600,
                                         }}
                                     >
                                         {displayValue}

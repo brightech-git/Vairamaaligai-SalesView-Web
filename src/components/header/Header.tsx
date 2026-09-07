@@ -34,7 +34,6 @@ const Header: React.FC = () => {
                     duration: theme.transitions.duration.leavingScreen,
                 }),
                 zIndex: theme.zIndex.drawer + 1,
-                backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 marginBottom: sidebarOpen? '5rem':'0.5rem'

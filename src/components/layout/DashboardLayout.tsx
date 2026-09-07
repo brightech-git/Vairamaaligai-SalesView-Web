@@ -52,7 +52,7 @@ const menuItems = [
     { text: "Payment Summary", icon: <PaymentOutlined fontSize="small" />, id: "payment" },
     { text: "Scheme Payment", icon: <AccountBalanceOutlined fontSize="small" />, id: "scheme" },
     { text: "Estimation Summary", icon: <AssessmentOutlined fontSize="small" />, id: "estimation" },
-    { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
+    // { text: "Cancelled Bills", icon: <CancelOutlined fontSize="small" />, id: "cancelled" },
     { text: "Personal Info Report", icon: <PersonOutlineIcon fontSize="small" />, id: "personal-info" },
 ];
 
