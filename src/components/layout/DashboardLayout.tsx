@@ -25,7 +25,8 @@ import {
     ChevronLeft as ChevronLeftIcon,
     People,
     PercentOutlined,
-    ContactPageOutlined
+    ContactPageOutlined,
+    ReceiptLongOutlined
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
@@ -45,6 +46,7 @@ import DiscountReportPage from "@/app/DiscountReport/page";
 import PersonalInfoReportPage from "@/app/PersonalInfoReport/page";
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
+import SchemeReport from "@/app/SchemeReport/SchemeReport";
 
 interface DashboardLayoutProps {
     children?: React.ReactNode;
@@ -60,6 +62,7 @@ const menuItems = [
     { text: "Item Range Wise Stock", icon: <Inventory2Outlined fontSize="small" />, id: "report" },
     { text: "Customer Report", icon: <People fontSize="small" />, id: "customer-report" },
     { text: "Discount Report", icon: <PercentOutlined fontSize="small" />, id: "discount-report" },
+    { text: "Scheme Report", icon: <ReceiptLongOutlined fontSize="small" />, id: "schemeReport" },
     { text: "Personal Info Report", icon: <ContactPageOutlined fontSize="small" />, id: "personal-info-report" },
 
 ];
@@ -67,6 +70,7 @@ const menuItems = [
 const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const { sidebarOpen, toggleSidebar } = useThemeContext();
     const theme = useTheme();
+  
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [activeItem, setActiveItem] = useState("dashboard");
     
@@ -157,7 +161,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
 
             case "personal-info-report":
                 return <PersonalInfoReportPage/>;
-
+            case "schemeReport":
+                return <SchemeReport />;
             default:
                 return <Dashboard />;
         }
