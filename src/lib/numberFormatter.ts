@@ -8,10 +8,14 @@ export type DecimalFormat = "2" | "3";
  */
 export const formatNumber = (value: number | null | undefined, format: DecimalFormat = "2"): string => {
     if (value === null || value === undefined || isNaN(Number(value))) {
-        return "0.00";
+        return " ";
     }
 
+    
+
     const num = Number(value);
+
+    if( num === 0) return "";
     if (format === "2") return num.toFixed(2);
     return num.toFixed(3);
 };

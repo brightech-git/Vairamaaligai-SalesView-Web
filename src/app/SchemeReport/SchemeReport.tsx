@@ -161,12 +161,16 @@ const SchemeReport: React.FC = () => {
             type: label,
             amount: Number(collectionObj[field]) || 0,
         }));
+
+        console.log(collectionRows,'collectionRows')
+        const filteredCollectionRow = collectionRows.filter(c=>!(c.amount === 0))
+
         const collectionTotalRow = {
             type: TOTAL_LABEL,
             amount: Number(collectionObj.TOTAMOUNT) || 0,
             __isTotal: true,
         };
-        const collectionData = [...collectionRows, collectionTotalRow];
+        const collectionData = [...filteredCollectionRow, collectionTotalRow];
         const collectionColumns = [
             { id: "type", label: "Collection Type", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
             { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
