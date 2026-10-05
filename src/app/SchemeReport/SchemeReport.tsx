@@ -50,9 +50,183 @@ const buildTotalsRow = (rows: any[], keyField: string, numericFields: string[]) 
     return totals;
 };
 
+const cleanText = (v: any) => (v === null || v === undefined ? "" : String(v).trim()) || "-";
+
 const boldIfTotal = (row: any, content: React.ReactNode) => (
     <span style={{ fontWeight: row.__isTotal ? 700 : 500 }}>{content}</span>
 );
+
+type BranchReport = any[][];
+
+const sectionKeys = ["receipt", "collection", "amount", "weight", "newMember"] as const;
+
+// Builds the five report tables for one branch from its five arrays:
+// [receipt summary, collection summary, scheme amount, scheme weight, new member collection]
+const buildBranchTables = (branchData: BranchReport) => {
+    const [receiptSummary = [], collectionSummary = [], schemeAmountSummary = [], schemeWeightSummary = [], newMemberCollection = []] =
+        Array.isArray(branchData) ? branchData : [];
+
+    // 1. Scheme Receipt Summary View
+    const receiptRows = (receiptSummary || []).map((r: any) => ({
+        group: cleanText(r.Group),
+        noOfRects: r["No Of Rects"] ?? 0,
+        amount: Number(r.AMOUNT) || 0,
+        weight: Number(r.WEIGHT) || 0,
+    }));
+    const receiptTotal = buildTotalsRow(receiptRows, "group", ["noOfRects", "amount", "weight"]);
+    const receiptData = receiptTotal ? [...receiptRows, receiptTotal] : receiptRows;
+    const receiptColumns = [
+        { id: "group", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "noOfRects", label: "No of Rects", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, v) },
+        { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+        { id: "weight", label: "Weight (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+    ];
+
+    // 2. Collection Summary View (single-row object -> label/value rows)
+    const collectionLabels: Record<string, string> = {
+        CASHAMOUNT: "Cash",
+        CARDAMOUNT: "Credit Card",
+        CHEQUEAMOUNT: "Cheque",
+        ETRANSFERAMOUNT: "Net Banking",
+        CREDITPURCHASE: "Credit Purchase",
+        GIFTADJUSTMENT: "Gift Adjustment",
+        HOMEAMOUNT: "Home Collection",
+        ADVAMOUNT: "Advance",
+        VAAMOUNT: "VA Amount",
+        ONLAMOUNT: "Online",
+        OTHERAMOUNT: "Other",
+    };
+    const collectionObj = (collectionSummary && collectionSummary[0]) || {};
+    const collectionRows = Object.entries(collectionLabels).map(([field, label]) => ({
+        type: label,
+        amount: Number(collectionObj[field]) || 0,
+    }));
+
+    console.log(collectionRows, 'collectionRows')
+    const filteredCollectionRow = collectionRows.filter(c => !(c.amount === 0))
+
+    const collectionTotalRow = {
+        type: TOTAL_LABEL,
+        amount: Number(collectionObj.TOTAMOUNT) || 0,
+        __isTotal: true,
+    };
+    const collectionData = [...filteredCollectionRow, collectionTotalRow];
+    const collectionColumns = [
+        { id: "type", label: "Collection Type", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+    ];
+
+    // 3. Scheme Summary View (Amount)
+    const amountRows = (schemeAmountSummary || []).map((r: any) => ({
+        schemeName: cleanText(r.SCHEMENAME),
+        opening: Number(r.OPENING) || 0,
+        receipt: Number(r.RECEIPT) || 0,
+        closedAmt: Number(r.CLOSEDAMT) || 0,
+        outstanding: Number(r.OUTSTANDING) || 0,
+    }));
+    const amountTotal = buildTotalsRow(amountRows, "schemeName", ["opening", "receipt", "closedAmt", "outstanding"]);
+    const amountData = amountTotal ? [...amountRows, amountTotal] : amountRows;
+    const amountColumns = [
+        { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "opening", label: "Opening (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+        { id: "receipt", label: "Receipt (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+        { id: "closedAmt", label: "Closed (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+        { id: "outstanding", label: "Outstanding (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+    ];
+
+    // 4. Scheme Summary View (Weight)
+    const weightRows = (schemeWeightSummary || []).map((r: any) => ({
+        schemeName: cleanText(r.SCHEMENAME),
+        groupCode: cleanText(r.GROUPCODE),
+        opening: Number(r.OPENING) || 0,
+        receipt: Number(r.RECEIPT) || 0,
+        chequeReturn: Number(r.CHEQUERETURN) || 0,
+        closedWeight: Number(r.CLOSEDWEIGHT) || 0,
+        outstanding: Number(r.OUTSTANDING) || 0,
+    }));
+    const weightTotal = buildTotalsRow(weightRows, "schemeName", ["opening", "receipt", "chequeReturn", "closedWeight", "outstanding"]);
+    const weightData = weightTotal ? [...weightRows, weightTotal] : weightRows;
+    const weightColumns = [
+        { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        // { id: "groupCode", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "opening", label: "Opening (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+        { id: "receipt", label: "Receipt (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+        { id: "chequeReturn", label: "Cheque Return (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+        { id: "closedWeight", label: "Closed (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+        { id: "outstanding", label: "Outstanding (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+    ];
+
+    // 5. New Member Collection View
+    const newMemberRows = (newMemberCollection || []).map((r: any) => ({
+        schemeName: cleanText(r.schemeName ?? r.SCHEMENAME),
+        group: cleanText(r.Group),
+        noOfRects: r["No Of Rects"] ?? 0,
+        amount: Number(r.AMOUNT) || 0,
+        weight: Number(r.WEIGHT) || 0,
+    }));
+    const newMemberTotal = buildTotalsRow(newMemberRows, "schemeName", ["noOfRects", "amount", "weight"]);
+    const newMemberData = newMemberTotal ? [...newMemberRows, newMemberTotal] : newMemberRows;
+    const newMemberColumns = [
+        { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "group", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
+        { id: "noOfRects", label: "No of Rects", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, v) },
+        { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
+        { id: "weight", label: "Weight (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
+    ];
+
+    return {
+        receipt: {
+            title: "Scheme Receipt Summary",
+            sheetName: "Receipt",
+            hasData: receiptRows.length > 0,
+            columns: receiptColumns,
+            data: receiptData,
+            pdfHead: ["Group", "No of Rects", "Amount", "Weight (g)"],
+            pdfBody: receiptData.map((r: any) => [r.group, String(r.noOfRects), formatAmountPdf(r.amount), formatWeight(r.weight)]),
+            pdfTextCols: 1,
+        },
+        collection: {
+            title: "Collection Summary",
+            sheetName: "Collection",
+            hasData: collectionSummary.length > 0,
+            columns: collectionColumns,
+            data: collectionData,
+            pdfHead: ["Collection Type", "Amount"],
+            pdfBody: collectionData.map((r: any) => [r.type, formatAmountPdf(r.amount)]),
+            pdfTextCols: 1,
+        },
+        amount: {
+            title: "Scheme Summary (Amount)",
+            sheetName: "Scheme Amount",
+            hasData: amountRows.length > 0,
+            columns: amountColumns,
+            data: amountData,
+            pdfHead: ["Scheme", "Opening", "Receipt", "Closed", "Outstanding"],
+            pdfBody: amountData.map((r: any) => [r.schemeName, formatAmountPdf(r.opening), formatAmountPdf(r.receipt), formatAmountPdf(r.closedAmt), formatAmountPdf(r.outstanding)]),
+            pdfTextCols: 1,
+        },
+        weight: {
+            title: "Scheme Summary (Weight)",
+            sheetName: "Scheme Weight",
+            hasData: weightRows.length > 0,
+            columns: weightColumns,
+            data: weightData,
+            pdfHead: ["Scheme", "Opening (g)", "Receipt (g)", "Cheque Return (g)", "Closed (g)", "Outstanding (g)"],
+            pdfBody: weightData.map((r: any) => [r.schemeName, formatWeight(r.opening), formatWeight(r.receipt), formatWeight(r.chequeReturn), formatWeight(r.closedWeight), formatWeight(r.outstanding)]),
+            pdfTextCols: 1,
+        },
+        newMember: {
+            title: "New Member Collection",
+            sheetName: "New Member",
+            hasData: newMemberRows.length > 0,
+            columns: newMemberColumns,
+            data: newMemberData,
+            pdfHead: ["Scheme", "Group", "No of Rects", "Amount", "Weight (g)"],
+            pdfBody: newMemberData.map((r: any) => [r.schemeName, r.group, String(r.noOfRects), formatAmountPdf(r.amount), formatWeight(r.weight)]),
+            pdfTextCols: 2,
+        },
+    };
+};
 
 const SchemeReport: React.FC = () => {
 
@@ -71,9 +245,9 @@ const SchemeReport: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [reportData, setReportData] = useState<any[] | null>(null);
+    const [reportData, setReportData] = useState<Record<string, BranchReport> | null>(null);
 
-    console.log(reportData,'reportData')
+    console.log(reportData, 'reportData')
 
     const handleModeChange = (_: React.MouseEvent<HTMLElement>, newMode: DateMode | null) => {
         if (newMode) setDateMode(newMode);
@@ -95,7 +269,7 @@ const SchemeReport: React.FC = () => {
                 costIds: filters.branchIds
             });
             console.log("Scheme Report Data:", data);
-            setReportData(Array.isArray(data) ? data : null);
+            setReportData(data);
         } catch (err) {
             setError("Failed to load scheme report");
             setReportData(null);
@@ -114,8 +288,6 @@ const SchemeReport: React.FC = () => {
         setError(null);
     };
 
-    const [receiptSummary, collectionSummary, schemeAmountSummary, schemeWeightSummary, newMemberCollection] =
-        reportData ?? [[], [], [], [], []];
 
     const sectionTitleSx = {
         mb: 1.5,
@@ -133,200 +305,43 @@ const SchemeReport: React.FC = () => {
         </Box>
     );
 
-    const tables = React.useMemo(() => {
-        if (!reportData) return null;
+    // One entry per branch key in the response, in the order the API returns them
+    const branchReports = React.useMemo(() => {
+        if (!reportData || typeof reportData !== "object") return null;
+        return Object.entries(reportData).map(([branch, branchData]) => {
+            const tables = buildBranchTables(branchData);
+            const sections = sectionKeys.map((key) => tables[key]).filter((section) => section.hasData);
+            return { branch: branch.trim(), tables, sections };
+        });
+    }, [reportData]);
 
-        // 1. Scheme Receipt Summary View
-        const receiptRows = (receiptSummary || []).map((r: any) => ({
-            group: r.Group ?? "-",
-            noOfRects: r["No Of Rects"] ?? 0,
-            amount: Number(r.AMOUNT) || 0,
-            weight: Number(r.WEIGHT) || 0,
-        }));
-        const receiptTotal = buildTotalsRow(receiptRows, "group", ["noOfRects", "amount", "weight"]);
-        const receiptData = receiptTotal ? [...receiptRows, receiptTotal] : receiptRows;
-        const receiptColumns = [
-            { id: "group", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "noOfRects", label: "No of Rects", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, v) },
-            { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-            { id: "weight", label: "Weight (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-        ];
+    const branchesWithData = (branchReports ?? []).filter((b) => b.sections.length > 0);
+    const hasReportData = branchesWithData.length > 0;
 
-        // 2. Collection Summary View (single-row object -> label/value rows)
-        const collectionLabels: Record<string, string> = {
-            CASHAMOUNT: "Cash",
-            CARDAMOUNT: "Credit Card",
-            CHEQUEAMOUNT: "Cheque",
-            ETRANSFERAMOUNT: "Net Banking",
-            CREDITPURCHASE: "Credit Purchase",
-            GIFTADJUSTMENT: "Gift Adjustment",
-            HOMEAMOUNT: "Home Collection",
-            ADVAMOUNT: "Advance",
-            VAAMOUNT: "VA Amount",
-            ONLAMOUNT: "Online",
-            OTHERAMOUNT: "Other",
-        };
-        const collectionObj = (collectionSummary && collectionSummary[0]) || {};
-        const collectionRows = Object.entries(collectionLabels).map(([field, label]) => ({
-            type: label,
-            amount: Number(collectionObj[field]) || 0,
-        }));
+    const branchTitleSx = {
+        mb: 2,
+        pb: 0.5,
+        fontWeight: 700,
+        color: theme.palette.primary.main,
+        borderBottom: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
+    };
 
-        console.log(collectionRows, 'collectionRows')
-        const filteredCollectionRow = collectionRows.filter(c => !(c.amount === 0))
-
-        const collectionTotalRow = {
-            type: TOTAL_LABEL,
-            amount: Number(collectionObj.TOTAMOUNT) || 0,
-            __isTotal: true,
-        };
-        const collectionData = [...filteredCollectionRow, collectionTotalRow];
-        const collectionColumns = [
-            { id: "type", label: "Collection Type", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-        ];
-
-        // 3. Scheme Summary View (Amount)
-        const amountRows = (schemeAmountSummary || []).map((r: any) => ({
-            schemeName: r.SCHEMENAME ?? "-",
-            opening: Number(r.OPENING) || 0,
-            receipt: Number(r.RECEIPT) || 0,
-            closedAmt: Number(r.CLOSEDAMT) || 0,
-            outstanding: Number(r.OUTSTANDING) || 0,
-        }));
-        const amountTotal = buildTotalsRow(amountRows, "schemeName", ["opening", "receipt", "closedAmt", "outstanding"]);
-        const amountData = amountTotal ? [...amountRows, amountTotal] : amountRows;
-        const amountColumns = [
-            { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "opening", label: "Opening (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-            { id: "receipt", label: "Receipt (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-            { id: "closedAmt", label: "Closed (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-            { id: "outstanding", label: "Outstanding (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-        ];
-
-        // 4. Scheme Summary View (Weight)
-        const weightRows = (schemeWeightSummary || []).map((r: any) => ({
-            schemeName: r.SCHEMENAME ?? "-",
-            groupCode: r.GROUPCODE || "-",
-            opening: Number(r.OPENING) || 0,
-            receipt: Number(r.RECEIPT) || 0,
-            chequeReturn: Number(r.CHEQUERETURN) || 0,
-            closedWeight: Number(r.CLOSEDWEIGHT) || 0,
-            outstanding: Number(r.OUTSTANDING) || 0,
-        }));
-        const weightTotal = buildTotalsRow(weightRows, "schemeName", ["opening", "receipt", "chequeReturn", "closedWeight", "outstanding"]);
-        const weightData = weightTotal ? [...weightRows, weightTotal] : weightRows;
-        const weightColumns = [
-            { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            // { id: "groupCode", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "opening", label: "Opening (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-            { id: "receipt", label: "Receipt (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-            { id: "chequeReturn", label: "Cheque Return (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-            { id: "closedWeight", label: "Closed (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-            { id: "outstanding", label: "Outstanding (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-        ];
-
-        // 5. New Member Collection View
-        const newMemberRows = (newMemberCollection || []).map((r: any) => ({
-            schemeName: r.schemeName ?? r.SCHEMENAME ?? "-",
-            group: r.Group ?? "-",
-            noOfRects: r["No Of Rects"] ?? 0,
-            amount: Number(r.AMOUNT) || 0,
-            weight: Number(r.WEIGHT) || 0,
-        }));
-        const newMemberTotal = buildTotalsRow(newMemberRows, "schemeName", ["noOfRects", "amount", "weight"]);
-        const newMemberData = newMemberTotal ? [...newMemberRows, newMemberTotal] : newMemberRows;
-        const newMemberColumns = [
-            { id: "schemeName", label: "Scheme", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "group", label: "Group", align: "left" as const, render: (v: string, row: any) => boldIfTotal(row, v) },
-            { id: "noOfRects", label: "No of Rects", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, v) },
-            { id: "amount", label: "Amount (₹)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, `${formatNumber(v, "2")}`) },
-            { id: "weight", label: "Weight (g)", align: "right" as const, render: (v: number, row: any) => boldIfTotal(row, formatNumber(v, "3")) },
-        ];
-
-        return {
-            receipt: {
-                title: "Scheme Receipt Summary",
-                hasData: receiptRows.length > 0,
-                columns: receiptColumns,
-                data: receiptData,
-                pdfHead: ["Group", "No of Rects", "Amount", "Weight (g)"],
-                pdfBody: receiptData.map((r: any) => [r.group, String(r.noOfRects), formatAmountPdf(r.amount), formatWeight(r.weight)]),
-                pdfTextCols: 1,
-            },
-            collection: {
-                title: "Collection Summary",
-                hasData: collectionSummary.length > 0,
-                columns: collectionColumns,
-                data: collectionData,
-                pdfHead: ["Collection Type", "Amount"],
-                pdfBody: collectionData.map((r: any) => [r.type, formatAmountPdf(r.amount)]),
-                pdfTextCols: 1,
-            },
-            amount: {
-                title: "Scheme Summary (Amount)",
-                hasData: amountRows.length > 0,
-                columns: amountColumns,
-                data: amountData,
-                pdfHead: ["Scheme", "Opening", "Receipt", "Closed", "Outstanding"],
-                pdfBody: amountData.map((r: any) => [r.schemeName, formatAmountPdf(r.opening), formatAmountPdf(r.receipt), formatAmountPdf(r.closedAmt), formatAmountPdf(r.outstanding)]),
-                pdfTextCols: 1,
-            },
-            weight: {
-                title: "Scheme Summary (Weight)",
-                hasData: weightRows.length > 0,
-                columns: weightColumns,
-                data: weightData,
-                pdfHead: ["Scheme", "Opening (g)", "Receipt (g)", "Cheque Return (g)", "Closed (g)", "Outstanding (g)"],
-                pdfBody: weightData.map((r: any) => [r.schemeName, formatWeight(r.opening), formatWeight(r.receipt), formatWeight(r.chequeReturn), formatWeight(r.closedWeight), formatWeight(r.outstanding)]),
-                pdfTextCols: 1,
-            },
-            newMember: {
-                title: "New Member Collection",
-                hasData: newMemberRows.length > 0,
-                columns: newMemberColumns,
-                data: newMemberData,
-                pdfHead: ["Scheme", "Group", "No of Rects", "Amount", "Weight (g)"],
-                pdfBody: newMemberData.map((r: any) => [r.schemeName, r.group, String(r.noOfRects), formatAmountPdf(r.amount), formatWeight(r.weight)]),
-                pdfTextCols: 2,
-            },
-        };
-    }, [reportData, receiptSummary, collectionSummary, schemeAmountSummary, schemeWeightSummary, newMemberCollection]);
-
-    const hasReportData =
-        !!tables &&
-        (tables.receipt.hasData || tables.collection.hasData || tables.amount.hasData || tables.weight.hasData || tables.newMember.hasData);
-
-    const renderReport = () => {
-        if (loading) return <TableSkeleton rows={6} columns={4} />;
-        if (error)
-            return (
-                <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
-                    <Typography variant="body1">{error}</Typography>
-                </Box>
-            );
-        if (!tables) return null;
-
+    const renderBranch = (branch: string, tables: ReturnType<typeof buildBranchTables>) => {
         const { receipt, collection, amount, weight, newMember } = tables;
         const showFirstRow = receipt.hasData || collection.hasData;
 
-        if (!showFirstRow && !amount.hasData && !weight.hasData && !newMember.hasData) {
-            return (
-                <Box sx={{ p: 4, textAlign: "center", color: theme.palette.text.secondary }}>
-                    <Typography variant="body1">No data available for the selected filters</Typography>
-                </Box>
-            );
-        }
-
         return (
-            <>
+            <Box key={branch} sx={{ mb: 5 }}>
+                <Typography variant="h5" sx={branchTitleSx}>
+                    {branch}
+                </Typography>
+
                 {/* First row */}
                 {showFirstRow && (
                     <Box
                         display="grid"
                         gridTemplateColumns={receipt.hasData && collection.hasData ? "repeat(2, 1fr)" : "1fr"}
                         gap={4}
-                       
                     >
                         {receipt.hasData &&
                             renderSection(
@@ -360,12 +375,33 @@ const SchemeReport: React.FC = () => {
                         newMember.title,
                         <ResponsiveTable columns={newMember.columns} data={newMember.data} stickyHeader />
                     )}
-            </>
+            </Box>
         );
     };
 
+    const renderReport = () => {
+        if (loading) return <TableSkeleton rows={6} columns={4} />;
+        if (error)
+            return (
+                <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+                    <Typography variant="body1">{error}</Typography>
+                </Box>
+            );
+        if (!branchReports) return null;
+
+        if (!hasReportData) {
+            return (
+                <Box sx={{ p: 4, textAlign: "center", color: theme.palette.text.secondary }}>
+                    <Typography variant="body1">No data available for the selected filters</Typography>
+                </Box>
+            );
+        }
+
+        return <>{branchesWithData.map(({ branch, tables }) => renderBranch(branch, tables))}</>;
+    };
+
     const handleExportPdf = (type: "pdf" | "direct") => {
-        if (!tables) return;
+        if (!branchReports) return;
 
         const effectiveFrom = dateMode === "asOn" ? asOnDate : fromDate;
         const effectiveTo = dateMode === "asOn" ? asOnDate : toDate;
@@ -411,72 +447,84 @@ const SchemeReport: React.FC = () => {
         doc.text(`Generated on: ${format(new Date(), "dd/MM/yyyy hh:mm a")}`, margin, y);
         y += 10;
 
-        const sections = [tables.receipt, tables.collection, tables.amount, tables.weight, tables.newMember].filter(
-            (s) => s.hasData
-        );
-
-        if (sections.length === 0) {
+        if (branchesWithData.length === 0) {
             doc.setFontSize(11);
             doc.text("No data available for the selected filters.", margin, y + 20);
         }
 
         const pageHeight = doc.internal.pageSize.getHeight();
 
-        sections.forEach((section) => {
-            if (y + 100 > pageHeight - 40) {
+        branchesWithData.forEach(({ branch, sections }, branchIndex) => {
+            // Each branch after the first starts on a new page
+            if (branchIndex > 0) {
                 doc.addPage();
                 y = 40;
             }
 
             doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
+            doc.setFontSize(12.5);
             doc.setTextColor(0, 0, 0);
-            doc.text(section.title, margin, y + 14);
-            doc.setFont("helvetica", "normal");
+            doc.text(`Branch: ${branch}`, margin, y + 16);
+            doc.setLineWidth(0.8);
+            doc.line(margin, y + 21, pageWidth - margin, y + 21);
+            y += 24;
 
-            const columnStyles: Record<number, { halign: "left" | "right" }> = {};
-            section.pdfHead.forEach((_, idx) => {
-                columnStyles[idx] = { halign: idx < section.pdfTextCols ? "left" : "right" };
+            sections.forEach((section) => {
+                if (y + 100 > pageHeight - 40) {
+                    doc.addPage();
+                    y = 40;
+                }
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                doc.text(section.title, margin, y + 14);
+                doc.setFont("helvetica", "normal");
+
+                const columnStyles: Record<number, { halign: "left" | "right" }> = {};
+                section.pdfHead.forEach((_, idx) => {
+                    columnStyles[idx] = { halign: idx < section.pdfTextCols ? "left" : "right" };
+                });
+
+                autoTable(doc, {
+                    startY: y + 22,
+                    margin: { left: margin, right: margin },
+                    head: [section.pdfHead],
+                    body: section.pdfBody,
+                    theme: "grid",
+                    styles: {
+                        font: "helvetica",
+                        fontSize: 9,
+                        cellPadding: 5,
+                        textColor: [0, 0, 0],
+                        lineColor: [0, 0, 0],
+                        lineWidth: 0.5,
+                    },
+                    headStyles: {
+                        fillColor: [235, 235, 235],
+                        textColor: [0, 0, 0],
+                        fontStyle: "bold",
+                        halign: "center",
+                    },
+                    columnStyles,
+                    alternateRowStyles: { fillColor: [248, 248, 248] },
+                    didParseCell: (data) => {
+                        if (data.section === "body" && data.row.index === section.pdfBody.length - 1) {
+                            data.cell.styles.fontStyle = "bold";
+                            data.cell.styles.fillColor = [220, 220, 220];
+                        }
+                    },
+                    didDrawPage: () => {
+                        const str = `Page ${doc.getNumberOfPages()}`;
+                        doc.setFontSize(8);
+                        doc.setTextColor(0, 0, 0);
+                        doc.text(str, pageWidth - margin, doc.internal.pageSize.getHeight() - 20, { align: "right" });
+                    },
+                });
+
+                const finalY = (doc as any).lastAutoTable.finalY as number;
+                y = finalY + 26;
             });
-
-            autoTable(doc, {
-                startY: y + 22,
-                margin: { left: margin, right: margin },
-                head: [section.pdfHead],
-                body: section.pdfBody,
-                theme: "grid",
-                styles: {
-                    font: "helvetica",
-                    fontSize: 9,
-                    cellPadding: 5,
-                    textColor: [0, 0, 0],
-                    lineColor: [0, 0, 0],
-                    lineWidth: 0.5,
-                },
-                headStyles: {
-                    fillColor: [235, 235, 235],
-                    textColor: [0, 0, 0],
-                    fontStyle: "bold",
-                    halign: "center",
-                },
-                columnStyles,
-                alternateRowStyles: { fillColor: [248, 248, 248] },
-                didParseCell: (data) => {
-                    if (data.section === "body" && data.row.index === section.pdfBody.length - 1) {
-                        data.cell.styles.fontStyle = "bold";
-                        data.cell.styles.fillColor = [220, 220, 220];
-                    }
-                },
-                didDrawPage: () => {
-                    const str = `Page ${doc.getNumberOfPages()}`;
-                    doc.setFontSize(8);
-                    doc.setTextColor(0, 0, 0);
-                    doc.text(str, pageWidth - margin, doc.internal.pageSize.getHeight() - 20, { align: "right" });
-                },
-            });
-
-            const finalY = (doc as any).lastAutoTable.finalY as number;
-            y = finalY + 26;
         });
         if (type === "direct") {
             const pdfBlob = doc.output("blob");
@@ -504,113 +552,168 @@ const SchemeReport: React.FC = () => {
 
     };
     const handleExportExcel = () => {
-        if (!tables) return;
+        if (!branchReports) return;
 
         const workbook = XLSX.utils.book_new();
+        const usedSheetNames = new Set<string>();
 
-        const sections = [
-            tables.receipt,
-            tables.collection,
-            tables.amount,
-            tables.weight,
-            tables.newMember,
-        ].filter((section) => section?.hasData);
+        // Excel sheet names: max 31 chars, no : \ / ? * [ ], unique (case-insensitive)
+        const makeSheetName = (branch: string, sheetName: string) => {
+            const base = `${branch} - ${sheetName}`.replace(/[:\\/?*[\]]/g, " ").trim().substring(0, 31);
+            let name = base;
+            let counter = 2;
+            while (usedSheetNames.has(name.toLowerCase())) {
+                const suffix = ` (${counter++})`;
+                name = base.substring(0, 31 - suffix.length) + suffix;
+            }
+            usedSheetNames.add(name.toLowerCase());
+            return name;
+        };
 
-        sections.forEach((section) => {
+        branchesWithData.forEach(({ branch, sections }) => {
+            sections.forEach((section) => {
 
-            const rows = [
-                section.pdfHead,
-                ...section.pdfBody,
-            ];
+                const rows = [
+                    section.pdfHead,
+                    ...section.pdfBody,
+                ];
 
-            const worksheet = XLSX.utils.aoa_to_sheet(rows);
+                const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
-            // =========================
-            // Column Width
-            // =========================
+                // =========================
+                // Column Width
+                // =========================
 
-            worksheet["!cols"] = section.pdfHead.map((header, index) => {
+                worksheet["!cols"] = section.pdfHead.map((header, index) => {
 
-                let maxLength = String(header).length;
+                    let maxLength = String(header).length;
 
-                section.pdfBody.forEach((row: any) => {
-                    const value = row[index];
+                    section.pdfBody.forEach((row: any) => {
+                        const value = row[index];
 
-                    if (value !== null && value !== undefined) {
-                        maxLength = Math.max(
-                            maxLength,
-                            String(value).length
-                        );
+                        if (value !== null && value !== undefined) {
+                            maxLength = Math.max(
+                                maxLength,
+                                String(value).length
+                            );
+                        }
+                    });
+
+                    return {
+                        wch: Math.min(Math.max(maxLength + 3, 12), 35),
+                    };
+                });
+
+                // =========================
+                // Header Styling
+                // =========================
+
+                section.pdfHead.forEach((_, colIndex) => {
+
+                    const cellAddress = XLSX.utils.encode_cell({
+                        r: 0,
+                        c: colIndex,
+                    });
+
+                    if (worksheet[cellAddress]) {
+                        worksheet[cellAddress].s = {
+                            fill: {
+                                patternType: "solid",
+                                fgColor: {
+                                    rgb: "D9EAF7",
+                                },
+                            },
+                            font: {
+                                bold: true,
+                                color: {
+                                    rgb: "000000",
+                                },
+                            },
+                            alignment: {
+                                horizontal: "center",
+                                vertical: "center",
+                                wrapText: true,
+                            },
+                            border: {
+                                top: {
+                                    style: "thin",
+                                    color: { rgb: "000000" },
+                                },
+                                bottom: {
+                                    style: "thin",
+                                    color: { rgb: "000000" },
+                                },
+                                left: {
+                                    style: "thin",
+                                    color: { rgb: "000000" },
+                                },
+                                right: {
+                                    style: "thin",
+                                    color: { rgb: "000000" },
+                                },
+                            },
+                        };
                     }
                 });
 
-                return {
-                    wch: Math.min(Math.max(maxLength + 3, 12), 35),
-                };
-            });
+                // =========================
+                // Body Styling
+                // =========================
 
-            // =========================
-            // Header Styling
-            // =========================
+                section.pdfBody.forEach((row: any, rowIndex: number) => {
 
-            section.pdfHead.forEach((_, colIndex) => {
+                    row.forEach((_: any, colIndex: number) => {
 
-                const cellAddress = XLSX.utils.encode_cell({
-                    r: 0,
-                    c: colIndex,
+                        const cellAddress = XLSX.utils.encode_cell({
+                            r: rowIndex + 1,
+                            c: colIndex,
+                        });
+
+                        const cell = worksheet[cellAddress];
+
+                        if (!cell) return;
+
+                        cell.s = {
+                            alignment: {
+                                horizontal:
+                                    colIndex < section.pdfTextCols
+                                        ? "left"
+                                        : "right",
+                                vertical: "center",
+                                wrapText: true,
+                            },
+                            border: {
+                                top: {
+                                    style: "thin",
+                                    color: { rgb: "D0D0D0" },
+                                },
+                                bottom: {
+                                    style: "thin",
+                                    color: { rgb: "D0D0D0" },
+                                },
+                                left: {
+                                    style: "thin",
+                                    color: { rgb: "D0D0D0" },
+                                },
+                                right: {
+                                    style: "thin",
+                                    color: { rgb: "D0D0D0" },
+                                },
+                            },
+                        };
+                    });
                 });
 
-                if (worksheet[cellAddress]) {
-                    worksheet[cellAddress].s = {
-                        fill: {
-                            patternType: "solid",
-                            fgColor: {
-                                rgb: "D9EAF7",
-                            },
-                        },
-                        font: {
-                            bold: true,
-                            color: {
-                                rgb: "000000",
-                            },
-                        },
-                        alignment: {
-                            horizontal: "center",
-                            vertical: "center",
-                            wrapText: true,
-                        },
-                        border: {
-                            top: {
-                                style: "thin",
-                                color: { rgb: "000000" },
-                            },
-                            bottom: {
-                                style: "thin",
-                                color: { rgb: "000000" },
-                            },
-                            left: {
-                                style: "thin",
-                                color: { rgb: "000000" },
-                            },
-                            right: {
-                                style: "thin",
-                                color: { rgb: "000000" },
-                            },
-                        },
-                    };
-                }
-            });
+                // =========================
+                // Total Row
+                // =========================
 
-            // =========================
-            // Body Styling
-            // =========================
+                const totalRowIndex = section.pdfBody.length;
 
-            section.pdfBody.forEach((row: any, rowIndex: number) => {
-
-                row.forEach((_: any, colIndex: number) => {
+                section.pdfHead.forEach((_, colIndex) => {
 
                     const cellAddress = XLSX.utils.encode_cell({
-                        r: rowIndex + 1,
+                        r: totalRowIndex,
                         c: colIndex,
                     });
 
@@ -619,118 +722,71 @@ const SchemeReport: React.FC = () => {
                     if (!cell) return;
 
                     cell.s = {
+                        fill: {
+                            patternType: "solid",
+                            fgColor: {
+                                rgb: "E7E7E7",
+                            },
+                        },
+                        font: {
+                            bold: true,
+                        },
                         alignment: {
                             horizontal:
                                 colIndex < section.pdfTextCols
                                     ? "left"
                                     : "right",
                             vertical: "center",
-                            wrapText: true,
                         },
                         border: {
                             top: {
                                 style: "thin",
-                                color: { rgb: "D0D0D0" },
+                                color: { rgb: "000000" },
                             },
                             bottom: {
                                 style: "thin",
-                                color: { rgb: "D0D0D0" },
+                                color: { rgb: "000000" },
                             },
                             left: {
                                 style: "thin",
-                                color: { rgb: "D0D0D0" },
+                                color: { rgb: "000000" },
                             },
                             right: {
                                 style: "thin",
-                                color: { rgb: "D0D0D0" },
+                                color: { rgb: "000000" },
                             },
                         },
                     };
                 });
-            });
 
-            // =========================
-            // Total Row
-            // =========================
+                // =========================
+                // Row Heights
+                // =========================
 
-            const totalRowIndex = section.pdfBody.length;
-
-            section.pdfHead.forEach((_, colIndex) => {
-
-                const cellAddress = XLSX.utils.encode_cell({
-                    r: totalRowIndex,
-                    c: colIndex,
-                });
-
-                const cell = worksheet[cellAddress];
-
-                if (!cell) return;
-
-                cell.s = {
-                    fill: {
-                        patternType: "solid",
-                        fgColor: {
-                            rgb: "E7E7E7",
-                        },
+                worksheet["!rows"] = [
+                    {
+                        hpt: 25,
                     },
-                    font: {
-                        bold: true,
-                    },
-                    alignment: {
-                        horizontal:
-                            colIndex < section.pdfTextCols
-                                ? "left"
-                                : "right",
-                        vertical: "center",
-                    },
-                    border: {
-                        top: {
-                            style: "thin",
-                            color: { rgb: "000000" },
-                        },
-                        bottom: {
-                            style: "thin",
-                            color: { rgb: "000000" },
-                        },
-                        left: {
-                            style: "thin",
-                            color: { rgb: "000000" },
-                        },
-                        right: {
-                            style: "thin",
-                            color: { rgb: "000000" },
-                        },
-                    },
+                    ...section.pdfBody.map(() => ({
+                        hpt: 20,
+                    })),
+                ];
+
+                // =========================
+                // Freeze Header
+                // =========================
+
+                worksheet["!freeze"] = {
+                    xSplit: 0,
+                    ySplit: 1,
                 };
+
+                XLSX.utils.book_append_sheet(
+                    workbook,
+                    worksheet,
+                    makeSheetName(branch, section.sheetName)
+                );
             });
-
-            // =========================
-            // Row Heights
-            // =========================
-
-            worksheet["!rows"] = [
-                {
-                    hpt: 25,
-                },
-                ...section.pdfBody.map(() => ({
-                    hpt: 20,
-                })),
-            ];
-
-            // =========================
-            // Freeze Header
-            // =========================
-
-            worksheet["!freeze"] = {
-                xSplit: 0,
-                ySplit: 1,
-            };
-
-            XLSX.utils.book_append_sheet(
-                workbook,
-                worksheet,
-                section.title.substring(0, 31)
-            );
         });
 
         // =========================
@@ -758,9 +814,9 @@ const SchemeReport: React.FC = () => {
                         border: `1px solid ${theme.palette.divider}`,
                         overflow: "hidden",
                         mb: 1,
-                        marginTop :{xs:2 ,sm:4, md:8 ,lg:4}
+                        marginTop: { xs: 2, sm: 4, md: 8, lg: 4 }
                     }}
-                    
+
                 >
                     <Box
                         sx={{

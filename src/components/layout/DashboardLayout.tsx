@@ -162,7 +162,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
             case "personal-info-report":
                 return <PersonalInfoReportPage/>;
             case "schemeReport":
-                return <SchemeReport />;
+                return <SchemeReport />
             default:
                 return <Dashboard />;
         }
