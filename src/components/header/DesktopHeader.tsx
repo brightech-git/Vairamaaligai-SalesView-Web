@@ -60,10 +60,10 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
                         src={logoImg.src}
                         alt="Logo"
                         style={{
-                            height: '40px'
+                            height: '25px'
                         }}
                     />
-                    <Typography fontSize='18px' variant='h1'> Jaiguru Jewellers </Typography>
+                    <Typography fontSize='14px' variant='h1'> Jaiguru Jewellers </Typography>
                 </Box>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2, borderColor: theme.palette.divider }} />
@@ -86,8 +86,8 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ logo }) => {
                 flex: 1,
                 justifyContent: 'flex-end',
                 flexWrap: 'wrap',
-                rowGap: 1,
-                gap: 2.5,
+             
+                gap: 1,
                 minWidth: 200,
             }}>
                 {/* Metal Rates as Chips */}

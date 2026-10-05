@@ -23,10 +23,10 @@ export const useMetals = () => {
 };
 
 // ================= ITEM =================
-export const useItems = () => {
+export const useItems = (metalId ?:string) => {
     return useQuery({
-        queryKey: ["items"],
-        queryFn: getItems,
+        queryKey: ["items" , metalId],
+        queryFn: ()=>getItems(metalId),
         staleTime: 1000 * 60 * 30,
     });
 };

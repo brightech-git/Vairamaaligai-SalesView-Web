@@ -77,7 +77,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const { branchesData, loading, error, } = useDashBoardContext(); // ✅ get context
 
 
-    const drawerWidth = sidebarOpen ? 240 : 72;
+    const drawerWidth = sidebarOpen ? 200 : 62;
 
     const handleMenuClick = (itemId: string) => {
         setActiveItem(itemId);
@@ -171,7 +171,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
 
 
     const drawerContent = (
-        <Box sx={{ overflow: "hidden", zIndex: 1 }}>
+        <Box sx={{ overflow: "hidden", zIndex: 1  }}>
             {/* Drawer Header */}
             <Box
                 sx={{
@@ -281,11 +281,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                             duration: theme.transitions.duration.enteringScreen,
                         }),
                         ...(isMobile && {
-                            top: "100px",
+                            top: "60px",
                             height: "calc(100% - 64px)",
                             background:theme.palette.background.paper
                         }),
+                        marginTop: "65px"
                     },
+                  
                 }}
             >
                 {drawerContent}

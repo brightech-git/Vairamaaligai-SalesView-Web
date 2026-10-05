@@ -59,7 +59,7 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
         ];
 
         return (
-            <Box sx={{ mt: 10, mb: 3 }} key={title}>
+            <Box sx={{ mt: 5, mb: 3 }} key={title}>
                 {title && (
                     <Typography
                         variant="h6"
@@ -74,29 +74,29 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
                         {title} - Chit Collection
                     </Typography>
                 )}
-                 {!title &&(
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            mb: 1,
-                                            textAlign: "center",
-                                            fontWeight: 600,
-                                            color: theme.palette.text.primary,
-                                            fontFamily: "var(--font-merriweather)",
-                                        }}
-                                    >
-                                            Chit Collection
-                                    </Typography>
-                                )
-                                }
+                {!title && (
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            mb: 1,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            fontFamily: "var(--font-merriweather)",
+                        }}
+                    >
+                        Chit Collection
+                    </Typography>
+                )
+                }
                 <ResponsiveTable columns={columns} data={rows} stickyHeader />
-              
+
             </Box>
         );
     };
 
     // Handle multiple branches
-    if (Array.isArray(data) && data[0]?.branchName &&( data[0]?.SchemePayment || data[0]?.schemePayment[0])) {
+    if (Array.isArray(data) && data[0]?.branchName && (data[0]?.SchemePayment || data[0]?.schemePayment[0])) {
         return (
             <>
                 {data.map((branch: any) =>

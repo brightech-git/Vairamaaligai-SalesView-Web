@@ -56,7 +56,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
         ];
 
         return (
-            <Box sx={{ mt: 10, mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt: 5, mb: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"
@@ -71,7 +71,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
                         {title} - Payment Summary
                     </Typography>
                 )}
-                {!title &&(
+                {!title && (
                     <Typography
                         variant="h6"
                         sx={{
@@ -87,7 +87,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
                 )
                 }
                 <ResponsiveTable columns={columns} data={rows} stickyHeader />
-                
+
             </Box>
         );
     };

@@ -142,8 +142,16 @@ export function exportToExcel(
 
     const flatCols = buildFlatColumns();
     const colCount = flatCols.length;
-    const dataRows = buildRows(data, flatCols);
-    const total = buildTotalRow(data, flatCols);
+    const numRow = (vals: (any)[]) => vals.map((v, i) => {
+        const col = flatCols[i];
+        if (col.decimals === undefined) return v == null ? "" : String(v);
+        const n = Number(v);
+        return v == null || v === "" || !n ? "" : Number(n.toFixed(col.decimals));
+    });
+    const dataRows = data.map((r) => numRow(flatCols.map((c) => r[c.key])));
+    const total = numRow(flatCols.map((c, i) =>
+        i === 0 ? "TOTAL" : c.decimals === undefined ? "" : data.reduce((a, r) => a + (Number(r[c.key]) || 0), 0)));
+    total[0] = "TOTAL";
 
     const wsData: any[][] = [];
     wsData.push([title, ...Array(colCount - 1).fill("")]);
@@ -156,7 +164,7 @@ export function exportToExcel(
     wsData.push(groupRow);
 
     // Sub-column header row
-    const subRow: string[] = ["", "", ""];
+    const subRow: string[] = ["", "", "", ""];
     for (const _grp of COST_CENTER_GROUPS) for (const sub of SUB_COLS) subRow.push(sub.header);
     wsData.push(subRow);
 
@@ -166,7 +174,7 @@ export function exportToExcel(
     wsData.push(total);
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
-    ws["!cols"] = flatCols.map((_, i) => ({ wch: i < 3 ? 16 : 10 }));
+    ws["!cols"] = flatCols.map((_, i) => ({ wch: i < 4 ? 18 : 11 }));
 
     // Row indices
     const titleRowIdx = 0;
@@ -180,12 +188,13 @@ export function exportToExcel(
     const merges: XLSX.Range[] = [];
     merges.push({ s: { r: titleRowIdx, c: 0 }, e: { r: titleRowIdx, c: colCount - 1 } });
     if (subtitle) merges.push({ s: { r: 1, c: 0 }, e: { r: 1, c: colCount - 1 } });
-    for (let c = 0; c < 3; c++) merges.push({ s: { r: groupRowIdx, c }, e: { r: subRowIdx, c } });
+    for (let c = 0; c < 4; c++) merges.push({ s: { r: groupRowIdx, c }, e: { r: subRowIdx, c } });
     COST_CENTER_GROUPS.forEach((_, gi) => {
-        const startC = 3 + gi * 4;
+        const startC = 4 + gi * 4;
         merges.push({ s: { r: groupRowIdx, c: startC }, e: { r: groupRowIdx, c: startC + 3 } });
     });
     ws["!merges"] = merges;
+    ws["!views"] = [{ state: "frozen", xSplit: 4, ySplit: subRowIdx + 1 }] as any;
 
     // Style helpers
     const C_WHITE = "FFFFFF";
@@ -206,14 +215,14 @@ export function exportToExcel(
     if (ws[tRef]) ws[tRef].s = { font: { bold: true, color: { rgb: C_WHITE }, sz: 14 }, fill: { fgColor: { rgb: C_LEAD } }, alignment: { horizontal: "center", vertical: "center" } };
 
     // Lead column headers (ITEM / SUBITEM /SIZE / RANGE)
-    for (let c = 0; c < 3; c++) {
+    for (let c = 0; c < 4; c++) {
         const ref = XLSX.utils.encode_cell({ r: groupRowIdx, c });
         if (ws[ref]) ws[ref].s = hdrStyle(C_LEAD, 9);
     }
 
     // Per-group coloring
     COST_CENTER_GROUPS.forEach((grp, gi) => {
-        const startC = 3 + gi * 4;
+        const startC = 4 + gi * 4;
         const palette = GROUP_PALETTES[gi % GROUP_PALETTES.length];
         const isSelected = !!selectedCostId && selectedCostId !== "ALL" && selectedCostId === grp.costId;
 
@@ -237,7 +246,8 @@ export function exportToExcel(
             for (let s = 0; s < 4; s++) {
                 const dRef = XLSX.utils.encode_cell({ r: dataStartIdx + dr, c: startC + s });
                 if (!ws[dRef]) ws[dRef] = { t: "z" };
-                ws[dRef].s = { fill: { fgColor: { rgb: dataTintHex } }, alignment: { horizontal: "right" }, border };
+                ws[dRef].s = { fill: { fgColor: { rgb: dataTintHex } }, alignment: { horizontal: "right", vertical: "center" }, border };
+                ws[dRef].z = SUB_COLS[s].decimals ? "0.000" : "0";
             }
         }
 
@@ -245,11 +255,12 @@ export function exportToExcel(
         for (let s = 0; s < 4; s++) {
             const fRef = XLSX.utils.encode_cell({ r: totalRowIdx, c: startC + s });
             if (ws[fRef]) ws[fRef].s = { font: { bold: true, color: { rgb: C_WHITE }, sz: 10 }, fill: { fgColor: { rgb: footHex } }, alignment: { horizontal: "right", vertical: "center" }, border };
+            if (ws[fRef]) ws[fRef].z = SUB_COLS[s].decimals ? "0.000" : "0";
         }
     });
 
     // Lead total cells (ITEM / SUBITEM /SIZE / RANGE in total row)
-    for (let c = 0; c < 3; c++) {
+    for (let c = 0; c < 4; c++) {
         const ref = XLSX.utils.encode_cell({ r: totalRowIdx, c });
         if (ws[ref]) ws[ref].s = { font: { bold: true, color: { rgb: C_WHITE }, sz: 10 }, fill: { fgColor: { rgb: C_LEAD_DARK } }, alignment: { horizontal: c === 0 ? "left" : "center", vertical: "center" }, border };
     }
@@ -274,7 +285,7 @@ export function exportToPDF(
     const rows = buildRows(data, flatCols);
     const total = buildTotalRow(data, flatCols);
 
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 5;
@@ -326,11 +337,11 @@ export function exportToPDF(
 
     // Column alignment
     const columnStyles: Record<number, any> = {};
-    flatCols.forEach((_, i) => { columnStyles[i] = { halign: i < 3 ? "left" : "right" }; });
+    flatCols.forEach((_, i) => { columnStyles[i] = { halign: i < 4 ? "left" : "right" }; });
 
     const selectedGroupIdx = selectedCostId && selectedCostId !== "ALL"
         ? COST_CENTER_GROUPS.findIndex((g) => g.costId === selectedCostId) : -1;
-    const selectedStartCol = selectedGroupIdx >= 0 ? 3 + selectedGroupIdx * 4 : -1;
+    const selectedStartCol = selectedGroupIdx >= 0 ? 4 + selectedGroupIdx * 4 : -1;
 
     autoTable(doc, {
         head: [headRow1, headRow2],
@@ -349,9 +360,9 @@ export function exportToPDF(
 
         didParseCell(hookData) {
             const col = hookData.column.index;
-            if (col < 3) return;
+            if (col < 4) return;
 
-            const gi = Math.floor((col - 3) / 4);
+            const gi = Math.floor((col - 4) / 4);
             const palette = GROUP_PALETTES[gi % GROUP_PALETTES.length];
             const isSelGroup = selectedStartCol >= 0 && col >= selectedStartCol && col < selectedStartCol + 4;
 

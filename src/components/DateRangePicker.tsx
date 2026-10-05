@@ -126,7 +126,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
     const chips = [
         { label: 'Today', value: 'today' },
         { label: 'Last 7 Days', value: 'last7days' },
-        { label: 'Last 30 Days', value: 'last30days' },
+        // { label: 'Last 30 Days', value: 'last30days' },
     ];
 
     const open = Boolean(anchorEl);
@@ -165,7 +165,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         backgroundColor: theme.palette.background.paper,
                         fontFamily: "'Funnel Display', sans-serif",
                         fontWeight: 600,
-                        fontSize: '14px',
+                        fontSize: '12px',
                         height: '36px',
                         '&:hover': {
                             opacity: 1,
@@ -397,7 +397,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         <Typography
                             variant="body2"
                             sx={{
-                                mt: 2,
+                                mt: 1,
                                 textAlign: 'center',
                                 fontFamily: "'Funnel Display', sans-serif",
                                 color: theme.palette.text.primary,

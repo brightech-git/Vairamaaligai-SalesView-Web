@@ -18,9 +18,9 @@ const Header: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const drawerWidth = sidebarOpen ? 240 : 72;
+    const drawerWidth = sidebarOpen ? 200 : 62;
 
-    const headerWidth = isMobile ? '100%' : `calc(100% - ${drawerWidth}px)`;
+    const headerWidth ='100%'
     const headerMarginLeft = isMobile ? 0 : `${drawerWidth}px`;
 
     return (
@@ -37,10 +37,10 @@ const Header: React.FC = () => {
                 backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                marginBottom: sidebarOpen? '5rem':'0.5rem'
+                marginBottom: sidebarOpen? '1rem':'0.5rem'
             }}
         >
-            <Toolbar sx={{ minHeight: '64px!important', py: 1 , }}>
+            <Toolbar>
                 <HeaderContent />
             </Toolbar>
         </AppBar>

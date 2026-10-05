@@ -68,7 +68,7 @@ const EstimationSummary: React.FC<EstimationSummaryProps> = ({
         ];
 
         return (
-            <Box sx={{ mt: 10, mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt: 4, mb: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"

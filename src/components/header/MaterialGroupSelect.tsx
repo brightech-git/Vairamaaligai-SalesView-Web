@@ -34,6 +34,7 @@ const MaterialGroupSelect: React.FC<MaterialGroupSelectProps> = ({ minWidth = "1
                 "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: theme.palette.divider,
                 },
+                
             }}
         >
             {groupOptions.map((opt) => (

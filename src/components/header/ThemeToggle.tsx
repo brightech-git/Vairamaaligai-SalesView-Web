@@ -31,7 +31,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ size = "medium" }) => {
                     alignItems: "center",
                     gap: 0.5,
                     px: 1,
-                    height: size === "small" ? 32 : 36,
+                    height: size === "small" ? 30 : 32,
                     border: `1px solid ${theme.palette.divider}`,
                     borderRadius: 2,
                     cursor: "pointer",

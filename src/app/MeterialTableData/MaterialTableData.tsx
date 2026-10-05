@@ -23,7 +23,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
     const theme = useTheme();
 
     const { filters } = useDashBoardContext();
-    
+
 
     if (loading) return <TableSkeleton rows={4} columns={6} />;
     if (error) return <div>Error loading dashboard</div>;
@@ -56,7 +56,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
         ];
 
         return (
-            <Box sx={{ mt:10, mb: 3 }} key={title || Math.random()}>
+            <Box sx={{ mt: 4, mb: 3 }} key={title || Math.random()}>
                 {title && (
                     <Typography
                         variant="h6"

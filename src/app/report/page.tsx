@@ -20,6 +20,7 @@ import {
 
 import ResponsiveTable, { Column, SubColumn, GROUP_PALETTES } from "@/components/ui/table/ReportTabel";
 import { formatToNumber } from "@/lib/numberFormatter";
+import { getAllReports } from "@/service/ReportService";
 import { exportToExcel, exportToPDF, ExportColumn, } from '@/components/ui/export/ReportExport';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -156,7 +157,10 @@ const ReportScreen = () => {
     const { data, isLoading } = useAllReports(filters, true);
 
     const { data: metals = [] } = useMetals();
-    const { data: items = [] } = useItems();
+    const { data: items = [] } = useItems(form.metal);
+
+    console.log(items?.length , "itemsLength")
+
     const { data: costCenter = [] } = useCostCentre();
     const { data: subItems = [] } = useSubItems(form.item ? Number(form.item) : undefined);
     const { data: sizes = [] } = useSizes(form.item ? Number(form.item) : undefined);
@@ -191,19 +195,46 @@ const ReportScreen = () => {
         return parts.join("  |  ");
     };
 
-    // ── Export handlers ──────────────────────────────────────────────────────
+    // ── Export handlers (fetch ALL pages, not just the visible one) ──────────
+    const [exporting, setExporting] = useState(false);
+
+    const fetchAllRows = async (): Promise<ReportRow[]> => {
+        const EXPORT_PAGE_SIZE = 1000;
+        const all: ReportRow[] = [];
+        for (let p = 0; p < 1000; p++) {
+            const res = await getAllReports({ ...filters, page: p, pageSize: EXPORT_PAGE_SIZE });
+            const rows: ReportRow[] = res?.data ?? [];
+            all.push(...rows);
+            const total = res?.totalRecords ?? 0;
+            if (rows.length === 0 || all.length >= total || rows.length < EXPORT_PAGE_SIZE && !total) break;
+        }
+        return all;
+    };
+
+    const runExport = async (fn: (rows: ReportRow[]) => void) => {
+        if (exporting) return;
+        setExporting(true);
+        try {
+            fn(await fetchAllRows());
+        } finally {
+            setExporting(false);
+        }
+    };
+
     const handleExcelExport = () =>
-        exportToExcel(reportData, exportColumns, {
-            fileName: "stock-report", sheetName: "Stock Report",
-            title: "STOCK REPORT", subtitle: buildSubtitle(),
-            selectedCostId: form.cost || undefined,
-        });
+        runExport((rows) =>
+            exportToExcel(rows, exportColumns, {
+                fileName: "stock-report", sheetName: "Stock Report",
+                title: "STOCK REPORT", subtitle: buildSubtitle(),
+                selectedCostId: form.cost || undefined,
+            }));
 
     const handlePdfExport = () =>
-        exportToPDF(reportData, exportColumns, {
-            fileName: "stock-report", title: "STOCK REPORT",
-            subtitle: buildSubtitle(), selectedCostId: form.cost || undefined,
-        });
+        runExport((rows) =>
+            exportToPDF(rows, exportColumns, {
+                fileName: "stock-report", title: "STOCK REPORT",
+                subtitle: buildSubtitle(), selectedCostId: form.cost || undefined,
+            }));
 
     // ── Actions ──────────────────────────────────────────────────────────────
     const handleView = () => {
@@ -274,7 +305,7 @@ const ReportScreen = () => {
                             <Inventory2RoundedIcon fontSize="small" />
                         </Box>
                         <Box>
-                            <Typography variant="h6" sx={{ fontSize: { xs: "15px", sm: "17px" }, fontWeight: 700, lineHeight: 1.3 }}>
+                            <Typography variant="h1" sx={{ fontSize: { xs: "15px", sm: "17px" }, fontWeight: 700, lineHeight: 1.3 }}>
                                 Stock Report
                             </Typography>
                             <Typography variant="body2" color="text.primary" sx={{ fontSize: { xs: "11px", sm: "12px" } }}>
@@ -342,41 +373,74 @@ const ReportScreen = () => {
             {viewMode === "table" && (
                 <Box width="100%" display="flex" flexDirection="column" gap={1.5}>
 
-                    {/* Top bar */}
-                    <Box display="flex" alignItems="center" gap={1.5} flexWrap="wrap">
-                        <Tooltip title="Back to filters">
-                            <IconButton
-                                size="small"
-                                onClick={() => setViewMode("form")}
-                                sx={{
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: 2,
-                                }}
+                    {/* Header banner */}
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            borderRadius: 3,
+                            overflow: "hidden",
+                            border: `1px solid ${theme.palette.divider}`,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1.5,
+                                flexWrap: "wrap",
+                                px: { xs: 1.5, sm: 2.5 },
+                                py: 1.5,
+                                color: "#fff",
+                                background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+                            }}
+                        >
+                            <Tooltip title="Back to filters">
+                                <IconButton
+                                    size="small"
+                                    onClick={() => setViewMode("form")}
+                                    sx={{ color: "#fff", bgcolor: "rgba(255,255,255,0.18)", "&:hover": { bgcolor: "rgba(255,255,255,0.3)" } }}
+                                >
+                                    <ArrowBackRoundedIcon fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
+                            <Box sx={{ width: 36, height: 36, borderRadius: 2, bgcolor: "rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <Inventory2RoundedIcon fontSize="small" />
+                            </Box>
+                            <Box flex={1} minWidth={140}>
+                                <Typography  variant="h4" sx={{ fontWeight: 700, fontSize: { xs: "15px", sm: "18px" }, lineHeight: 1.2 }}>
+                                    Stock Report
+                                </Typography>
+                                <Typography variant="h4" sx={{ fontSize: "11px", opacity: 0.85 }}>
+                                    {(data?.totalRecords ?? reportData.length).toLocaleString()} records
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: "flex", gap: 0.75, flexWrap: "wrap" }}>
+                                {GROUP_PALETTES.slice(0, 4).map((pal, i) => (
+                                    <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 0.5, px: 1, py: 0.25, borderRadius: 10, bgcolor: "rgba(255,255,255,0.16)", fontSize: "10px", fontWeight: 600 }}>
+                                        <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: pal.foot }} />
+                                        {["HEAD OFFICE", "JN ROAD", "THIRUTTANI", "THIRUVALLUR"][i]}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+
+                        <Box sx={{ px: { xs: 1.5, sm: 2.5 }, py: 1, display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ fontSize: { xs: "10px", sm: "11px" }, flex: 1, minWidth: 0 }}
                             >
-                                <ArrowBackRoundedIcon fontSize="small" />
-                            </IconButton>
-                        </Tooltip>
-                        <Box flex={1} minWidth={0}>
+                                {buildSubtitle() || "All stock — no filters applied"}
+                            </Typography>
                             <ExportToolbar
                                 title="Stock Report"
                                 recordCount={data?.totalRecords ?? reportData.length}
-                                disabled={isLoading || reportData.length === 0}
+                                disabled={isLoading || exporting || reportData.length === 0}
                                 onExcelExport={handleExcelExport}
                                 onPdfExport={handlePdfExport}
                             />
                         </Box>
-                    </Box>
-
-                    {/* Applied filter summary */}
-                    {buildSubtitle() && (
-                        <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            sx={{ fontSize: { xs: "10px", sm: "11px" }, pl: 0.5 }}
-                        >
-                            {buildSubtitle()}
-                        </Typography>
-                    )}
+                    </Paper>
 
                     {/* Table */}
                     <ResponsiveTable<ReportRow>

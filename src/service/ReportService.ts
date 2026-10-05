@@ -61,8 +61,9 @@ export const getMetals = async (): Promise<MetalMaster[]> => {
 };
 
 // ================= ITEM =================
-export const getItems = async (): Promise<ITEMMASTER[]> => {
-    const res = await adminInstance.get(`${baseUrlMast}/item`);
+export const getItems = async (metalId ?:string): Promise<ITEMMASTER[]> => {
+
+    const res = await adminInstance.get(`${baseUrlMast}/item`,{ params : metalId ? {metalId} :null });
     return res.data;
 };
 

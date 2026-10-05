@@ -47,7 +47,7 @@ const Dashboard = () => {
               variant="h6"
               sx={{
                 fontWeight: 600,
-                mb: 2,
+              
                 mt: 2,
                 color: theme.palette.primary.main,
                 textTransform: "uppercase",

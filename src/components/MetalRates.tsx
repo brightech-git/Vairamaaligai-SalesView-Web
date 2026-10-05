@@ -37,12 +37,13 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                 <Chip
                     label={
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <span style={{ fontFamily: "'Funnel Display', sans-serif" }}>
+                            <span style={{ fontFamily: "'Funnel Display', sans-serif" ,fontSize : "10px" }}>
                                 Gold:
                             </span>
                             <span style={{
                                 fontFamily: "'Delius', cursive",
-                                fontWeight: 600
+                                fontWeight: 600 ,
+                                fontSize : "8px"
                             }}>
                                 ₹{metalRates.GOLDRATE}
                             </span>
@@ -52,7 +53,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                     sx={{
                         ...chipStyles.gold,
                         fontSize: '0.75rem',
-                        height: '28px',
+                        height: '24px',
                         '& .MuiChip-label': {
                             padding: '0 8px',
                         },
@@ -79,7 +80,7 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                     sx={{
                         ...chipStyles.silver,
                         fontSize: '0.75rem',
-                        height: '28px',
+                        height: '24px',
                         '& .MuiChip-label': {
                             padding: '0 8px',
                         }
@@ -97,14 +98,14 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span style={{
                             fontFamily: "'Funnel Display', sans-serif",
-                            fontSize: '14px'
+                            fontSize: '12px'
                         }}>
                             Gold:
                         </span>
                         <span style={{
                             fontFamily: "'Delius', cursive",
                             fontWeight: 700,
-                            fontSize: '14px'
+                            fontSize: '13px'
                         }}>
                             ₹{metalRates.GOLDRATE}
                         </span>
@@ -112,9 +113,9 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                 }
                 sx={{
                     ...chipStyles.gold,
-                    height: '36px',
+                    height: '32px',
                     '& .MuiChip-label': {
-                        padding: '0 12px',
+                        padding: '0 8px',
                     }
                 }}
             />
@@ -125,14 +126,14 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span style={{
                             fontFamily: "'Funnel Display', sans-serif",
-                            fontSize: '14px'
+                            fontSize: '12px'
                         }}>
                             Silver:
                         </span>
                         <span style={{
                             fontFamily: "'Delius', cursive",
                             fontWeight: 700,
-                            fontSize: '14px'
+                            fontSize: '13px'
                         }}>
                             ₹{metalRates.SILVERRATE}
                         </span>
@@ -140,9 +141,9 @@ const MetalRates: React.FC<MetalRatesProps> = ({ compact = false }) => {
                 }
                 sx={{
                     ...chipStyles.silver,
-                    height: '36px',
+                    height: '32px',
                     '& .MuiChip-label': {
-                        padding: '0 12px',
+                        padding: '0 8px',
                     }
                 }}
             />
