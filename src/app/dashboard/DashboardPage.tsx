@@ -1,24 +1,27 @@
 "use client";
 import React from "react";
 import { useDashBoardContext } from "@/context/DashBoardContext";
-import { Box, Grid, useTheme ,Typography } from "@mui/material";
+import { Box, Grid, useTheme ,Typography, Alert, Paper } from "@mui/material";
 
 import MaterialSummaryTable from "../MeterialTableData/MaterialTableData";
 import PaymentSummary from "../PaymentSummary/PaymentSummary";
 import SchemePayment from "../SchemePaymentSummary/SchemePayment";
 import EstimationSummary from "../estimationSummary/EstimationSummary";
 import BillCancelledPage from "../BillCancelledTable/BillCancelledPage";
-import { useThemeContext } from "@/context/ThemeContext";
+import TableSkeleton from "@/components/ui/table/TableSkeleton";
+
 
 const Dashboard = () => {
   const theme = useTheme();
   const { branchesData, loading, error } = useDashBoardContext();
-  const { sidebarOpen } =useThemeContext();
+
 
   console.log(branchesData,'branchesData')
-  if (error) return <div>{error}</div>;
+  if (error) return <Alert severity="error">{error}</Alert>;
+  if (loading) return <Box sx={{ display: "grid", gap: 3 }}><TableSkeleton rows={4} columns={4} /><TableSkeleton rows={4} columns={3} /></Box>;
+  if (!branchesData.length) return <Paper sx={{ p: 6, textAlign: "center", border: "1px solid", borderColor: "divider" }}><Typography variant="h6">No reports for this period</Typography><Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Choose another date range to view your branch activity.</Typography></Paper>;
 
-  const hasValidData = (arr:any) => {
+  const hasValidData = (arr: unknown) => {
     return (
       Array.isArray(arr) &&
       arr.length > 0 &&
@@ -33,19 +36,19 @@ const Dashboard = () => {
     <Box
       sx={{
         backgroundColor: theme.palette.background.default,
-        p: { xs: 0, md: 2 },
-        marginTop: sidebarOpen ? 'rem' : '0.5rem'
+        p: 0,
+        marginTop: 0
       }}
     >
       <Box
         sx={{
           backgroundColor: theme.palette.background.default,
-          p: { xs: 0, md: 2 },
-          marginTop: sidebarOpen ? "0rem" : "0.5rem",
+          p: 0,
+          marginTop: 0,
         }}
       >
         {branchesData.map((branch) => (
-          <Box key={branch.branchName} sx={{ mb: 2 }}>
+          <Paper className="glass-surface" key={branch.branchName} sx={{ mb: 2, p: { xs: 1.25, md: 1.5 }, border: "1px solid", borderColor: "divider", borderRadius: 3 }}>
 
             {/* ➤ Branch Name Heading */}
             {/* ➤ Branch Name Heading */}
@@ -53,11 +56,11 @@ const Dashboard = () => {
               variant="h6"
               sx={{
                 fontWeight: 600,
-                mb: 2,
-                mt: 2,
+                mb: 1.5,
+                mt: .5,
                 color: theme.palette.primary.main,
-                textTransform: "uppercase",
-                textAlign:'center'
+                textTransform: "none",
+                textAlign:'left'
               }}
             >
               {branch.branchName}
@@ -72,11 +75,11 @@ const Dashboard = () => {
               />
             )}
 
-            <Box sx={{ mt: 2, mb: 3 }}>
-              <Grid container spacing={2.5} alignItems="stretch">
+            <Box sx={{ mt: 1.5, mb: 1.5 }}>
+              <Grid container spacing={1.5} alignItems="stretch">
 
                 {hasValidData(branch.paymentSummary) && (
-                  <Grid size={{ xs: 12, md: 4 }}>
+                  <Grid size={{ xs: 12, md: 6, xl: 4 }}>
                     <PaymentSummary
                       data={branch.paymentSummary}
                       loading={loading}
@@ -86,7 +89,7 @@ const Dashboard = () => {
                 )}
 
                 {hasValidData(branch.schemePayment) && (
-                  <Grid size={{ xs: 12, md: 4 }}>
+                  <Grid size={{ xs: 12, md: 6, xl: 4 }}>
                     <SchemePayment
                       data={branch.schemePayment}
                       loading={loading}
@@ -96,7 +99,7 @@ const Dashboard = () => {
                 )}
 
                 {hasValidData(branch.estimationSummary) && (
-                  <Grid size={{ xs: 12, md: 4 }}>
+                  <Grid size={{ xs: 12, md: 6, xl: 4 }}>
                     <EstimationSummary
                       data={branch.estimationSummary}
                       loading={loading}
@@ -116,7 +119,7 @@ const Dashboard = () => {
               />
             )}
 
-          </Box>
+          </Paper>
         ))}
       </Box>
 

@@ -29,7 +29,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
             <Box
                 className={className}
                 sx={{
-                    maxWidth: "95%",
+                    maxWidth: "100%",
                     margin: "auto",
                     borderRadius: 2,
                     overflow: "hidden",
@@ -41,7 +41,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
                 <Box
                     sx={{
                         display: 'flex',
-                        bgcolor: '#4a4a4a',
+                        bgcolor: "action.hover",
                         p: 1
                     }}
                 >
@@ -120,7 +120,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
             <Box
                 sx={{
                     display: 'flex',
-                    bgcolor: '#4a4a4a',
+                    bgcolor: "action.hover",
                     p: 1
                 }}
             >

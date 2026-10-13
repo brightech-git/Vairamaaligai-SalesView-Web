@@ -25,7 +25,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
     if (loading) return <TableSkeleton rows={5} columns={2} />;
     if (error)
         return (
-            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+            <Box sx={{ p: 3, textAlign: "left", color: theme.palette.error.main }}>
                 <Typography variant="body1">Failed to load payment summary</Typography>
             </Box>
         );
@@ -62,7 +62,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",
@@ -76,7 +76,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",

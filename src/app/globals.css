@@ -1,152 +1,30 @@
 @import "tailwindcss";
-
-
-@font-face {
-  font-family: 'Zalando Sans';
-  src: url('/fonts/ZalandoSans/ZalandoSans-Regular.woff2') format('woff2'),
-    url('/fonts/ZalandoSans/ZalandoSans-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Zalando Sans';
-  src: url('/fonts/ZalandoSans/ZalandoSans-Bold.woff2') format('woff2'),
-    url('/fonts/ZalandoSans/ZalandoSans-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-/* CSS Custom Properties */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@font-face { font-family: Lato; src: url('/fonts/fonts/lato/lato.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: Lato; src: url('/fonts/fonts/lato/lato-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 :root {
-  /* Light Theme Colors */
-  --color-background-light: #f8fafc;
-  --color-paper-light: #ffffff;
-  --color-foreground-light: #1e293b;
-  --color-foreground-secondary-light: #64748b;
-
-  /* Dark Theme Colors */
-  --color-background-dark: #0f172a;
-  --color-paper-dark: #1e293b;
-  --color-foreground-dark: #f1f5f9;
-  --color-foreground-secondary-dark: #cbd5e1;
-  --background-color-header:#FCF9EA;
-
-  /* Primary Color Palette */
-  --primary-color: #3b82f6;
-  --secondary-color: #8b5cf6;
-  --accent-color: #f59e0b;
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --error-color: #ef4444;
-
-  /* Typography System */
-  --font-quintessential: 'Quintessential', cursive;
-  --font-grenze: 'Grenze Gotisch', serif;
-  --font-almendra: 'Almendra Display', serif;
-  --font-funnel: 'Funnel Display', sans-serif;
-  --font-delius: 'Delius', cursive;
-  --font-merriweather: 'Merriweather', serif;
-  --font-neuton: 'Neuton', serif;
-  --font-domine: 'Domine', serif;
-  --font-montserrat:'Montserrat',sans-serif;
-  --font-ZalandoSans:'Zalando Sans',sans-serif;
-  --font-satisfy:'Satisfy'
-
-  /* Dynamic Variables - Light by default */
-  --color-background: var(--color-background-light);
-  --color-paper: var(--color-paper-light);
-  --color-foreground: var(--color-foreground-light);
-  --color-foreground-secondary: var(--color-foreground-secondary-light);
+  --font-ui: Lato, "Segoe UI", Arial, sans-serif;
+  --font-funnel: var(--font-ui); --font-merriweather: var(--font-ui); --font-domine: var(--font-ui);
+  --font-montserrat: var(--font-ui); --font-quintessential: var(--font-ui);
+  --color-background: #f8f3f4; --color-paper: #fff; --color-foreground: #36232c;
+  --color-foreground-secondary: #806975; --primary-color: #681c32;
 }
+[data-theme="dark"] { --color-background: #1c141a; --color-paper: #2a1e26; --color-foreground: #f6e9ee; --color-foreground-secondary: #c4abb6; }
+html { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+body { margin: 0; font-family: var(--font-ui); font-size: 14px; line-height: 1.6; background: var(--color-background); color: var(--color-foreground); -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+*:focus-visible { outline: 3px solid #a75e78; outline-offset: 3px; }
+::selection { background: #681c3230; }
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #94a3b866; border-radius: 8px; }
+.font-quintessential, .font-domine, .font-montserrat, .font-funnel { font-family: var(--font-ui); }
+.page-enter { animation: page-enter 320ms cubic-bezier(.2,.7,.3,1) both; }
+@keyframes page-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
-/* Dark Theme Variables */
-[data-theme="dark"] {
-  --color-background: var(--color-background-dark);
-  --color-paper: var(--color-paper-dark);
-  --color-foreground: var(--color-foreground-dark);
-  --color-foreground-secondary: var(--color-foreground-secondary-dark);
-}
-
-/* Smooth Theme Transitions */
-html {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-body {
-  font-family: var(--font-funnel);
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  line-height: 1.6;
-}
-
-/* Enhanced Focus Styles */
-*:focus-visible {
-  outline: 1px solid var(--primary-color);
-  outline-offset: 1px;
-  border-radius: 4px;
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-foreground-secondary);
-  border-radius: 0px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-
-  html,
-  body,
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* Utility Classes */
-.font-quintessential {
-  font-family: var(--font-quintessential);
-}
-
-.font-grenze {
-  font-family: var(--font-grenze);
-}
-
-.font-almendra {
-  font-family: var(--font-almendra);
-}
-
-.font-funnel {
-  font-family: var(--font-funnel);
-}
-
-.font-delius {
-  font-family: var(--font-delius);
-}
-
-.font-merriweather {
-  font-family: var(--font-merriweather);
-}
-
-.font-neuton {
-  font-family: var(--font-neuton);
-}
-
+:root { --glass-surface: rgba(255,255,255,.78); --glass-blur: blur(18px) saturate(140%); --glass-shadow: 0 4px 20px #681c3207; }
+[data-theme="dark"] { --glass-surface: rgba(42,30,38,.82); --glass-shadow: 0 4px 20px #00000018; }
+[data-glass="false"] { --glass-surface: var(--color-paper); --glass-blur: none; --glass-shadow: none; }
+.glass-surface { background: var(--glass-surface) !important; backdrop-filter: var(--glass-blur); box-shadow: var(--glass-shadow); }

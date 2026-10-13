@@ -25,7 +25,7 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
 
     if (error)
         return (
-            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+            <Box sx={{ p: 3, textAlign: "left", color: theme.palette.error.main }}>
                 <Typography variant="body1">Failed to load Chit Collection</Typography>
             </Box>
         );
@@ -65,7 +65,7 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",
@@ -79,7 +79,7 @@ const SchemePayment: React.FC<SchemePaymentProps> = ({
                                         variant="h6"
                                         sx={{
                                             mb: 1,
-                                            textAlign: "center",
+                                            textAlign: "left",
                                             fontWeight: 600,
                                             color: theme.palette.text.primary,
                                             fontFamily: "var(--font-merriweather)",

@@ -72,11 +72,11 @@ const LoginForm: React.FC = () => {
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 1,
+                gap: 1.5,
                 width: "100%",
                 maxWidth: 400, // optional, limits form width
                 mx: "auto",    // center horizontally
-                px: 1,         // small padding for mobile
+                px: 0,         // small padding for mobile
             }}
         >
             {localError && (
@@ -93,12 +93,14 @@ const LoginForm: React.FC = () => {
                 variant="subtitle2" // Use variant, not fontFamily
                 sx={{ color: theme.palette.text.primary, fontWeight: 600 }}
             >
-                Name
+                Username
             </Typography>
             <TextField
                 fullWidth
                 variant="outlined"
-                placeholder="Enter UserName"
+                placeholder="Enter your username"
+                autoComplete="username"
+                inputProps={{ "aria-label": "Username" }}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 InputProps={{
@@ -116,7 +118,9 @@ const LoginForm: React.FC = () => {
             <TextField
                 fullWidth
                 type="password"
-                placeholder="Enter Your Password"
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                inputProps={{ "aria-label": "Password" }}
                 variant="outlined"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

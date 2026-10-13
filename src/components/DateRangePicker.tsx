@@ -17,9 +17,9 @@ import { format, subDays, startOfDay, endOfDay, isToday, isSameDay } from 'date-
 import { useAppContext } from '@/context/AppContext';
 import { useDashBoardContext } from '@/context/DashBoardContext';
 
-interface DateRangePickerProps { }
+interface DateRangePickerProps { compact?: boolean; }
 
-const DateRangePicker: React.FC<DateRangePickerProps> = () => {
+const DateRangePicker: React.FC<DateRangePickerProps> = ({ compact = false }) => {
     const theme = useTheme();
     const { dateRange, fetchDataWithDates, selectedChip, setSelectedChip } = useAppContext();
 
@@ -163,13 +163,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         borderColor: theme.palette.primary.main,
                         color: theme.palette.text.primary,
                         backgroundColor: theme.palette.background.paper,
-                        fontFamily: "'Funnel Display', sans-serif",
+                        fontFamily: "var(--font-ui)",
                         fontWeight: 600,
-                        fontSize: '14px',
-                        height: '36px',
+                        fontSize: compact ? '12px' : '14px',
+                        height: compact ? '30px' : '36px',
                         '&:hover': {
                             opacity: 1,
-                            color: '#000'
+                            color: theme.palette.text.primary
 
                         },
                     }}
@@ -177,7 +177,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
 
                 {/* Quick Selection Chips */}
                 <Box sx={{
-                    display: {xs: 'none', sm: 'flex'},
+                    display: compact ? 'none' : {xs: 'none', sm: 'flex'},
                     gap: 1,
                     alignItems: 'center',
                 }}>
@@ -189,7 +189,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                             variant={activeChip === chip.value ? "filled" : "outlined"}
                             onClick={() => handleChipClick(chip.value)}
                             sx={{
-                                fontFamily: "'Funnel Display', sans-serif",
+                                fontFamily: "var(--font-ui)",
                                 fontSize: '0.75rem',
                                 fontWeight: 500,
                                 ...(activeChip === chip.value && {
@@ -197,7 +197,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     color: theme.palette.primary.contrastText,
                                     '&:hover': {
                                         opacity: 1,
-                                        color: '#000'
+                                        color: theme.palette.text.primary
                                     },
                                 }),
                                 ...(activeChip !== chip.value && {
@@ -205,7 +205,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                                     color: theme.palette.text.primary,
                                     '&:hover': {
                                         opacity: 1,
-                                        color: '#000'
+                                        color: theme.palette.text.primary
                                     },
                                 }),
                             }}
@@ -234,7 +234,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                             border: `1px solid ${theme.palette.divider}`,
                             borderRadius: 2,
                             boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                            minWidth: 320,
+                            width: "min(360px, calc(100vw - 32px))",
                         },
                     }}
                 >
@@ -242,7 +242,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         variant="h6"
                         sx={{
                             mb: 3,
-                            fontFamily: "'Quintessential', cursive",
+                            fontFamily: "var(--font-ui)",
                             color: theme.palette.text.primary,
                             textAlign: 'center',
                         }}
@@ -250,6 +250,9 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                         Select Date Range
                     </Typography>
 
+                    <Box sx={{ display: "flex", gap: .75, mb: 2, flexWrap: "wrap" }}>
+                        {chips.map(chip => <Chip key={chip.value} size="small" label={chip.label} variant={activeChip === chip.value ? "filled" : "outlined"} color={activeChip === chip.value ? "primary" : "default"} onClick={() => handleChipClick(chip.value)} />)}
+                    </Box>
                     <Box sx={{
                         display: 'flex',
                         gap: 2,
@@ -400,7 +403,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = () => {
                             sx={{
                                 mt: 2,
                                 textAlign: 'center',
-                                fontFamily: "'Funnel Display', sans-serif",
+                                fontFamily: "var(--font-ui)",
                                 color: theme.palette.text.primary,
                             }}
                         >

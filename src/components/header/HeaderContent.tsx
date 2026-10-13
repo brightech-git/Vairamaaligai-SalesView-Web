@@ -15,8 +15,11 @@ const HeaderContent: React.FC = () => {
 
     const { companyDetails } =useCompanyDetails();
 
+    console.log(companyDetails,'companyDetails')
+
     const baseUrl = 'https://app.bmgjewellers.com'
     const logo = `${baseUrl.trim()}${companyDetails?.LOGO}`
+    
     console.log(logo ,'companydetails');
 
 

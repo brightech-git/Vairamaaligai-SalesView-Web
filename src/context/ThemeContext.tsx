@@ -1,345 +1,50 @@
 "use client";
-export const dynamic = "force-dynamic";
-
-import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from "react";
-import {
-    ThemeProvider as MuiThemeProvider,
-    createTheme,
-    ThemeOptions
-} from "@mui/material/styles";
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from "react";
+import { ThemeProvider, createTheme, alpha } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
-
-// Types
-interface ThemeContextProps {
-    mode: "light" | "dark";
-    toggleTheme: () => void;
-    isLargeScreen: boolean;
-    sidebarOpen: boolean;
-    toggleSidebar: () => void;
-}
-
-interface ThemeProviderProps {
-    children: ReactNode;
-}
-
-// Constants
-const THEME_STORAGE_KEY = "app-theme";
-const SIDEBAR_STORAGE_KEY = "sidebar-state";
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
-
-// Theme Context
+interface ThemeContextProps { mode: "light" | "dark"; toggleTheme: () => void; setThemeMode: (mode: "light" | "dark") => void; glass: boolean; setGlass: (enabled: boolean) => void; isLargeScreen: boolean; sidebarOpen: boolean; toggleSidebar: () => void; }
+const defaults: ThemeContextProps = { mode: "light", toggleTheme: () => {}, setThemeMode: () => {}, glass: true, setGlass: () => {}, isLargeScreen: true, sidebarOpen: true, toggleSidebar: () => {} };
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
-
-export const useThemeContext = (): ThemeContextProps => {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        // Return default values during SSR instead of throwing
-        if (typeof window === 'undefined') {
-            return {
-                mode: "light",
-                toggleTheme: () => { },
-                isLargeScreen: true,
-                sidebarOpen: true,
-                toggleSidebar: () => { },
-            };
-        }
-        throw new Error("useThemeContext must be used within a ThemeContextProvider");
+export const useThemeContext = () => { const value = useContext(ThemeContext); if (!value) throw new Error("ThemeContextProvider is required"); return value; };
+export const useSafeThemeContext = () => useContext(ThemeContext) ?? defaults;
+export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
+  const [mode, setMode] = useState<"light" | "dark">("light");
+  const [glass, updateGlass] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  useEffect(() => {
+    updateGlass(localStorage.getItem("app-glass") !== "false");
+    const saved = localStorage.getItem("app-theme");
+    setMode(saved === "dark" || saved === "light" ? saved : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    setSidebarOpen(window.innerWidth >= 900 && localStorage.getItem("sidebar-state") !== "false");
+  }, []);
+  useEffect(() => { document.documentElement.dataset.theme = mode; }, [mode]);
+  useEffect(() => { document.documentElement.dataset.glass = String(glass); }, [glass]);
+  const setGlass = useCallback((enabled: boolean) => { updateGlass(enabled); localStorage.setItem("app-glass", String(enabled)); }, []);
+  const setThemeMode = useCallback((next: "light" | "dark") => { setMode(next); localStorage.setItem("app-theme", next); }, []);
+  const toggleTheme = useCallback(() => setMode(current => { const next = current === "light" ? "dark" : "light"; localStorage.setItem("app-theme", next); return next; }), []);
+  const toggleSidebar = useCallback(() => setSidebarOpen(current => { localStorage.setItem("sidebar-state", String(!current)); return !current; }), []);
+  const theme = useMemo(() => createTheme({
+    palette: { mode, primary: { main: mode === "light" ? "#681c32" : "#eaa7b7" }, secondary: { main: "#8c6b40" },
+      background: { default: mode === "light" ? "#f8f3f4" : "#1c141a", paper: mode === "light" ? "#ffffff" : "#2a1e26" },
+      text: { primary: mode === "light" ? "#36232c" : "#f6e9ee", secondary: mode === "light" ? "#806975" : "#c4abb6" },
+      divider: mode === "light" ? "#eadde2" : "#49343f" },
+    typography: { fontFamily: 'Lato, "Segoe UI", Arial, sans-serif', fontSize: 14,
+      h1: { fontSize: "2.5rem", fontWeight: 700 }, h2: { fontSize: "2rem", fontWeight: 700 }, h3: { fontSize: "1.75rem", fontWeight: 700 },
+      h4: { fontSize: "1.25rem", fontWeight: 700 }, h5: { fontSize: "1.25rem", fontWeight: 700 }, h6: { fontSize: "1rem", fontWeight: 700 },
+      body1: { fontSize: "0.9375rem", lineHeight: 1.65 }, body2: { fontSize: "0.875rem", lineHeight: 1.6 }, caption: { fontSize: "0.75rem" }, button: { fontSize: "0.875rem", fontWeight: 700 } },
+    shape: { borderRadius: 10 },
+    components: {
+      MuiPaper: { defaultProps: { elevation: 0 }, styleOverrides: { root: { backgroundImage: "none" } } },
+      MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: { textTransform: "none", minHeight: 32, paddingInline: 12, transition: "background-color 180ms, box-shadow 180ms, transform 180ms", "&:active": { transform: "translateY(1px)" } } } },
+      MuiIconButton: { styleOverrides: { root: { transition: "background-color 180ms" } } },
+      MuiOutlinedInput: { styleOverrides: { root: { fontSize: 14, "& fieldset": { borderColor: mode === "light" ? "#ddcbd3" : "#614652" } } } },
+      MuiChip: { styleOverrides: { root: { borderRadius: 7, fontSize: 13 } } },
+      MuiListItemButton: { styleOverrides: { root: { borderRadius: 8, minHeight: 36, transition: "background-color 180ms", "&.Mui-selected": { backgroundColor: alpha(mode === "light" ? "#681c32" : "#eaa7b7", .1) } } } },
+      MuiTooltip: { defaultProps: { arrow: true } },
+      MuiCssBaseline: { styleOverrides: { body: { transition: "background-color 200ms, color 200ms" } } },
     }
-    return context;
-};
-export const useSafeThemeContext = (): ThemeContextProps => {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        return {
-            mode: "light",
-            toggleTheme: () => { },
-            isLargeScreen: true,
-            sidebarOpen: true,
-            toggleSidebar: () => { },
-        };
-    }
-    return context;
-};
-
-const getInitialTheme = (): "light" | "dark" => {
-    if (typeof window === "undefined") return "light";
-
-    const saved = localStorage.getItem(THEME_STORAGE_KEY) as "light" | "dark" | null;
-    if (saved) return saved;
-
-    return window.matchMedia(COLOR_SCHEME_QUERY).matches ? "dark" : "light";
-};
-
-const getInitialSidebarState = (): boolean => {
-    if (typeof window === "undefined") return true;
-    const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : true;
-};
-
-export const ThemeContextProvider = ({ children }: ThemeProviderProps) => {
-    const [mode, setMode] = useState<"light" | "dark">("light");
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-
-    // Initialize theme and sidebar
-    useEffect(() => {
-        const initialTheme = getInitialTheme();
-        const initialSidebar = getInitialSidebarState();
-        setMode(initialTheme);
-        setSidebarOpen(initialSidebar);
-    }, []);
-
-    const toggleTheme = (): void => {
-        setMode((currentMode) => {
-            const newMode = currentMode === "light" ? "dark" : "light";
-            localStorage.setItem(THEME_STORAGE_KEY, newMode);
-            return newMode;
-        });
-    };
-
-    const toggleSidebar = (): void => {
-        setSidebarOpen((current) => {
-            const newState = !current;
-            localStorage.setItem(SIDEBAR_STORAGE_KEY, JSON.stringify(newState));
-            return newState;
-        });
-    };
-
-    // Enhanced color palettes
-    const lightPalette = {
-        background: {
-            default: "#FFFFFF",
-            paper: "#FFFFFF",
-            
-        },
-        text: {
-            primary: "#222",
-            secondary: "#FFFFFF",
-            disabled: "#ba7135",
-        },
-        primary: {
-            main: "#9d2324",
-            light: "#c09b4a",
-            dark: "#9d2324",
-        },
-        secondary: {
-            main: "#9d2324",
-            light: "#c09b4a",
-            dark: "#9d2324",
-        },
-        success: {
-            main: "#10b981",
-        },
-        warning: {
-            main: "#f59e0b",
-        },
-        error: {
-            main: "#ef4444",
-        },
-        grey: {
-            100: "#f1f5f9",
-            200: "#e2e8f0",
-            300: "#cbd5e1",
-            400: "#94a3b8",
-        },
-    };
-
-    const darkPalette = {
-        background: {
-            default: "#0f0346ff",
-            paper: "#0C0C0C",
-        },
-        text: {
-            primary: "#f1f5f9",
-            secondary: "#222",
-        },
-        primary: {
-            main: "#FFFFFF",
-            light: "#93c5fd",
-            dark: "#FFFFFF",
-        },
-        secondary: {
-            main: "#a78bfa",
-            light: "#c4b5fd",
-            dark: "#8b5cf6",
-        },
-        success: {
-            main: "#34d399",
-        },
-        warning: {
-            main: "#fbbf24",
-        },
-        error: {
-            main: "#f87171",
-        },
-        grey: {
-            100: "#1e293b",
-            200: "#334155",
-            300: "#475569",
-            400: "#64748b",
-        },
-    };
-
-    // MUI Theme configuration
-    const muiTheme = useMemo(() => {
-        const palette = mode === "light" ? lightPalette : darkPalette;
-
-        const themeOptions: ThemeOptions = {
-            palette: {
-                mode,
-                ...palette,
-            },
-            typography: {
-                fontFamily: "Lato",
-                h1: {
-                    fontFamily: "Lato",
-                    fontWeight: 700,
-                    color: palette.text.primary,
-                },
-                h2: {
-                    fontFamily: "Lato",
-                    fontWeight: 600,
-                    color: palette.text.primary,
-                },
-                h3: {
-                    fontFamily: "Lato",
-                    fontWeight: 600,
-                    color: palette.text.primary,
-                },
-                h4: {
-                    fontFamily: "Lato",
-                    color: palette.text.secondary,
-                    fontWeight: 600,
-                    fontSize: '16px'
-                    
-                },
-                h5: {
-                    fontFamily: "Lato",
-                    color: palette.text.primary,
-                    fontWeight: 600,
-                    fontSize: '14px'
-
-                },
-                h6: {
-                    fontFamily: "Lato",
-                    color: palette.text.primary,
-                    fontWeight: 600,
-                    fontSize: '14px'
-
-                },
-                body1: {
-                    fontFamily: "Lato",
-                    lineHeight: 1.6,
-                    color: palette.text.primary,
-                    fontWeight: 400,
-                    fontSize:'10px'
-                },
-                body2: {
-                    fontFamily: "Lato",
-                    lineHeight: 1.5,
-                    color: palette.text.primary,
-                    fontSize: '12px'
-                },
-            },
-            shape: {
-                borderRadius: 12,
-            },
-            components: {
-
-                MuiCssBaseline: {
-                    styleOverrides: {
-                        html: {
-                            transition: "background-color 0.3s ease, color 0.3s ease",
-                        },
-                        body: {
-                            transition: "background-color 0.3s ease, color 0.3s ease",
-                            fontFamily: "'Funnel Display', sans-serif",
-                            margin: 0,
-                            padding: 0,
-                            minHeight: "100vh",
-                            backgroundColor: palette.background.default,
-                            color: palette.text.primary,
-                        },
-                    },
-                },
-                MuiAppBar: {
-                    styleOverrides: {
-                        root: {
-                            backgroundColor: palette.background.paper,
-                            color: palette.text.primary,
-                            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-                        },
-                    },
-                },
-                MuiDrawer: {
-                    styleOverrides: {
-                        paper: {
-                            backgroundColor: palette.background.paper,
-                            borderRight: `1px solid ${palette.grey[200]}`,
-                            transition: "width 0.3s ease",
-                        },
-                    },
-                },
-                MuiButton: {
-                    styleOverrides: {
-                        root: {
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            borderRadius: 8,
-                        },
-                    },
-                },
-                MuiChip: {
-                    styleOverrides: {
-                        root: {
-                            borderColor: palette.primary.main,
-                            color: palette.text.primary,
-                            backgroundColor: palette.background.paper,
-                            '&:hover': {
-                                backgroundColor: palette.primary.light,
-                                color: palette.background.paper,
-                            },
-                        },
-                    },
-                },
-                MuiListItemButton: {
-                    styleOverrides: {
-                        root: {
-                            borderRadius: 8,
-                            margin: "4px 8px",
-                            '&:hover': {
-                                backgroundColor: palette.primary.light + "20",
-                            },
-                            '&.Mui-selected': {
-                                backgroundColor: palette.primary.main + "20",
-                                color: palette.primary.main,
-                            },
-                        },
-                    },
-                },
-              
-            },
-            
-        };
-
-        return createTheme(themeOptions);
-    }, [mode]);
-
-    const isLargeScreen = useMediaQuery(muiTheme.breakpoints.up("md"));
-
-    const contextValue = useMemo(() => ({
-        mode,
-        toggleTheme,
-        isLargeScreen,
-        sidebarOpen,
-        toggleSidebar,
-    }), [mode, isLargeScreen, sidebarOpen]);
-
-    return (
-        <ThemeContext.Provider value={contextValue}>
-            <MuiThemeProvider theme={muiTheme}>
-                <CssBaseline />
-                {children}
-            </MuiThemeProvider>
-        </ThemeContext.Provider>
-    );
+  }), [mode]);
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const value = useMemo(() => ({ mode, toggleTheme, setThemeMode, glass, setGlass, sidebarOpen, toggleSidebar, isLargeScreen }), [mode, toggleTheme, setThemeMode, glass, setGlass, sidebarOpen, toggleSidebar, isLargeScreen]);
+  return <ThemeContext.Provider value={value}><ThemeProvider theme={theme}><CssBaseline />{children}</ThemeProvider></ThemeContext.Provider>;
 };

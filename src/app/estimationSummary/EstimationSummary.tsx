@@ -24,7 +24,7 @@ const EstimationSummary: React.FC<EstimationSummaryProps> = ({
 
     if (error)
         return (
-            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+            <Box sx={{ p: 3, textAlign: "left", color: theme.palette.error.main }}>
                 <Typography variant="body1">Failed to load estimation summary</Typography>
             </Box>
         );
@@ -74,7 +74,7 @@ const EstimationSummary: React.FC<EstimationSummaryProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",
@@ -89,7 +89,7 @@ const EstimationSummary: React.FC<EstimationSummaryProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",

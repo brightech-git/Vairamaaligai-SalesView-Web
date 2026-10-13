@@ -14,8 +14,11 @@ import {
     Box,
     useTheme,
     useMediaQuery,
+    Tooltip,
+    Divider,
 } from "@mui/material";
 import {
+    LogoutRounded,
     DashboardOutlined,
     Inventory2Outlined,
     PaymentOutlined,
@@ -27,6 +30,12 @@ import {
 } from "@mui/icons-material";
 import { useThemeContext } from "@/context/ThemeContext";
 import Header from "../header/Header";
+import ThemeSettings from "../ThemeSettings";
+import CompanyLogo from "../CompanyLogo";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
+import { logout } from "@/redux/slices/authSlice";
 
 // ✅ Import your page components here
 import Dashboard from "@/app/dashboard/DashboardPage";
@@ -36,7 +45,7 @@ import PaymentSummary from "@/app/PaymentSummary/PaymentSummary";
 import MaterialSummaryTable from "@/app/MeterialTableData/MaterialTableData";
 import EstimationSummary from "@/app/estimationSummary/EstimationSummary";
 import SchemeReport from "@/app/SchemeReport/SchemeReport";
-import BranchTables from "../ui/table/BranchTables";
+
 
 import { useDashBoardContext } from "@/context/DashBoardContext";
 
@@ -56,12 +65,22 @@ const menuItems = [
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
     const { sidebarOpen, toggleSidebar } = useThemeContext();
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+    const handleLogout = () => {
+        sessionStorage.removeItem("isAuthenticated");
+        dispatch(logout());
+        void queryClient.cancelQueries();
+        queryClient.clear();
+        router.replace("/login");
+    };
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [activeItem, setActiveItem] = useState("dashboard");
     
     const { branchesData, loading, error } = useDashBoardContext(); // ✅ get context
-    const drawerWidth = sidebarOpen ? 240 : 72;
+    const drawerWidth = sidebarOpen ? 220 : 64;
 
     const handleMenuClick = (itemId: string) => {
         setActiveItem(itemId);
@@ -145,96 +164,30 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
 
 
 
+    const activeMenu = menuItems.find(item => item.id === activeItem)!;
     const drawerContent = (
-        <Box sx={{ overflow: "hidden", zIndex: 1 }}>
-            {/* Drawer Header */}
-            <Box
-                sx={{
-                    p: sidebarOpen ? 1.5 : 0.5, // smaller padding
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: sidebarOpen ? "space-between" : "center",
-                    borderBottom: `1px solid ${theme.palette.grey[200]}`,
-                    minHeight: "56px", // slightly smaller height
-                }}
-            >
-                {sidebarOpen && (
-                    <Typography
-                        variant="subtitle1" // smaller font
-                        noWrap
-                        component="div"
-                        className="font-quintessential"
-                        sx={{ color: theme.palette.text.primary ,textTransform: 'capitalize'}}
-                    >
-                        {activeItem}
-                    </Typography>
-                )}
-                {!isMobile && (
-                    <IconButton
-                        onClick={toggleSidebar}
-                        size="small"
-                        sx={{
-                            color: theme.palette.text.primary,
-                            ...(!sidebarOpen && { mx: "auto" }),
-                        }}
-                    >
-                        <ChevronLeftIcon
-                            sx={{
-                                transform: sidebarOpen ? "rotate(0deg)" : "rotate(180deg)",
-                                transition: "transform 0.3s ease",
-                            }}
-                        />
-                    </IconButton>
-                )}
+        <Box sx={{ height: "100%", display: "flex", flexDirection: "column", p: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, px: .5, height: 48, mb: 2 }}>
+                <CompanyLogo size="20px"/>
+                {sidebarOpen && <Box><Typography variant="body2" fontWeight={700}>Sales View</Typography><Typography variant="caption" color="text.secondary">Business intelligence</Typography></Box>}
             </Box>
-
-            {/* Navigation Menu */}
-            <List sx={{ px: 0.5 }}> {/* reduced horizontal padding */}
-                {menuItems.map((item) => (
-                    <ListItem key={item.id} disablePadding>
-                        <ListItemButton
-                            selected={activeItem === item.id}
-                            onClick={() => handleMenuClick(item.id)}
-                            sx={{
-                                justifyContent: sidebarOpen ? "initial" : "center",
-                                px: sidebarOpen ? 1.5 : 0.5, // reduced padding
-                                py: 0.5,
-                            }}
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: sidebarOpen ? 1.5 : "auto", // reduced margin
-                                    justifyContent: "center",
-                                    color:
-                                        activeItem === item.id
-                                            ? theme.palette.primary.main
-                                            : theme.palette.text.primary,
-                                }}
-                            >
-                                {item.icon}
-                            </ListItemIcon>
-                            {sidebarOpen && (
-                                <ListItemText
-                                    primary={item.text}
-                                    primaryTypographyProps={{
-                                        fontFamily: "'Funnel Display', sans-serif",
-                                        fontWeight: 500,
-                                        fontSize: "0.875rem", // smaller text
-                                        color:
-                                            activeItem === item.id
-                                                ? theme.palette.primary.main
-                                                : theme.palette.text.primary,
-                                        textTransform: "capitalize",
-                                    }}
-                                />
-                            )}
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+            {sidebarOpen && <Typography variant="caption" color="text.secondary" sx={{ px: 1.5, mb: 1, letterSpacing: 1.4, fontWeight: 700 }}>WORKSPACE</Typography>}
+            <List sx={{ p: 0 }}>
+                {menuItems.map(item => <ListItem key={item.id} disablePadding sx={{ mb: .5 }}>
+                    <Tooltip title={sidebarOpen ? "" : item.text} placement="right"><ListItemButton selected={activeItem === item.id} onClick={() => handleMenuClick(item.id)} aria-label={item.text} sx={{ px: sidebarOpen ? 1.5 : 1, justifyContent: sidebarOpen ? "initial" : "center", color: activeItem === item.id ? "primary.main" : "text.secondary" }}>
+                        <ListItemIcon sx={{ color: "inherit", minWidth: sidebarOpen ? 30 : 0 }}>{item.icon}</ListItemIcon>
+                        {sidebarOpen && <ListItemText primary={item.text} slotProps={{ primary: { fontSize: 13, fontWeight: activeItem === item.id ? 700 : 400 } }} />}
+                    </ListItemButton></Tooltip>
+                </ListItem>)}
             </List>
+            <Box sx={{ mt: "auto", pt: 1.5 }}>
+                <Divider sx={{ mb: 1 }} />
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: sidebarOpen ? "space-between" : "center", px: sidebarOpen ? 1 : 0, mb: 1 }}>{sidebarOpen && <Typography variant="caption" color="text.secondary">Appearance</Typography>}<ThemeSettings /></Box>
+                <Tooltip title={sidebarOpen ? "" : "Log out"} placement="right"><ListItemButton aria-label="Log out" onClick={handleLogout} sx={{ px: sidebarOpen ? 1.5 : 1, justifyContent: sidebarOpen ? "initial" : "center", color: "primary.main", mb: 1 }}><ListItemIcon sx={{ color: "inherit", minWidth: sidebarOpen ? 30 : 0 }}><LogoutRounded fontSize="small" /></ListItemIcon>{sidebarOpen && <ListItemText primary="Log out" slotProps={{ primary: { fontSize: 13, fontWeight: 700 } }} />}</ListItemButton></Tooltip>
+                {!isMobile && <Tooltip title={sidebarOpen ? "Collapse navigation" : "Expand navigation"}><IconButton aria-label={sidebarOpen ? "Collapse navigation" : "Expand navigation"} onClick={toggleSidebar} size="small" sx={{ width: "100%", borderRadius: 2 }}><ChevronLeftIcon sx={{ transform: sidebarOpen ? "none" : "rotate(180deg)", transition: "transform 200ms" }} /></IconButton></Tooltip>}
+            </Box>
         </Box>
-    )
+    );
     return (
         <Box sx={{ display: "flex", backgroundColor: theme.palette.background.default }}>
             {/* Header */}
@@ -246,19 +199,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                 open={sidebarOpen}
                 onClose={toggleSidebar}
                 sx={{
-                    width: drawerWidth,
+                    width: isMobile ? 0 : drawerWidth,
                     flexShrink: 0,
                     "& .MuiDrawer-paper": {
-                        width: drawerWidth,
+                        width: isMobile ? 220 : drawerWidth,
                         boxSizing: "border-box",
+                        background: "var(--glass-surface)",
+                        backdropFilter: "var(--glass-blur)",
                         transition: theme.transitions.create("width", {
                             easing: theme.transitions.easing.sharp,
                             duration: theme.transitions.duration.enteringScreen,
                         }),
                         ...(isMobile && {
-                            top: "100px",
-                            height: "calc(100% - 64px)",
-                            background:theme.palette.background.paper
+                            top: "96px",
+                            height: "calc(100% - 96px)",
+                            background: "var(--glass-surface)"
                         }),
                     },
                 }}
@@ -271,19 +226,25 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = () => {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: {lg:1,sm:1,xs:1 ,md:0},
+                    p: { xs: 1.25, md: 1.5, xl: 2 },
+                    minWidth: 0,
+                    minHeight: "100vh",
                     width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
                     backgroundColor: theme.palette.background.default,
+                    backgroundImage: "radial-gradient(ellipse at 90% 0%, #a75e7814, transparent 50%)",
                     transition: theme.transitions.create(["width", "margin"], {
                         easing: theme.transitions.easing.sharp,
                         duration: theme.transitions.duration.leavingScreen,
                     }),
                 }}
             >
-                <Box sx={{ height: { xs: "100px", md: "74px", lg: "65px"  }  }} /> {/* Spacer for Header */}
+                <Box sx={{ height: { xs: 96, md: 56 } }} /> {/* Spacer for Header */}
 
                 {/* ✅ Render the selected page here */}
-                {renderPage()}
+                <Box sx={{ maxWidth: 1600, mx: "auto" }}>
+                  <Box sx={{ mb: 1.5 }}><Typography variant="caption" color="text.secondary">Workspace / Reports</Typography><Typography variant="h4" sx={{ mt: .5 }}>{activeMenu.text === "Dashboard" ? "Business overview" : activeMenu.text}</Typography><Typography variant="body2" color="text.secondary" sx={{ mt: .5 }}>Explore your branch reports for the selected period.</Typography></Box>
+                  <Box key={activeItem} className="page-enter">{renderPage()}</Box>
+                </Box>
             </Box>
         </Box>
     );

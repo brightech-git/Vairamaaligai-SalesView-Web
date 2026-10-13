@@ -50,7 +50,7 @@ const BillCancelledPage: React.FC<BillCancelledPageProps> = ({
 
     if (error)
         return (
-            <Box sx={{ p: 3, textAlign: "center", color: theme.palette.error.main }}>
+            <Box sx={{ p: 3, textAlign: "left", color: theme.palette.error.main }}>
                 <Typography variant="body1">
                     Error loading cancelled bills: {error}
                 </Typography>
@@ -66,7 +66,7 @@ const BillCancelledPage: React.FC<BillCancelledPageProps> = ({
                     alignItems: "center",
                     justifyContent: "center",
                     px: 2,
-                    textAlign: "center",
+                    textAlign: "left",
                 }}
             >
                 <Box sx={{ fontSize: "3rem", mb: 0, opacity: 0.8 }}>📋</Box>
@@ -120,7 +120,7 @@ const BillCancelledPage: React.FC<BillCancelledPageProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-satisfy)",

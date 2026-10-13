@@ -54,7 +54,7 @@ const MaterialSummaryTable: React.FC<MaterialSummaryTableProps> = ({
                         variant="h6"
                         sx={{
                             mb: 1,
-                            textAlign: "center",
+                            textAlign: "left",
                             fontWeight: 600,
                             color: theme.palette.text.primary,
                             fontFamily: "var(--font-merriweather)",

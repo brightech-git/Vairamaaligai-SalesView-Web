@@ -111,11 +111,11 @@ const SchemeReport: React.FC = () => {
         mb: 1.5,
         fontWeight: 600,
         color: theme.palette.text.primary,
-        fontFamily: "var(--font-merriweather)",
+        fontFamily: "var(--font-ui)",
     };
 
     const renderSection = (title: string, table: React.ReactNode) => (
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 2 }}>
             <Typography variant="h6" sx={sectionTitleSx}>
                 {title}
             </Typography>
@@ -143,26 +143,28 @@ const SchemeReport: React.FC = () => {
         ];
 
         // 2. Collection Summary View (single-row object -> label/value rows)
-        const collectionLabels: Record<string, string> = {
-            CASHAMOUNT: "Cash",
-            CARDAMOUNT: "Credit Card",
-            CHEQUEAMOUNT: "Cheque",
-            ETRANSFERAMOUNT: "Net Banking",
-            CREDITPURCHASE: "Credit Purchase",
-            GIFTADJUSTMENT: "Gift Adjustment",
-            HOMEAMOUNT: "Home Collection",
-            ADVAMOUNT: "Advance",
-            VAAMOUNT: "VA Amount",
-            ONLAMOUNT: "Online",
-            OTHERAMOUNT: "Other",
-        };
-        const collectionObj = (collectionSummary && collectionSummary[0]) || {};
-        const collectionRows = Object.entries(collectionLabels).map(([field, label]) => ({
-            type: label,
+        // const collectionLabels: Record<string, string> = {
+        //     CASHAMOUNT: "CASH",
+        //     CARDAMOUNT: "CREDIT CARD",
+        //     CHEQUEAMOUNT: "CHEQUE",
+        //     ETRANSFERAMOUNT: "NET BANKING",
+        //     CREDITPURCHASE: "CREDIT PURCHASE",
+        //     GIFTADJUSTMENT: "GIFT ADJUSTMENT",
+        //     HOMEAMOUNT: "HOME COLLECTION",
+        //     ADVAMOUNT: "ADVANCE",
+        //     VAAMOUNT: "VA AMOUNT",
+        //     ONLAMOUNT: "ONLINE",
+        //     OTHERAMOUNT: "OTHER",
+        //     MOBILEAMOUNT:"MOBILE"
+        // };
+        const collectionObj = collectionSummary[0] || {};
+
+        const collectionRows = Object.entries(collectionObj).filter(([field, label]) => field !== "TOTAMOUNT") .map(([field, _]) => ({
+            type: field,
             amount: Number(collectionObj[field]) || 0,
         }));
 
-        console.log(collectionRows,'collectionRows')
+        console.log(collectionObj, 'collectionRows')
         const filteredCollectionRow = collectionRows.filter(c=>!(c.amount === 0))
 
         const collectionTotalRow = {
@@ -740,13 +742,13 @@ const SchemeReport: React.FC = () => {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Box>
-                <Paper
+                <Paper className="glass-surface"
                     elevation={0}
                     sx={{
-                        borderRadius: 1,
+                        borderRadius: 3,
                         border: `1px solid ${theme.palette.divider}`,
                         overflow: "hidden",
-                        mb: 1,
+                        mb: 3,
                     }}
                 >
                     <Box
@@ -756,7 +758,7 @@ const SchemeReport: React.FC = () => {
                             alignItems: "center",
                             justifyContent: "space-between",
                             gap: 1.5,
-                            p :1,
+                            p: 1.5,
                             backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.12 : 0.06),
                         }}
                     >
@@ -789,7 +791,7 @@ const SchemeReport: React.FC = () => {
                             </Box>
                         </Box>
                        
-                        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1.5 }}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: 1.5 }}>
                             <Button
                                 variant="outlined"
                                 color="inherit"
