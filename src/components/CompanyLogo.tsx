@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useCompanyDetails } from "@/context/CompanyDetailsContext";
-const fallbackLogo = "/images/logo/icon.png";
+const fallbackLogo = "/images/logo/logo.jpeg";
 
 export default function CompanyLogo({size}:{size:string}) {
   const { companyDetails } = useCompanyDetails();

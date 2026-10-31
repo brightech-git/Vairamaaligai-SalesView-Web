@@ -6,7 +6,10 @@ import ThemeSettings from "@/components/ThemeSettings";
 import CompanyLogo from "@/components/CompanyLogo";
 import { useCompanyDetails } from "@/context/CompanyDetailsContext";
 const LoginPage = () => {
+  
  const { companyDetails } = useCompanyDetails();
+
+
  return <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
   <Box className="glass-surface" sx={{ position: "fixed", right: 16, top: 16, zIndex: 5, border: "1px solid", borderColor: "divider", borderRadius: 1.5 }}><ThemeSettings /></Box>
   <Box sx={{ bgcolor: "#481527", color: "#fff", p: { xs: 4, md: 7, xl: 10 }, display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden" }}>
